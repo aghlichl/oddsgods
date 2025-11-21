@@ -27,6 +27,7 @@
   --animate-marquee: marquee 20s linear infinite;
   --animate-shake: shake 0.5s ease-in-out;
   --animate-pulse-glow: pulse-glow 2s ease-in-out infinite;
+  --animate-mega-aura: mega-aura 3s ease-in-out infinite;
 
   @keyframes marquee {
     from {
@@ -47,6 +48,21 @@
   @keyframes pulse-glow {
     0%, 100% { box-shadow: 0 0 10px rgba(59, 130, 246, 0.3); }
     50% { box-shadow: 0 0 20px rgba(59, 130, 246, 0.5); }
+  }
+
+  @keyframes mega-aura {
+    0%, 100% {
+      box-shadow:
+        0 0 5px rgba(147, 51, 234, 0.3),
+        0 0 15px rgba(147, 51, 234, 0.4),
+        0 0 30px rgba(147, 51, 234, 0.2);
+    }
+    50% {
+      box-shadow:
+        0 0 10px rgba(147, 51, 234, 0.6),
+        0 0 25px rgba(147, 51, 234, 0.5),
+        0 0 50px rgba(147, 51, 234, 0.3);
+    }
   }
 }
 

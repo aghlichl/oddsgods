@@ -30,7 +30,7 @@ export function AnomalyCard({ title, amount, bet, type, multiplier, isContra }: 
     return (
         <Card className={cn(
             "p-4 border-2 transition-all duration-300",
-            isMega ? "border-purple-500 bg-purple-950/10 shadow-lg shadow-purple-500/30 animate-shake" :
+            isMega ? "border-purple-500 bg-purple-950/20 shadow-lg shadow-purple-500/40 animate-shake animate-mega-aura" :
             isWhale ? "border-blue-500 bg-blue-950/10 shadow-lg shadow-blue-500/25 animate-pulse-glow" :
             "border-zinc-500 bg-zinc-950/50"
         )}>
