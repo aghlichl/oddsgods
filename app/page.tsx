@@ -59,7 +59,7 @@ export default function Home() {
     <main className="min-h-screen bg-background">
       <Ticker />
 
-      <div className="pt-8 pb-14 overflow-y-auto p-4 scrollbar-hide min-h-screen">
+      <div className="pt-12 pb-14 overflow-y-auto p-4 scrollbar-hide min-h-screen">
         <motion.div
           className="max-w-md mx-auto w-full"
           key={currentPage}

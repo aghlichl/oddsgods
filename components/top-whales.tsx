@@ -12,7 +12,7 @@ const PERIOD_LABELS: Record<Period, string> = {
   weekly: 'WEEKLY',
   monthly: 'MONTHLY',
   yearly: 'YEARLY',
-  max: 'ALL TIME'
+  max: 'ALL'
 };
 
 const PERIODS: Period[] = ['today', 'weekly', 'monthly', 'yearly', 'max'];
@@ -44,7 +44,7 @@ export function TopWhales() {
       </div>
 
       {/* Period Selector */}
-      <div className="flex flex-wrap gap-2 justify-center mb-6">
+      <div className="flex gap-2 justify-center mb-6">
         {PERIODS.map((period) => (
           <button
             key={period}
@@ -53,7 +53,7 @@ export function TopWhales() {
             className={cn(
               "px-4 py-2 border-2 font-mono text-sm font-bold uppercase transition-all duration-200",
               selectedPeriod === period
-                ? "border-purple-500 bg-purple-950/20 text-purple-300 shadow-[3px_3px_0px_0px_rgba(147,51,234,0.8)]"
+                ? "border-[#b8a889] bg-[#b8a889]/10 text-[#e9e2d3] shadow-[3px_3px_0px_0px_rgba(184,168,137,0.7)]"
                 : "border-zinc-600 bg-zinc-800 text-zinc-400 hover:border-zinc-500 hover:text-zinc-300",
               topTradesLoading && "opacity-50 cursor-not-allowed"
             )}
