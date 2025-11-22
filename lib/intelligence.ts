@@ -35,6 +35,9 @@ export interface TraderProfile {
   isFresh: boolean;
   isSmartMoney: boolean;
   isWhale: boolean;
+  txCount: number;
+  maxTradeValue: number;
+  activityLevel: 'LOW' | 'MEDIUM' | 'HIGH' | null;
 }
 
 interface PolymarketPosition {
@@ -51,14 +54,14 @@ async function fetchTraderProfileFromAPI(address: string): Promise<Partial<Trade
   try {
     const url = `https://data-api.polymarket.com/positions?user=${address}`;
     const response = await fetch(url);
-    
+
     if (!response.ok) {
       console.warn(`[Intelligence] Failed to fetch positions for ${address}: ${response.statusText}`);
       return { totalPnl: 0, winRate: 0, isWhale: false };
     }
 
     const positions: PolymarketPosition[] = await response.json();
-    
+
     if (!positions || positions.length === 0) {
       return { totalPnl: 0, winRate: 0, isWhale: false };
     }
@@ -67,10 +70,10 @@ async function fetchTraderProfileFromAPI(address: string): Promise<Partial<Trade
     const totalPnl = positions.reduce((acc, pos) => acc + (pos.cashPnl || 0), 0);
     const winningPositions = positions.filter(p => (p.percentPnl || 0) > 0);
     const winRate = positions.length > 0 ? winningPositions.length / positions.length : 0;
-    
+
     // Check if they have any large positions
     const isWhale = positions.some(p => (p.currentValue || 0) > 10000);
-    
+
     // Determine label
     let label: string | null = null;
     if (totalPnl > 50000 && winRate > 0.60) {
@@ -99,15 +102,15 @@ async function fetchTraderProfileFromAPI(address: string): Promise<Partial<Trade
 /**
  * Checks if a wallet is "fresh" (< 10 transactions)
  */
-async function checkWalletFreshness(address: `0x${string}`): Promise<boolean> {
+async function checkWalletFreshness(address: `0x${string}`): Promise<number> {
   try {
     const txCount = await publicClient.getTransactionCount({
       address,
     });
-    return txCount < 10;
+    return txCount;
   } catch (error) {
     console.error(`[Intelligence] Error checking freshness for ${address}:`, error);
-    return false;
+    return 0;
   }
 }
 
@@ -132,17 +135,25 @@ export async function getTraderProfile(address: string): Promise<TraderProfile> 
   }
 
   // Cache miss - fetch from API
-  const [apiProfile, isFresh] = await Promise.all([
+  const [apiProfile, txCount] = await Promise.all([
     fetchTraderProfileFromAPI(address),
     checkWalletFreshness(address as `0x${string}`),
   ]);
+
+  // Determine activity level
+  let activityLevel: 'LOW' | 'MEDIUM' | 'HIGH' = 'LOW';
+  if (txCount > 500) activityLevel = 'HIGH';
+  else if (txCount > 50) activityLevel = 'MEDIUM';
 
   const profile: TraderProfile = {
     address: address.toLowerCase(),
     label: apiProfile.label || null,
     totalPnl: apiProfile.totalPnl || 0,
     winRate: apiProfile.winRate || 0,
-    isFresh,
+    isFresh: txCount < 10,
+    txCount,
+    maxTradeValue: 0, // Will be updated by worker
+    activityLevel,
     isSmartMoney: apiProfile.isSmartMoney || false,
     isWhale: apiProfile.isWhale || false,
   };
@@ -168,14 +179,14 @@ export async function analyzeMarketImpact(assetId: string, tradeSize: number, si
   try {
     const url = `https://clob.polymarket.com/book?token_id=${assetId}`;
     const response = await fetch(url);
-    
+
     if (!response.ok) {
       return { isSweeper: false, liquidityAvailable: 0, priceImpact: 0 };
     }
 
     const book = await response.json();
     const levels = side === 'BUY' ? book.asks : book.bids;
-    
+
     if (!levels || !Array.isArray(levels)) {
       return { isSweeper: false, liquidityAvailable: 0, priceImpact: 0 };
     }
@@ -188,10 +199,10 @@ export async function analyzeMarketImpact(assetId: string, tradeSize: number, si
     for (const level of levels) {
       const levelSize = parseFloat(level.size || '0');
       const levelPrice = parseFloat(level.price || '0');
-      
+
       accumulatedLiquidity += levelSize;
       levelsSwept++;
-      
+
       if (accumulatedLiquidity >= tradeSize) {
         // Trade was absorbed within this liquidity
         priceImpact = initialPrice > 0 ? Math.abs((levelPrice - initialPrice) / initialPrice) * 100 : 0;

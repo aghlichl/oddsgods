@@ -20,14 +20,23 @@ export interface Anomaly {
     side: 'BUY' | 'SELL';
     // Optional fields for enriched display
     wallet_context?: {
+        address?: string;
         label: string;
         pnl_all_time: string;
         win_rate: string;
         is_fresh_wallet: boolean;
     };
+    trader_context?: {
+        tx_count: number;
+        max_trade_value: number;
+        activity_level: string | null;
+    };
     market_impact?: {
         swept_levels: number;
         slippage_induced: string;
+    };
+    analysis?: {
+        tags: string[];
     };
 }
 

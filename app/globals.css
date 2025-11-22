@@ -166,7 +166,9 @@
   }
 
   @keyframes breathe {
-    0%, 100% {
+
+    0%,
+    100% {
       opacity: 0.6;
       transform: scale(1);
     }
@@ -182,26 +184,32 @@
       transform: translate(0, 0) rotate(0deg) scale(1);
       opacity: 0.3;
     }
+
     16.67% {
       transform: translate(12px, -8px) rotate(60deg) scale(1.15);
       opacity: 0.7;
     }
+
     33.33% {
       transform: translate(-10px, 6px) rotate(120deg) scale(0.85);
       opacity: 0.5;
     }
+
     50% {
       transform: translate(6px, 12px) rotate(180deg) scale(1.1);
       opacity: 0.8;
     }
+
     66.67% {
       transform: translate(-8px, -10px) rotate(240deg) scale(0.9);
       opacity: 0.4;
     }
+
     83.33% {
       transform: translate(10px, 4px) rotate(300deg) scale(1.05);
       opacity: 0.6;
     }
+
     100% {
       transform: translate(0, 0) rotate(360deg) scale(1);
       opacity: 0.3;
@@ -213,18 +221,22 @@
       transform: translate(0, 0) scale(1) rotate(0deg);
       opacity: 0.4;
     }
+
     25% {
       transform: translate(18px, -6px) scale(1.2) rotate(90deg);
       opacity: 0.8;
     }
+
     50% {
       transform: translate(-14px, 12px) scale(0.8) rotate(180deg);
       opacity: 0.6;
     }
+
     75% {
       transform: translate(8px, -14px) scale(1.1) rotate(270deg);
       opacity: 0.9;
     }
+
     100% {
       transform: translate(0, 0) scale(1) rotate(360deg);
       opacity: 0.4;
@@ -236,14 +248,17 @@
       transform: translate(0, 0) scale(1);
       opacity: 0.2;
     }
+
     30% {
       transform: translate(20px, 8px) scale(1.3);
       opacity: 0.9;
     }
+
     60% {
       transform: translate(-16px, -12px) scale(0.7);
       opacity: 0.5;
     }
+
     100% {
       transform: translate(0, 0) scale(1);
       opacity: 0.2;
@@ -254,6 +269,7 @@
     0% {
       transform: rotate(0deg) scale(1);
     }
+
     100% {
       transform: rotate(360deg) scale(1);
     }
@@ -264,10 +280,12 @@
       transform: scale(0.9) rotate(0deg);
       opacity: 0.4;
     }
+
     50% {
       transform: scale(1.1) rotate(180deg);
       opacity: 0.7;
     }
+
     100% {
       transform: scale(0.9) rotate(360deg);
       opacity: 0.4;
@@ -275,10 +293,13 @@
   }
 
   @keyframes dust-twinkle {
-    0%, 100% {
+
+    0%,
+    100% {
       opacity: 0.3;
       transform: scale(1);
     }
+
     50% {
       opacity: 1;
       transform: scale(1.5);
@@ -286,10 +307,13 @@
   }
 
   @keyframes core-pulse {
-    0%, 100% {
+
+    0%,
+    100% {
       opacity: 0.4;
       transform: translate(-50%, -50%) scale(0.8);
     }
+
     50% {
       opacity: 0.8;
       transform: translate(-50%, -50%) scale(1.2);
@@ -351,26 +375,33 @@
   }
 
   @keyframes heat-distortion {
-    0%, 100% {
+
+    0%,
+    100% {
       transform: translateX(0) scaleY(1) rotate(0deg);
       filter: blur(0px);
     }
+
     16.67% {
       transform: translateX(0.3px) scaleY(1.005) rotate(0.02deg);
       filter: blur(0.2px);
     }
+
     33.33% {
       transform: translateX(-0.2px) scaleY(0.995) rotate(-0.01deg);
       filter: blur(0.1px);
     }
+
     50% {
       transform: translateX(0.4px) scaleY(1.003) rotate(0.03deg);
       filter: blur(0.3px);
     }
+
     66.67% {
       transform: translateX(-0.1px) scaleY(0.997) rotate(-0.02deg);
       filter: blur(0.15px);
     }
+
     83.33% {
       transform: translateX(0.2px) scaleY(1.002) rotate(0.01deg);
       filter: blur(0.25px);
@@ -378,22 +409,28 @@
   }
 
   @keyframes rgb-glitch-cycle {
-    0%, 100% {
+
+    0%,
+    100% {
       border-color: #ef4444;
       box-shadow: 0 0 0 2px rgba(239, 68, 68, 0.3);
     }
+
     20% {
       border-color: #dc2626;
       box-shadow: 0 0 0 2px rgba(220, 38, 38, 0.4);
     }
+
     40% {
       border-color: #b91c1c;
       box-shadow: 0 0 0 2px rgba(185, 28, 28, 0.3);
     }
+
     60% {
       border-color: #991b1b;
       box-shadow: 0 0 0 2px rgba(153, 27, 27, 0.35);
     }
+
     80% {
       border-color: #7f1d1d;
       box-shadow: 0 0 0 2px rgba(127, 29, 29, 0.4);
@@ -401,10 +438,13 @@
   }
 
   @keyframes aura-pulse {
-    0%, 100% {
+
+    0%,
+    100% {
       transform: scale(1);
       opacity: 0.6;
     }
+
     50% {
       transform: scale(1.1);
       opacity: 0.9;
@@ -412,10 +452,13 @@
   }
 
   @keyframes energy-wisp {
-    0%, 100% {
+
+    0%,
+    100% {
       opacity: 0;
       transform: translateY(0px) scale(0.8);
     }
+
     50% {
       opacity: 1;
       transform: translateY(-10px) scale(1.2);
@@ -426,33 +469,45 @@
     0% {
       transform: translateX(-100%) skewX(-15deg);
     }
+
     100% {
       transform: translateX(100%) skewX(15deg);
     }
   }
 
   @keyframes spin-reverse {
-    from { transform: rotate(360deg); }
-    to { transform: rotate(0deg); }
+    from {
+      transform: rotate(360deg);
+    }
+
+    to {
+      transform: rotate(0deg);
+    }
   }
 
   @keyframes border-flicker {
-    0%, 100% {
+
+    0%,
+    100% {
       opacity: 1;
       transform: scale(1);
     }
+
     2% {
       opacity: 0.8;
       transform: scale(1.02);
     }
+
     4% {
       opacity: 1;
       transform: scale(0.98);
     }
+
     6% {
       opacity: 0.9;
       transform: scale(1.01);
     }
+
     8% {
       opacity: 1;
       transform: scale(1);

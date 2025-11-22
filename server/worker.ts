@@ -36,9 +36,9 @@ let assetIdToOutcome = new Map<string, AssetOutcome>();
 async function updateMarketMetadata(): Promise<string[]> {
   try {
     const markets = await fetchMarketsFromGamma();
-    
+
     const result = parseMarketData(markets);
-    
+
     // Update globals
     marketsByCondition = result.marketsByCondition;
     assetIdToOutcome = result.assetIdToOutcome;
@@ -71,16 +71,10 @@ async function processTrade(trade: any) {
     // Get wallet address
     let walletAddress = trade.user || trade.maker || trade.taker || trade.wallet || '';
 
-    // TEMPORARY: Use mock wallet addresses for demo purposes
+    // If no wallet address is found, we can't profile the trader
     if (!walletAddress) {
-      const mockWallets = [
-        '0x742d35Cc6634C0532925a3b844Bc454e4438f44e',
-        '0x742d35Cc6634C0532925a3b844Bc454e4438f44f',
-        '0x742d35Cc6634C0532925a3b844Bc454e4438f44a',
-        '0x742d35Cc6634C0532925a3b844Bc454e4438f44b',
-        '0x742d35Cc6634C0532925a3b844Bc454e4438f44c'
-      ];
-      walletAddress = mockWallets[Math.floor(Math.random() * mockWallets.length)];
+      // console.log('[Worker] Trade missing wallet address, skipping profile enrichment');
+      // We can still process the trade, but without wallet context
     }
 
     // Lookup market metadata
@@ -110,6 +104,7 @@ async function processTrade(trade: any) {
     const isSmartMoney = profile.isSmartMoney;
     const isFresh = profile.isFresh;
     const isSweeper = impact.isSweeper;
+    const isInsider = profile.activityLevel === 'LOW' && profile.winRate > 0.7 && profile.totalPnl > 10000;
 
     // Create enriched trade object
     const enrichedTrade = {
@@ -134,8 +129,10 @@ async function processTrade(trade: any) {
           isSmartMoney && 'SMART_MONEY',
           isFresh && 'FRESH_WALLET',
           isSweeper && 'SWEEPER',
+          isInsider && 'INSIDER',
         ].filter(Boolean) as string[],
         wallet_context: {
+          address: walletAddress.toLowerCase(),
           label: profile.label || 'Unknown',
           pnl_all_time: `$${profile.totalPnl.toLocaleString()}`,
           win_rate: `${(profile.winRate * 100).toFixed(0)}%`,
@@ -145,6 +142,11 @@ async function processTrade(trade: any) {
           swept_levels: impact.isSweeper ? 3 : 0,
           slippage_induced: `${impact.priceImpact.toFixed(2)}%`,
         },
+        trader_context: {
+          tx_count: profile.txCount,
+          max_trade_value: Math.max(profile.maxTradeValue, value),
+          activity_level: profile.activityLevel,
+        }
       },
     };
 
@@ -158,6 +160,9 @@ async function processTrade(trade: any) {
           totalPnl: profile.totalPnl,
           winRate: profile.winRate,
           isFresh: profile.isFresh,
+          txCount: profile.txCount,
+          maxTradeValue: Math.max(profile.maxTradeValue, value),
+          activityLevel: profile.activityLevel,
           lastUpdated: new Date(),
         },
         create: {
@@ -166,6 +171,9 @@ async function processTrade(trade: any) {
           totalPnl: profile.totalPnl,
           winRate: profile.winRate,
           isFresh: profile.isFresh,
+          txCount: profile.txCount,
+          maxTradeValue: value,
+          activityLevel: profile.activityLevel,
         },
       });
 

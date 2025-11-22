@@ -39,9 +39,9 @@ async function fetchMarketMetadata() {
         if (!response.ok) throw new Error('Failed to fetch metadata');
 
         const markets: PolymarketMarket[] = await response.json();
-        
+
         const result = parseMarketData(markets);
-        
+
         marketsByCondition = result.marketsByCondition;
         assetIdToOutcome = result.assetIdToOutcome;
 
@@ -89,7 +89,7 @@ export function startFirehose(onAnomaly: (a: Anomaly) => void, getPreferences?: 
                 console.log('[Firehose] Refreshing metadata...');
                 const latestAssetIds = await fetchMarketMetadata();
                 const newAssets = latestAssetIds.filter(id => !subscribedAssets.has(id));
-                
+
                 if (newAssets.length > 0 && ws?.readyState === WebSocket.OPEN) {
                     console.log(`[Firehose] Subscribing to ${newAssets.length} new assets`);
                     ws.send(JSON.stringify({

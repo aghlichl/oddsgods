@@ -16,6 +16,9 @@ model WalletProfile {
   totalPnl    Float    @default(0) // Total PnL in USD
   winRate     Float    @default(0) // Win rate as decimal (0.0 to 1.0)
   isFresh     Boolean  @default(false) // < 10 transactions
+  txCount     Int      @default(0)
+  maxTradeValue Float  @default(0)
+  activityLevel String? // "LOW", "MEDIUM", "HIGH"
   lastUpdated DateTime @default(now())
   trades      Trade[]
 

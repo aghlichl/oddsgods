@@ -1,0 +1,350 @@
+"use client";
+
+import { Anomaly } from "@/lib/types";
+import { Modal } from "@/components/ui/modal";
+import { cn } from "@/lib/utils";
+import { useState, useEffect } from "react";
+import {
+    AreaChart,
+    Area,
+    XAxis,
+    YAxis,
+    Tooltip,
+    ResponsiveContainer,
+    BarChart,
+    Bar,
+    Cell
+} from "recharts";
+
+interface TradeDetailsModalProps {
+    isOpen: boolean;
+    onClose: () => void;
+    anomaly: Anomaly;
+}
+
+export function TradeDetailsModal({ isOpen, onClose, anomaly }: TradeDetailsModalProps) {
+    const { event, outcome, odds, value, side, trader_context, wallet_context, analysis } = anomaly;
+
+    // Fallback to analysis tags if trader_context is missing (for older trades)
+    const isInsider = analysis?.tags?.includes('INSIDER');
+    const activityLevel = trader_context?.activity_level || 'UNKNOWN';
+    const txCount = trader_context?.tx_count ?? 0;
+    const maxTrade = trader_context?.max_trade_value ?? 0;
+
+    // Determine color theme based on type
+    const isGod = anomaly.type === 'GOD_WHALE';
+    const isSuper = anomaly.type === 'SUPER_WHALE';
+    const isMega = anomaly.type === 'MEGA_WHALE';
+    const isWhale = anomaly.type === 'WHALE';
+
+    const themeColor = isGod ? "text-yellow-400 border-yellow-400/30" :
+        isSuper ? "text-red-400 border-red-400/30" :
+            isMega ? "text-purple-400 border-purple-400/30" :
+                isWhale ? "text-blue-400 border-blue-400/30" :
+                    "text-zinc-400 border-zinc-700";
+
+    const bgGlow = isGod ? "bg-yellow-400/5" :
+        isSuper ? "bg-red-400/5" :
+            isMega ? "bg-purple-400/5" :
+                isWhale ? "bg-blue-400/5" :
+                    "bg-zinc-900/50";
+
+    // Chart Data State
+    const [historyData, setHistoryData] = useState<{
+        priceHistory: any[];
+        walletHistory: any[];
+    } | null>(null);
+    const [isLoadingHistory, setIsLoadingHistory] = useState(false);
+
+    useEffect(() => {
+        if (isOpen && anomaly) {
+            setIsLoadingHistory(true);
+            const params = new URLSearchParams({
+                question: anomaly.event,
+                outcome: anomaly.outcome,
+                walletAddress: anomaly.wallet_context?.address || ''
+            });
+
+            fetch(`/api/market-history?${params.toString()}`)
+                .then(res => res.json())
+                .then(data => {
+                    setHistoryData(data);
+                })
+                .catch(err => console.error("Failed to fetch history:", err))
+                .finally(() => setIsLoadingHistory(false));
+        }
+    }, [isOpen, anomaly]);
+
+    return (
+        <Modal isOpen={isOpen} onClose={onClose}>
+            <div className="flex flex-col max-h-[85vh] overflow-y-auto custom-scrollbar">
+                {/* Header */}
+                <div className={cn("p-6 border-b border-zinc-800 sticky top-0 z-10 backdrop-blur-xl", bgGlow)}>
+                    <div className="flex items-start justify-between gap-4">
+                        <div>
+                            <div className="flex items-center gap-2 mb-2">
+                                <span className={cn("text-xs font-bold px-2 py-0.5 border rounded-full bg-black/50", themeColor)}>
+                                    {anomaly.type.replace('_', ' ')}
+                                </span>
+                                {isInsider && (
+                                    <span className="text-xs font-bold px-2 py-0.5 border border-red-500 text-red-500 bg-red-500/10 rounded-full animate-pulse">
+                                        INSIDER DETECTED
+                                    </span>
+                                )}
+                            </div>
+                            <h2 className="text-xl font-bold text-zinc-100 leading-tight">{event}</h2>
+                        </div>
+                    </div>
+                </div>
+
+                {/* Trade Stats */}
+                <div className="grid grid-cols-2 divide-x divide-zinc-800 border-b border-zinc-800">
+                    <div className="p-4 flex flex-col items-center justify-center bg-black/20">
+                        <span className="text-xs text-zinc-500 uppercase tracking-wider mb-1">Trade Value</span>
+                        <span className={cn("text-2xl font-black font-mono", themeColor.split(' ')[0])}>
+                            ${Math.round(value).toLocaleString()}
+                        </span>
+                    </div>
+                    <div className="p-4 flex flex-col items-center justify-center bg-black/20">
+                        <span className="text-xs text-zinc-500 uppercase tracking-wider mb-1">Outcome</span>
+                        <div className="flex items-center gap-2">
+                            <span className={cn(
+                                "font-bold text-lg",
+                                side === 'BUY' ? "text-emerald-400" : "text-red-400"
+                            )}>
+                                {side} {outcome}
+                            </span>
+                            <span className="text-zinc-400 font-mono">@{odds}¢</span>
+                        </div>
+                    </div>
+                </div>
+
+                {/* Charts Section */}
+                <div className="p-6 space-y-8 border-b border-zinc-800">
+                    {/* Price History Chart */}
+                    <div>
+                        <h3 className="text-sm font-bold text-zinc-400 uppercase tracking-wider mb-4 flex items-center gap-2">
+                            <span className="w-1 h-4 bg-blue-500 rounded-full" />
+                            Price History ({outcome})
+                        </h3>
+                        <div className="h-48 w-full bg-black/20 rounded border border-zinc-800/50 p-2">
+                            {isLoadingHistory ? (
+                                <div className="h-full flex items-center justify-center text-zinc-600 text-xs animate-pulse">Loading chart data...</div>
+                            ) : historyData?.priceHistory?.length ? (
+                                <ResponsiveContainer width="100%" height="100%">
+                                    <AreaChart data={historyData.priceHistory}>
+                                        <defs>
+                                            <linearGradient id="colorPrice" x1="0" y1="0" x2="0" y2="1">
+                                                <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.3} />
+                                                <stop offset="95%" stopColor="#3b82f6" stopOpacity={0} />
+                                            </linearGradient>
+                                        </defs>
+                                        <XAxis
+                                            dataKey="timestamp"
+                                            type="number"
+                                            domain={['auto', 'auto']}
+                                            tickFormatter={(ts) => new Date(ts).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                                            stroke="#52525b"
+                                            fontSize={10}
+                                            tickLine={false}
+                                            axisLine={false}
+                                            minTickGap={30}
+                                        />
+                                        <YAxis
+                                            domain={['auto', 'auto']}
+                                            stroke="#52525b"
+                                            fontSize={10}
+                                            tickLine={false}
+                                            axisLine={false}
+                                            tickFormatter={(val) => `${val}¢`}
+                                            width={30}
+                                        />
+                                        <Tooltip
+                                            contentStyle={{ backgroundColor: '#18181b', borderColor: '#27272a', fontSize: '12px' }}
+                                            itemStyle={{ color: '#e4e4e7' }}
+                                            labelFormatter={(ts) => new Date(ts).toLocaleTimeString()}
+                                            formatter={(value: number) => [`${value.toFixed(1)}¢`, 'Price']}
+                                        />
+                                        <Area
+                                            type="monotone"
+                                            dataKey="price"
+                                            stroke="#3b82f6"
+                                            strokeWidth={2}
+                                            fillOpacity={1}
+                                            fill="url(#colorPrice)"
+                                            isAnimationActive={false}
+                                        />
+                                    </AreaChart>
+                                </ResponsiveContainer>
+                            ) : (
+                                <div className="h-full flex items-center justify-center text-zinc-600 text-xs">No price history available</div>
+                            )}
+                        </div>
+                    </div>
+
+                    {/* Wallet Activity Chart */}
+                    <div>
+                        <h3 className="text-sm font-bold text-zinc-400 uppercase tracking-wider mb-4 flex items-center gap-2">
+                            <span className="w-1 h-4 bg-emerald-500 rounded-full" />
+                            Recent Wallet Activity
+                        </h3>
+                        <div className="h-48 w-full bg-black/20 rounded border border-zinc-800/50 p-2">
+                            {isLoadingHistory ? (
+                                <div className="h-full flex items-center justify-center text-zinc-600 text-xs animate-pulse">Loading wallet data...</div>
+                            ) : historyData?.walletHistory?.length ? (
+                                <ResponsiveContainer width="100%" height="100%">
+                                    <BarChart data={historyData.walletHistory}>
+                                        <XAxis
+                                            dataKey="timestamp"
+                                            tickFormatter={(ts) => new Date(ts).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                                            stroke="#52525b"
+                                            fontSize={10}
+                                            tickLine={false}
+                                            axisLine={false}
+                                            minTickGap={30}
+                                        />
+                                        <YAxis
+                                            stroke="#52525b"
+                                            fontSize={10}
+                                            tickLine={false}
+                                            axisLine={false}
+                                            tickFormatter={(val) => `$${(val / 1000).toFixed(0)}k`}
+                                            width={35}
+                                        />
+                                        <Tooltip
+                                            cursor={{ fill: '#ffffff10' }}
+                                            content={({ active, payload, label }) => {
+                                                if (active && payload && payload.length && label) {
+                                                    const data = payload[0].payload;
+                                                    return (
+                                                        <div className="bg-zinc-900 border border-zinc-800 p-2 rounded shadow-xl text-xs">
+                                                            <div className="font-bold text-zinc-300 mb-1">{new Date(label).toLocaleTimeString()}</div>
+                                                            <div className="text-zinc-400">{data.question}</div>
+                                                            <div className={cn("font-bold mt-1", data.side === 'BUY' ? "text-emerald-400" : "text-red-400")}>
+                                                                {data.side} {data.outcome}
+                                                            </div>
+                                                            <div className="text-zinc-300 font-mono mt-1">
+                                                                ${Math.round(data.tradeValue).toLocaleString()} @ {data.price.toFixed(1)}¢
+                                                            </div>
+                                                        </div>
+                                                    );
+                                                }
+                                                return null;
+                                            }}
+                                        />
+                                        <Bar dataKey="tradeValue" radius={[2, 2, 0, 0]}>
+                                            {historyData.walletHistory.map((entry, index) => (
+                                                <Cell key={`cell-${index}`} fill={entry.side === 'BUY' ? '#10b981' : '#ef4444'} fillOpacity={0.8} />
+                                            ))}
+                                        </Bar>
+                                    </BarChart>
+                                </ResponsiveContainer>
+                            ) : (
+                                <div className="h-full flex items-center justify-center text-zinc-600 text-xs">No recent wallet activity</div>
+                            )}
+                        </div>
+                    </div>
+                </div>
+
+                {/* Trader Intelligence */}
+                <div className="p-6 space-y-6">
+                    <div>
+                        <h3 className="text-sm font-bold text-zinc-400 uppercase tracking-wider mb-4 flex items-center gap-2">
+                            <span className="w-1 h-4 bg-zinc-600 rounded-full" />
+                            Trader Intelligence
+                        </h3>
+
+                        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                            {/* Activity Level */}
+                            <div className="bg-zinc-900/50 p-3 rounded border border-zinc-800">
+                                <div className="text-[10px] text-zinc-500 uppercase mb-1">Activity Level</div>
+                                <div className={cn(
+                                    "font-bold text-sm",
+                                    activityLevel === 'LOW' ? "text-red-400" :
+                                        activityLevel === 'HIGH' ? "text-emerald-400" : "text-yellow-400"
+                                )}>
+                                    {activityLevel}
+                                    <span className="text-zinc-600 font-normal ml-1 text-xs">({txCount} txs)</span>
+                                </div>
+                                <div className="text-[10px] text-zinc-600 mt-1 leading-tight">
+                                    {activityLevel === 'LOW' ? "Barely makes any bets" : "Regular trader"}
+                                </div>
+                            </div>
+
+                            {/* Profitability */}
+                            <div className="bg-zinc-900/50 p-3 rounded border border-zinc-800">
+                                <div className="text-[10px] text-zinc-500 uppercase mb-1">Total PnL</div>
+                                <div className={cn(
+                                    "font-bold text-sm",
+                                    (wallet_context?.pnl_all_time?.includes('-') ?? false) ? "text-red-400" : "text-emerald-400"
+                                )}>
+                                    {wallet_context?.pnl_all_time || "$0"}
+                                </div>
+                                <div className="text-[10px] text-zinc-600 mt-1 leading-tight">
+                                    Win Rate: {wallet_context?.win_rate || "0%"}
+                                </div>
+                            </div>
+
+                            {/* Max Trade Context */}
+                            <div className="bg-zinc-900/50 p-3 rounded border border-zinc-800">
+                                <div className="text-[10px] text-zinc-500 uppercase mb-1">Max Trade Size</div>
+                                <div className="font-bold text-sm text-zinc-300">
+                                    ${Math.round(maxTrade).toLocaleString()}
+                                </div>
+                                <div className="text-[10px] text-zinc-600 mt-1 leading-tight">
+                                    {value >= maxTrade * 0.9 ? "New record trade!" : "Within normal range"}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Insider Analysis */}
+                    {isInsider && (
+                        <div className="bg-red-500/5 border border-red-500/20 p-4 rounded-lg">
+                            <div className="flex items-start gap-3">
+                                <div className="p-2 bg-red-500/10 rounded-full">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-red-500"><path d="M2 12h20" /><path d="M20 12v6a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-6" /><path d="M12 2 2 7l10 5 10-5-10-5Z" /><path d="m2 17 10 5 10-5" /></svg>
+                                </div>
+                                <div>
+                                    <h4 className="text-red-400 font-bold text-sm mb-1">Suspicious Activity Detected</h4>
+                                    <p className="text-xs text-red-300/70 leading-relaxed">
+                                        This trader has <strong>low activity</strong> but a <strong>high win rate</strong> and is making a <strong>large bet</strong>. This pattern is often associated with insider information or selective trading.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    )}
+
+                    <div className="flex flex-col items-center gap-2 pt-4 border-t border-zinc-800">
+                        <div className="flex items-center gap-2 text-xs text-zinc-500 font-mono">
+                            <span>WALLET:</span>
+                            <span className="text-zinc-300">
+                                {wallet_context?.label && wallet_context.label !== 'Unknown'
+                                    ? wallet_context.label
+                                    : wallet_context?.address
+                                        ? `${wallet_context.address.slice(0, 6)}...${wallet_context.address.slice(-4)}`
+                                        : 'UNKNOWN TRADER'}
+                            </span>
+                        </div>
+
+                        {wallet_context?.address ? (
+                            <a
+                                href={`https://polymarket.com/profile/${wallet_context.address}`}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="text-[10px] uppercase tracking-wider font-bold text-blue-400 hover:text-blue-300 hover:underline flex items-center gap-1"
+                            >
+                                View Polymarket Profile
+                                <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" /><polyline points="15 3 21 3 21 9" /><line x1="10" y1="14" x2="21" y2="3" /></svg>
+                            </a>
+                        ) : (
+                            <span className="text-[10px] uppercase tracking-wider font-bold text-zinc-600 flex items-center gap-1 cursor-not-allowed">
+                                Profile Unavailable
+                            </span>
+                        )}
+                    </div>
+                </div>
+            </div>
+        </Modal>
+    );
+}

@@ -85,6 +85,27 @@ export async function GET(request: Request) {
         value,
         timestamp: trade.timestamp.getTime(),
         side: trade.side,
+        wallet_context: {
+          address: trade.walletProfile?.id || trade.walletAddress,
+          label: trade.walletProfile?.label || 'Unknown',
+          pnl_all_time: `$${trade.walletProfile?.totalPnl.toLocaleString()}`,
+          win_rate: `${((trade.walletProfile?.winRate || 0) * 100).toFixed(0)}%`,
+          is_fresh_wallet: trade.walletProfile?.isFresh || false,
+        },
+        trader_context: {
+          tx_count: trade.walletProfile?.txCount || 0,
+          max_trade_value: trade.walletProfile?.maxTradeValue || 0,
+          activity_level: trade.walletProfile?.activityLevel || null,
+        },
+        analysis: {
+          tags: [
+            trade.isWhale && 'WHALE',
+            trade.isSmartMoney && 'SMART_MONEY',
+            trade.isFresh && 'FRESH_WALLET',
+            trade.isSweeper && 'SWEEPER',
+            (trade.walletProfile?.activityLevel === 'LOW' && (trade.walletProfile?.winRate || 0) > 0.7 && (trade.walletProfile?.totalPnl || 0) > 10000) && 'INSIDER',
+          ].filter(Boolean) as string[],
+        },
       };
     });
 

@@ -9,7 +9,22 @@
 * 🟢 You can import this file directly.
 */
 
+export const WhaleTier = {
+  STANDARD: 'STANDARD',
+  WHALE: 'WHALE',
+  MEGA_WHALE: 'MEGA_WHALE',
+  SUPER_WHALE: 'SUPER_WHALE',
+  GOD_WHALE: 'GOD_WHALE'
+} as const
+
+export type WhaleTier = (typeof WhaleTier)[keyof typeof WhaleTier]
 
 
-// This file is empty because there are no enums in the schema.
-export {}
+export const IdentifierType = {
+  WALLET: 'WALLET',
+  SUBACCOUNT: 'SUBACCOUNT',
+  PROXY: 'PROXY',
+  OTHER: 'OTHER'
+} as const
+
+export type IdentifierType = (typeof IdentifierType)[keyof typeof IdentifierType]
