@@ -165,25 +165,15 @@ export function AnomalyCard({ anomaly }: AnomalyCardProps) {
 
                     {/* Top Right: Amount */}
                     <div className="flex items-start justify-end">
-                        <div className="relative">
-                            <div className={cn(
-                                "text-xl font-black font-mono drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]",
-                                isGod ? "text-yellow-300 drop-shadow-[0_2px_4px_rgba(251,191,36,0.5)]" :
-                                    isSuper ? "text-red-300 drop-shadow-[0_2px_4px_rgba(239,68,68,0.5)]" :
-                                        isMega ? "text-purple-300 drop-shadow-[0_2px_4px_rgba(168,85,247,0.5)]" :
-                                            isWhale ? "text-blue-300 drop-shadow-[0_2px_4px_rgba(59,130,246,0.5)]" :
-                                                "text-zinc-100 drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]"
-                            )}>
-                                {amount}
-                            </div>
-                            <div className={cn(
-                                "absolute -bottom-1 left-0 right-0 h-0.5 bg-gradient-to-r from-transparent via-current to-transparent opacity-60",
-                                isGod ? "via-yellow-400" :
-                                    isSuper ? "via-red-400" :
-                                        isMega ? "via-purple-400" :
-                                            isWhale ? "via-blue-400" :
-                                                "via-zinc-400"
-                            )}></div>
+                        <div className={cn(
+                            "px-3 py-1.5 rounded-full font-black text-sm uppercase tracking-wider shadow-lg border-2",
+                            isGod ? "bg-yellow-500/10 text-yellow-300 border-yellow-400/80 shadow-yellow-500/25" :
+                                isSuper ? "bg-red-500/10 text-red-300 border-red-400/80 shadow-red-500/25" :
+                                    isMega ? "bg-purple-500/10 text-purple-300 border-purple-400/80 shadow-purple-500/25" :
+                                        isWhale ? "bg-blue-500/10 text-blue-300 border-blue-400/80 shadow-blue-500/25" :
+                                            "bg-zinc-800/80 text-zinc-300 border-zinc-400/60 shadow-zinc-500/20"
+                        )}>
+                            <span className="font-mono text-lg font-bold tabular-nums">{amount}</span>
                         </div>
                     </div>
 
