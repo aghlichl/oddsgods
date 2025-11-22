@@ -72,6 +72,35 @@ export function TopWhales() {
         <div className="space-y-4 max-h-[calc(100vh-200px)] overflow-y-auto scrollbar-hide pl-10 pr-4 py-2">
           {topTrades.map((anomaly, index) => (
             <div key={anomaly.id} className="relative">
+              {/* Dragon Ball Z/Demon Slayer Aura - Only for God Whale */}
+              {anomaly.type === 'GOD_WHALE' && (
+                <>
+                  {/* Demonic Flame Rings - Around Card Border */}
+                  <div className="absolute -inset-1 z-0 pointer-events-none">
+                    {/* Outer Ring - Slow Pulsing */}
+                    <div className="absolute inset-0 bg-[conic-gradient(from_0deg_at_50%_50%,transparent_0deg,rgba(251,191,36,0.8)_45deg,rgba(239,68,68,0.9)_90deg,rgba(251,191,36,0.7)_135deg,transparent_180deg,rgba(168,85,247,0.6)_225deg,rgba(239,68,68,0.8)_270deg,rgba(251,191,36,0.7)_315deg,transparent_360deg)] animate-[spin_8s_linear_infinite] opacity-70 blur-sm" />
+
+                    {/* Inner Ring - Faster Rotation */}
+                    <div className="absolute inset-1 bg-[conic-gradient(from_0deg_at_50%_50%,transparent_0deg,rgba(239,68,68,1.0)_30deg,rgba(251,191,36,1.0)_60deg,rgba(239,68,68,0.9)_90deg,transparent_120deg,rgba(251,191,36,0.8)_150deg,rgba(239,68,68,1.0)_180deg,rgba(251,191,36,0.9)_210deg,transparent_240deg,rgba(168,85,247,0.7)_270deg,rgba(239,68,68,0.8)_300deg,rgba(251,191,36,1.0)_330deg,transparent_360deg)] animate-spin-reverse opacity-60 blur-sm" />
+                  </div>
+
+                  {/* Energy Wisps - Floating Demonic Particles Around Border */}
+                  <div className="absolute -inset-0.5 z-0 pointer-events-none">
+                    {/* Top wisps */}
+                    <div className="absolute -top-0.5 left-1/4 w-0.5 h-3 bg-gradient-to-t from-transparent via-yellow-400 to-transparent animate-energy-wisp" style={{ animationDelay: '0s' }} />
+                    <div className="absolute -top-0.5 right-1/3 w-0.5 h-2 bg-gradient-to-t from-transparent via-red-400 to-transparent animate-energy-wisp" style={{ animationDelay: '1s' }} />
+
+                    {/* Side wisps */}
+                    <div className="absolute top-1/2 -left-0.5 w-2 h-0.5 bg-gradient-to-r from-transparent via-orange-400 to-transparent animate-energy-wisp" style={{ animationDelay: '0.5s' }} />
+                    <div className="absolute top-1/3 -right-0.5 w-1.5 h-0.5 bg-gradient-to-l from-transparent via-yellow-300 to-transparent animate-energy-wisp" style={{ animationDelay: '1.5s' }} />
+
+                    {/* Bottom wisps */}
+                    <div className="absolute -bottom-0.5 left-1/3 w-0.5 h-2.5 bg-gradient-to-t from-yellow-500 via-orange-400 to-transparent animate-energy-wisp" style={{ animationDelay: '2s' }} />
+                    <div className="absolute -bottom-0.5 right-1/4 w-0.5 h-1.5 bg-gradient-to-t from-red-500 via-yellow-400 to-transparent animate-energy-wisp" style={{ animationDelay: '0.8s' }} />
+                  </div>
+                </>
+              )}
+
               {/* Rank indicator */}
               <div className="absolute -left-8 top-4 z-10">
                 <div className={cn(
