@@ -40,16 +40,12 @@
   --animate-super-spin: super-spin 3s linear infinite;
 
   @keyframes marquee {
-
-    0%,
-    100% {
-      opacity: 0;
-      transform: scale(0);
+    0% {
+      transform: translateX(100%);
     }
 
-    50% {
-      opacity: 1;
-      transform: scale(1);
+    100% {
+      transform: translateX(-100%);
     }
   }
 
