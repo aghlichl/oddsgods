@@ -30,6 +30,10 @@ function passesPreferences(anomaly: Anomaly, preferences: UserPreferencesType): 
       return preferences.showWhale;
     case 'MEGA_WHALE':
       return preferences.showMegaWhale;
+    case 'SUPER_WHALE':
+      return preferences.showSuperWhale;
+    case 'GOD_WHALE':
+      return preferences.showGodWhale;
     default:
       return true;
   }

@@ -1,11 +1,13 @@
 import { RunningStats } from './stats';
 
-export type AnomalyType = 'MEGA_WHALE' | 'WHALE' | 'STANDARD';
+export type AnomalyType = 'GOD_WHALE' | 'SUPER_WHALE' | 'MEGA_WHALE' | 'WHALE' | 'STANDARD';
 
 export interface UserPreferences {
     showStandard: boolean;
     showWhale: boolean;
     showMegaWhale: boolean;
+    showSuperWhale: boolean;
+    showGodWhale: boolean;
     minValueThreshold: number;
 }
 
@@ -56,6 +58,10 @@ function passesPreferences(anomaly: Anomaly, preferences?: UserPreferences): boo
             return preferences.showWhale;
         case 'MEGA_WHALE':
             return preferences.showMegaWhale;
+        case 'SUPER_WHALE':
+            return preferences.showSuperWhale;
+        case 'GOD_WHALE':
+            return preferences.showGodWhale;
         default:
             return true;
     }
@@ -259,7 +265,9 @@ export function startFirehose(onAnomaly: (a: Anomaly) => void, getPreferences?: 
                         // 5. Basic Classification (based on bet amount only)
                         let type: AnomalyType = 'STANDARD';
 
-                        if (value > 15000) type = 'MEGA_WHALE';
+                        if (value > 100000) type = 'GOD_WHALE';
+                        else if (value > 50000) type = 'SUPER_WHALE';
+                        else if (value > 15000) type = 'MEGA_WHALE';
                         else if (value > 8000) type = 'WHALE';
                         // else remains 'STANDARD'
 

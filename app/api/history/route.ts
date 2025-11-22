@@ -30,8 +30,10 @@ export async function GET() {
       const price = trade.price;
 
       // Determine anomaly type based on trade value (matching market-stream.ts logic)
-      let type: 'MEGA_WHALE' | 'WHALE' | 'STANDARD' = 'STANDARD';
-      if (value > 15000) type = 'MEGA_WHALE';
+      let type: 'GOD_WHALE' | 'SUPER_WHALE' | 'MEGA_WHALE' | 'WHALE' | 'STANDARD' = 'STANDARD';
+      if (value > 100000) type = 'GOD_WHALE';
+      else if (value > 50000) type = 'SUPER_WHALE';
+      else if (value > 15000) type = 'MEGA_WHALE';
       else if (value > 8000) type = 'WHALE';
 
       return {

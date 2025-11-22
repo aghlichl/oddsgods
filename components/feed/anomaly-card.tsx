@@ -1,7 +1,6 @@
 import { Anomaly } from "@/lib/market-stream";
 import { cn } from "@/lib/utils";
 import { Card } from "@/components/ui/card";
-import { Flame } from "lucide-react";
 import { Gauge } from "./gauge";
 
 interface AnomalyCardProps {
@@ -21,19 +20,21 @@ export function convertAnomalyToCardProps(anomaly: Anomaly) {
 }
 
 export function AnomalyCard({ anomaly }: AnomalyCardProps) {
-    const { event: title, value, outcome, odds, type, multiplier, zScore, timestamp, isContra, side } = anomaly;
+    const { event: title, value, outcome, odds, type, timestamp, side } = anomaly;
     const amount = `$${Math.round(value).toLocaleString()}`;
+    const isGod = type === 'GOD_WHALE';
+    const isSuper = type === 'SUPER_WHALE';
     const isMega = type === 'MEGA_WHALE';
     const isWhale = type === 'WHALE';
-    const isBadgeMega = zScore > 10;
-    const isBadgeWhale = zScore > 2;
 
     return (
         <Card className={cn(
             "relative p-4 border-2 transition-all duration-300 group rounded-none",
-            isMega ? "border-purple-500 bg-zinc-950 shadow-[4px_4px_0px_0px_#a855f7]" :
-                isWhale ? "border-blue-500 bg-zinc-950 shadow-[4px_4px_0px_0px_#3b82f6]" :
-                    "border-zinc-700 bg-zinc-950 shadow-[4px_4px_0px_0px_#27272a]"
+            isGod ? "border-yellow-500 bg-zinc-950 shadow-[4px_4px_0px_0px_#fbbf24]" :
+                isSuper ? "border-red-500 bg-zinc-950 shadow-[4px_4px_0px_0px_#ef4444]" :
+                    isMega ? "border-purple-500 bg-zinc-950 shadow-[4px_4px_0px_0px_#a855f7]" :
+                        isWhale ? "border-blue-500 bg-zinc-950 shadow-[4px_4px_0px_0px_#3b82f6]" :
+                            "border-zinc-700 bg-zinc-950 shadow-[4px_4px_0px_0px_#27272a]"
         )}>
             {/* Timestamp overlay - appears on hover */}
             <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-black/80 z-10">
@@ -59,9 +60,11 @@ export function AnomalyCard({ anomaly }: AnomalyCardProps) {
                 <div className="flex items-start justify-end">
                     <div className={cn(
                         "text-lg font-bold font-mono border-b",
-                        isMega ? "text-purple-300 border-purple-300/60" :
-                            isWhale ? "text-blue-300 border-blue-300/60" :
-                                "text-zinc-300 border-zinc-300/60"
+                        isGod ? "text-yellow-300 border-yellow-300/60" :
+                            isSuper ? "text-red-300 border-red-300/60" :
+                                isMega ? "text-purple-300 border-purple-300/60" :
+                                    isWhale ? "text-blue-300 border-blue-300/60" :
+                                        "text-zinc-300 border-zinc-300/60"
                     )}>
                         {amount}
                     </div>

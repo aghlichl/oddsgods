@@ -75,12 +75,50 @@ export function UserPreferences() {
           <div className="flex items-center justify-between">
             <div>
               <div className="font-mono font-bold text-purple-400">MEGA WHALE</div>
-              <div className="text-xs text-zinc-600 font-mono">$15,000+</div>
+              <div className="text-xs text-zinc-600 font-mono">$15,000 - $50,000</div>
             </div>
             <div className={`w-4 h-4 border-2 transition-all duration-200 ${
               preferences.showMegaWhale
                 ? 'border-purple-400 bg-purple-400'
                 : 'border-purple-600/50'
+            }`} />
+          </div>
+        </div>
+
+        {/* SUPER_WHALE Card */}
+        <div className={`relative p-4 border-2 transition-all duration-200 cursor-pointer ${
+          preferences.showSuperWhale
+            ? 'border-red-500 bg-red-950/20 shadow-[3px_3px_0px_0px_rgba(239,68,68,0.8)]'
+            : 'border-red-700/50 bg-zinc-950 shadow-[2px_2px_0px_0px_rgba(0,0,0,0.4)] opacity-60'
+        }`} onClick={() => setPreferences({ showSuperWhale: !preferences.showSuperWhale })}>
+          <div className="flex items-center justify-between">
+            <div>
+              <div className="font-mono font-bold text-red-400">SUPER WHALE</div>
+              <div className="text-xs text-zinc-600 font-mono">$50,000 - $100,000</div>
+            </div>
+            <div className={`w-4 h-4 border-2 transition-all duration-200 ${
+              preferences.showSuperWhale
+                ? 'border-red-400 bg-red-400'
+                : 'border-red-600/50'
+            }`} />
+          </div>
+        </div>
+
+        {/* GOD_WHALE Card */}
+        <div className={`relative p-4 border-2 transition-all duration-200 cursor-pointer ${
+          preferences.showGodWhale
+            ? 'border-yellow-500 bg-yellow-950/20 shadow-[3px_3px_0px_0px_rgba(251,191,36,0.8)]'
+            : 'border-yellow-700/50 bg-zinc-950 shadow-[2px_2px_0px_0px_rgba(0,0,0,0.4)] opacity-60'
+        }`} onClick={() => setPreferences({ showGodWhale: !preferences.showGodWhale })}>
+          <div className="flex items-center justify-between">
+            <div>
+              <div className="font-mono font-bold text-yellow-400">GOD WHALE</div>
+              <div className="text-xs text-zinc-600 font-mono">$100,000+</div>
+            </div>
+            <div className={`w-4 h-4 border-2 transition-all duration-200 ${
+              preferences.showGodWhale
+                ? 'border-yellow-400 bg-yellow-400'
+                : 'border-yellow-600/50'
             }`} />
           </div>
         </div>

@@ -5,6 +5,8 @@ interface Preferences {
   showStandard: boolean;
   showWhale: boolean;
   showMegaWhale: boolean;
+  showSuperWhale: boolean;
+  showGodWhale: boolean;
   minValueThreshold: number;
 }
 
@@ -12,6 +14,8 @@ const DEFAULT_PREFERENCES: Preferences = {
   showStandard: true,
   showWhale: true,
   showMegaWhale: true,
+  showSuperWhale: true,
+  showGodWhale: true,
   minValueThreshold: 0,
 };
 
@@ -96,7 +100,7 @@ export const useMarketStore = create<MarketStore>((set, get) => ({
     addAnomaly: (anomaly) => set((state) => ({
         anomalies: [anomaly, ...state.anomalies].slice(0, 100), // Increased limit for historical + real-time
         volume: state.volume + anomaly.value,
-        tickerItems: [`${anomaly.event} ${anomaly.type === 'MEGA_WHALE' ? 'WHALE' : 'TRADE'} $${(anomaly.value / 1000).toFixed(1)}k`, ...state.tickerItems].slice(0, 20)
+        tickerItems: [`${anomaly.event} ${anomaly.type === 'GOD_WHALE' || anomaly.type === 'SUPER_WHALE' || anomaly.type === 'MEGA_WHALE' ? 'WHALE' : 'TRADE'} $${(anomaly.value / 1000).toFixed(1)}k`, ...state.tickerItems].slice(0, 20)
     })),
     loadHistory: async () => {
         set({ isLoading: true });
