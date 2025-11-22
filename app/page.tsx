@@ -44,6 +44,12 @@ export default function Home() {
   const { preferences, loadPreferences } = usePreferencesStore();
   const [currentPage, setCurrentPage] = useState(1);
 
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+    // Scroll to top when switching tabs
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
   // Filter anomalies based on current preferences
   const filteredAnomalies = anomalies.filter(anomaly => passesPreferences(anomaly, preferences));
 
@@ -116,7 +122,7 @@ export default function Home() {
           <BottomCarousel
             currentPage={currentPage}
             totalPages={PAGES.length}
-            onPageChange={setCurrentPage}
+            onPageChange={handlePageChange}
           />
         </div>
 
