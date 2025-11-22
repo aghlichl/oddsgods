@@ -17,35 +17,35 @@ The system processes live trade data from Polymarket's WebSocket API, enriches t
 
 ### Core Implementation
 
-#### 1. Real-Time Data Streaming (`lib/market-stream.ts:145-322`)
+#### 1. Real-Time Data Streaming (`lib/market-stream.ts:151-330`)
 
 - Connects to Polymarket WebSocket at `wss://ws-subscriptions-clob.polymarket.com/ws/market`
 - Fetches market metadata from `/api/proxy/polymarket/markets` at startup
 - Subscribes to trade events for all active market assets using asset IDs
 - Processes incoming trade messages with event types "last_trade_price" and "trade"
-- Filters trades below $1,000 threshold and outcomes with price > 97% (odds > 97)
+- Filters trades below $1,000 threshold and outcomes with price > 97% (odds > 97) or 99c/100c bets
 - Maintains running statistics per market using `RunningStats` class for z-score calculation
-- Classifies anomalies as STANDARD ($8K+), WHALE ($15K+), or MEGA_WHALE based on trade value
+- Classifies anomalies as STANDARD (<$8K), WHALE ($8K+), MEGA_WHALE ($15K+), SUPER_WHALE ($50K+), or GOD_WHALE ($100K+) based on trade value
 - Applies user preference filtering before emitting anomalies to UI
 
-#### 2. Background Trade Processing (`server/worker.ts:292-387`)
+#### 2. Background Trade Processing (`server/worker.ts:138-287`)
 
-- Maintains separate WebSocket connection to Polymarket for comprehensive trade processing
-- Processes trades through `processTrade()` function that enriches data with trader intelligence
+- Maintains separate WebSocket connection to Polymarket for comprehensive trade processing (`server/worker.ts:292-373`)
+- Processes trades through `processTrade()` function (`server/worker.ts:138-287`) that enriches data with trader intelligence
 - Calls `getTraderProfile()` to fetch wallet statistics from Polymarket Data API
 - Analyzes market impact via `analyzeMarketImpact()` to detect order book sweeping
-- Persists enriched trades to PostgreSQL using Prisma ORM
+- Persists enriched trades to PostgreSQL using Prisma ORM with wallet profile upsert and trade creation
 - Broadcasts processed trades to Socket.io clients on port 3001
 - Uses mock wallet addresses for demonstration when real addresses unavailable
 
-#### 3. Frontend State Management (`lib/store.ts:86-153`)
+#### 3. Frontend State Management (`lib/store.ts:30-157`)
 
 - Uses Zustand for global state with two main stores: `usePreferencesStore` and `useMarketStore`
-- `usePreferencesStore` manages user filtering preferences with localStorage persistence
-- `useMarketStore` handles anomalies array, loading states, and top trades functionality
+- `usePreferencesStore` (`lib/store.ts:30-63`) manages user filtering preferences with localStorage persistence including showStandard, showWhale, showMegaWhale, showSuperWhale, showGodWhale, and minValueThreshold
+- `useMarketStore` (`lib/store.ts:90-157`) handles anomalies array, loading states, and top trades functionality
 - Maintains rolling 100-anomaly buffer for real-time display
 - Fetches historical data on stream start and appends real-time anomalies
-- Implements period-based top trades fetching (today, weekly, monthly, yearly, max)
+- Implements period-based top trades fetching (today, weekly, monthly, yearly, max) with default period 'weekly'
 
 #### 4. Database Schema (`prisma/schema.prisma:13-51`)
 
@@ -80,7 +80,7 @@ The system processes live trade data from Polymarket's WebSocket API, enriches t
 - Database: PostgreSQL with custom schema in `../generated` directory
 - WebSocket endpoints: Polymarket at port 443, internal Socket.io at port 3001
 - API rate limiting: 60-second cache for market metadata, 24-hour cache for trader profiles
-- Trade thresholds: $1,000 minimum, $8,000 WHALE, $15,000 MEGA_WHALE
+- Trade thresholds: $1,000 minimum, $8,000 WHALE, $15,000 MEGA_WHALE, $50,000 SUPER_WHALE, $100,000 GOD_WHALE
 
 ### Error Handling
 
@@ -113,17 +113,17 @@ The system processes live trade data from Polymarket's WebSocket API, enriches t
 - Hover overlay shows timestamp, gauge component displays odds visually
 - Side indicators (BUY/SELL) with green/red color scheme
 
-#### User Preferences (`components/user-preferences.tsx:5-123`)
-- Toggle switches for anomaly type filtering (STANDARD, WHALE, MEGA_WHALE)
+#### User Preferences (`components/user-preferences.tsx:5-162`)
+- Toggle switches for anomaly type filtering (STANDARD $0-8K, WHALE $8K-15K, MEGA_WHALE $15K-50K, SUPER_WHALE $50K-100K, GOD_WHALE $100K+)
 - Range slider for minimum value threshold ($0-$1M)
 - Auto-saves to localStorage on preference changes
-- Visual feedback with active/inactive styling
+- Visual feedback with active/inactive styling and color-coded borders
 
-#### Top Whales Leaderboard (`components/top-whales.tsx:20-105`)
+#### Top Whales Leaderboard (`components/top-whales.tsx:20-99`)
 - Period selector buttons (today, weekly, monthly, yearly, all-time)
-- Ranked list with top 100 trades by value
+- Ranked list with top trades by value (no explicit limit in UI)
 - Loading states and empty state handling
-- Rank indicators with gold/silver/bronze styling for top 3
+- Rank indicators with gold/silver/bronze styling for top 3 (yellow/gold for 1st, gray/silver for 2nd, orange/bronze for 3rd)
 
 ### API Routes
 
