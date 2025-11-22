@@ -105,13 +105,11 @@ export function AnomalyCard({ anomaly }: AnomalyCardProps) {
                 {isWhale && (
                     <>
                         {/* Deep Ocean Base */}
-                        <div className="absolute inset-0 z-0 pointer-events-none bg-[radial-gradient(circle_at_50%_120%,rgba(59,130,246,0.4)_0%,rgba(59,130,246,0.1)_40%,transparent_70%)] animate-heartbeat" />
+                        <div className="absolute inset-0 z-0 pointer-events-none bg-[radial-gradient(circle_at_50%_120%,rgba(59,130,246,0.4)_0%,rgba(59,130,246,0.1)_40%,transparent_70%)] animate-breathe" />
 
                         {/* Floating Plankton (Noise Texture) */}
                         <div className="absolute inset-0 z-0 pointer-events-none opacity-20 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] mix-blend-overlay animate-drift" />
 
-                        {/* Caustic Light Refraction */}
-                        <div className="absolute inset-0 z-0 pointer-events-none bg-[linear-gradient(110deg,transparent_40%,rgba(59,130,246,0.3)_50%,transparent_60%)] bg-[length:200%_100%] animate-shimmer-slide mix-blend-plus-lighter opacity-60" />
                     </>
                 )}
 
