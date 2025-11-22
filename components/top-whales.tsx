@@ -69,7 +69,7 @@ export function TopWhales() {
           LOADING TOP TRADES...
         </div>
       ) : topTrades.length > 0 ? (
-        <div className="space-y-4 max-h-[60vh] overflow-y-auto scrollbar-hide">
+        <div className="space-y-4 max-h-[calc(100vh-200px)] overflow-y-auto scrollbar-hide">
           {topTrades.map((anomaly, index) => (
             <div key={anomaly.id} className="relative">
               {/* Rank indicator */}
@@ -91,13 +91,6 @@ export function TopWhales() {
       ) : (
         <div className="text-center text-zinc-600 mt-20 font-mono">
           NO TRADES FOUND FOR {PERIOD_LABELS[selectedPeriod].toUpperCase()}
-        </div>
-      )}
-
-      {/* Stats */}
-      {!topTradesLoading && topTrades.length > 0 && (
-        <div className="text-center text-xs text-zinc-600 font-mono mt-6">
-          Showing {topTrades.length} trades • {PERIOD_LABELS[selectedPeriod]}
         </div>
       )}
     </div>
