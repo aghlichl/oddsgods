@@ -1,94 +1,101 @@
-## Analysis: OddsGods - Prediction Market Intelligence Platform
+## Analysis: OddsGods Trading Platform
 
 ### Overview
 
-OddsGods is a real-time prediction market aggregator that monitors Polymarket trades, identifies significant market anomalies using statistical analysis, and provides live visualization of trading activity. The application streams market data via WebSocket connections, processes trades through an intelligence pipeline that analyzes trader profiles and market impact, and displays anomalies in a slot-machine style interface with visual indicators for different anomaly types (standard, whale, mega-whale).
+OddsGods is a real-time trading intelligence platform that monitors Polymarket trades, identifies whale activity and market anomalies, and displays them through a live feed interface. The system ingests live trading data via WebSocket, analyzes it using statistical models and trader intelligence, stores it in PostgreSQL, and serves both historical and real-time anomaly data through a Next.js frontend.
 
 ### Entry Points
 
-- `app/page.tsx:10` - Home component that initializes market stream and renders anomaly feed
-- `server/worker.ts:365` - Background worker that connects to Polymarket WebSocket and processes trades
-- `app/api/proxy/polymarket/markets/route.ts:3` - API endpoint that proxies Polymarket market data
-- `app/api/history/route.ts:4` - API endpoint that retrieves enriched trade history
-- `app/api/leaderboard/route.ts:4` - API endpoint that calculates top trader rankings
+- `app/page.tsx:10` - Main Home component that initializes the market store and starts streaming
+- `app/api/history/route.ts:4` - GET endpoint for fetching historical whale trades
+- `app/api/leaderboard/route.ts:4` - GET endpoint for top trader rankings
+- `app/api/proxy/polymarket/markets/route.ts:3` - Proxy endpoint for Polymarket market metadata
+- `server/worker.ts:385` - Background worker that ingests and processes live trading data
 
 ### Core Implementation
 
-#### 1. Real-time Market Streaming (`lib/market-stream.ts:117-284`)
+#### 1. Frontend State Management (`lib/store.ts:14-50`)
 
-- Establishes WebSocket connection to `wss://ws-subscriptions-clob.polymarket.com/ws/market` at line 131
-- Subscribes to trades channel for all active market assets at line 140
-- Fetches market metadata from `/api/proxy/polymarket/markets` at line 50
-- Maps asset IDs to market outcomes and conditions at lines 92-102
-- Processes incoming trade messages at line 166, filtering for `last_trade_price` and `trade` events
-- Applies statistical analysis using `RunningStats` class at lines 225-228
-- Classifies anomalies based on trade value thresholds at lines 233-235
-- Filters out noise trades (< $50) at line 185 and 99¢/100¢ bets at lines 242-243
-- Creates anomaly objects with z-score multipliers at lines 240-259
+- Zustand store manages anomalies, volume, and ticker data
+- `loadHistory()` fetches historical anomalies from `/api/history` on initialization
+- `startStream()` connects to live WebSocket feed and adds new anomalies
+- Maintains rolling list of 100 anomalies and 20 ticker items
 
-#### 2. State Management (`lib/store.ts:12-28`)
+#### 2. Real-time Data Streaming (`lib/market-stream.ts:118-288`)
 
-- Uses Zustand for client-side state management at line 12
-- Maintains anomalies array limited to 50 items at line 17
-- Tracks total trading volume at line 18
-- Maintains ticker items for scrolling display at line 19
-- Starts WebSocket stream on initialization at lines 21-27
+- WebSocket connection to `wss://ws-subscriptions-clob.polymarket.com/ws/market`
+- Fetches market metadata from Polymarket API via proxy endpoint
+- Subscribes to trade events for all active market assets
+- Processes trades with value > $1,000, filters noise and likely outcomes
+- Calculates z-scores using running statistics per market
+- Classifies trades as STANDARD, WHALE, or MEGA_WHALE based on trade value
 
-#### 3. Trade Intelligence Pipeline (`lib/intelligence.ts:49-213`)
+#### 3. Historical Data API (`app/api/history/route.ts:4-60`)
 
-- Fetches trader profiles from Polymarket Data API at `https://data-api.polymarket.com/positions` at line 51
-- Caches profiles in Redis with 24-hour TTL at line 150
-- Checks wallet freshness (< 10 transactions) using Polygon RPC at line 102
-- Analyzes market impact by querying order book at `https://clob.polymarket.com/book` at line 168
-- Determines trader labels (Smart Whale, Degen, etc.) based on PnL and win rate at lines 75-82
+- Queries PostgreSQL for trades with `tradeValue > 10000` from last 30 minutes
+- Includes wallet profile data for each trade
+- Transforms database records to Anomaly interface format
+- Returns chronological list (newest first) for display
 
-#### 4. Database Persistence (`prisma/schema.prisma:13-51`)
+#### 4. Leaderboard API (`app/api/leaderboard/route.ts:4-58`)
 
-- Stores wallet profiles with PnL, win rate, and labels at lines 14-23
-- Maintains trade records with intelligence flags at lines 26-51
-- Uses PostgreSQL with indexed fields for timestamp and whale status
+- Aggregates wallet performance over last 7 days
+- Groups by wallet address, sums trade values and counts trades
+- Enriches with wallet profile data (labels, PnL, win rates)
+- Returns top 10 wallets by total volume
 
-#### 5. Background Processing (`server/worker.ts:138-275`)
+#### 5. Data Ingestion Worker (`server/worker.ts:292-387`)
 
-- Runs separate Socket.io server on port 3001 at line 21
-- Processes trades through intelligence pipeline at line 176-179
-- Tags trades with analysis metadata at lines 182-185
-- Persists enriched trades to database at lines 225-263
-- Broadcasts processed trades to frontend clients at line 269
+- Maintains persistent WebSocket connection to Polymarket
+- Processes incoming trade events in real-time
+- Enriches each trade with intelligence analysis (trader profiles, market impact)
+- Stores trades and wallet profiles in PostgreSQL database
+- Broadcasts enriched trades via Socket.io to connected clients
+
+#### 6. Trader Intelligence System (`lib/intelligence.ts:118-150`)
+
+- Fetches trader profiles from Polymarket Data API with 24-hour Redis caching
+- Analyzes historical PnL, win rates, and position sizes
+- Classifies traders as "Smart Whale", "Whale", "Smart Money", or "Degen"
+- Checks wallet freshness via Polygon RPC (< 10 transactions)
 
 ### Data Flow
 
-1. **Market Data Ingestion**: `server/worker.ts:284` connects to Polymarket WebSocket → fetches market metadata → subscribes to all asset trades
+1. **Market Data Fetching**: `startFirehose()` in `lib/market-stream.ts:118` fetches market metadata and establishes WebSocket connection
 
-2. **Trade Processing**: WebSocket messages arrive at `server/worker.ts:322` → parsed and filtered at lines 332-334 → enriched with intelligence at `server/worker.ts:176-179` → persisted to database at lines 225-263 → broadcast via Socket.io at line 269
+2. **Real-time Processing**: Worker in `server/worker.ts:335` receives trade events, processes via `processTrade()` function
 
-3. **Frontend Streaming**: `lib/market-stream.ts:117` establishes client WebSocket → processes anomalies at lines 170-262 → updates Zustand store at `lib/store.ts:16`
+3. **Intelligence Enrichment**: `getTraderProfile()` in `lib/intelligence.ts:118` fetches trader data with caching
 
-4. **UI Rendering**: `app/page.tsx:13` starts stream → `components/feed/anomaly-card.tsx:22` renders each anomaly → `components/feed/slot-reel.tsx:5` animates entry/exit
+4. **Database Storage**: Worker stores enriched trades and profiles in PostgreSQL via Prisma
 
-5. **Historical Data**: `app/api/history/route.ts:7` queries whale trades → transforms to frontend format at lines 21-55 → `app/api/leaderboard/route.ts:11` aggregates wallet volumes
+5. **Frontend Display**: Store loads historical data from `/api/history` and receives live updates via WebSocket
+
+6. **Socket.io Broadcasting**: Worker broadcasts enriched trades to connected frontend clients
 
 ### Key Patterns
 
-- **WebSocket Streaming**: Real-time data pipeline from Polymarket to frontend via dual WebSocket connections
-- **Intelligence Enrichment**: Multi-stage trade analysis combining statistical modeling, trader profiling, and market impact assessment
-- **Statistical Anomaly Detection**: Running z-score calculations for market-specific trade value distributions
-- **Repository Pattern**: Database access abstracted through Prisma ORM with intelligence flags
-- **State Management**: Client-side Zustand store for reactive anomaly feed updates
-- **Microservices Architecture**: Separate worker process for data processing and Socket.io server for real-time updates
+- **WebSocket Streaming**: Persistent connections for real-time data ingestion from Polymarket
+- **Statistical Analysis**: Running z-score calculations per market using Welford's algorithm
+- **Intelligence Layer**: Multi-source trader profiling with API calls and on-chain analysis
+- **State Management**: Zustand for client-side state with rolling data windows
+- **Proxy Pattern**: API routes proxy external Polymarket data to avoid CORS issues
+- **Repository Pattern**: Prisma provides database abstraction layer
+- **Observer Pattern**: Socket.io enables real-time updates between worker and frontend
 
 ### Configuration
 
-- WebSocket heartbeat intervals: 30 seconds (`server/worker.ts:304`), 5 seconds (`lib/market-stream.ts:144`)
-- Market metadata refresh: 5 minutes (`server/worker.ts:309`, `lib/market-stream.ts:148`)
-- API caching: 60 seconds for market data (`app/api/proxy/polymarket/markets/route.ts:14`)
-- Redis caching: 24 hours for trader profiles (`lib/intelligence.ts:119`)
-- Database retention: Rolling 50 anomalies in memory, unlimited persistence
+- **Database**: PostgreSQL connection via `DATABASE_URL` environment variable
+- **Redis**: Optional caching at `REDIS_URL` for trader profiles (24-hour TTL)
+- **WebSocket**: Polymarket at `wss://ws-subscriptions-clob.polymarket.com/ws/market`
+- **Socket.io**: Runs on port 3001, configurable via `process.env.FRONTEND_URL`
+- **Polygon RPC**: Wallet freshness checks via `POLYGON_RPC_URL`
+- **Trade Thresholds**: $1,000 minimum value, $8,000 whale, $15,000 mega whale
 
 ### Error Handling
 
-- WebSocket reconnection with 3-second delays at `server/worker.ts:349` and `lib/market-stream.ts:274`
-- Graceful Redis failure at `lib/intelligence.ts:19-21`
-- API error responses with HTTP status codes at `app/api/proxy/polymarket/markets/route.ts:18-22`
-- Database operation error logging at `server/worker.ts:264-266`
-- Market metadata fetch retry logic at `lib/market-stream.ts:123-127`
+- **WebSocket Reconnection**: Automatic reconnection with 3-second delay on disconnect
+- **API Resilience**: Graceful fallback when external APIs unavailable
+- **Database Errors**: Logged but don't crash the ingestion worker
+- **Cache Failures**: Redis errors logged, system continues without caching
+- **Frontend Fallback**: Displays "WAITING FOR SIGNAL..." when no data available

@@ -2,6 +2,7 @@ import { Anomaly } from "@/lib/market-stream";
 import { cn } from "@/lib/utils";
 import { Card } from "@/components/ui/card";
 import { Flame } from "lucide-react";
+import { Gauge } from "./gauge";
 
 interface AnomalyCardProps {
     anomaly: Anomaly;
@@ -26,17 +27,17 @@ export function AnomalyCard({ anomaly }: AnomalyCardProps) {
     const isWhale = type === 'WHALE';
     const isBadgeMega = zScore > 10;
     const isBadgeWhale = zScore > 2;
-    
+
     return (
         <Card className={cn(
-            "relative p-4 border-2 transition-all duration-300 group",
-            isMega ? "border-purple-500 bg-purple-950/10 shadow-xl shadow-purple-500/40 animate-pulse-glow-purple" :
-            isWhale ? "border-blue-500 bg-blue-950/10 shadow-lg shadow-blue-500/25 animate-pulse-glow" :
-            "border-zinc-500 bg-zinc-950/50"
+            "relative p-4 border-2 transition-all duration-300 group rounded-none",
+            isMega ? "border-purple-500 bg-zinc-950 shadow-[4px_4px_0px_0px_#a855f7]" :
+                isWhale ? "border-blue-500 bg-zinc-950 shadow-[4px_4px_0px_0px_#3b82f6]" :
+                    "border-zinc-700 bg-zinc-950 shadow-[4px_4px_0px_0px_#27272a]"
         )}>
             {/* Timestamp overlay - appears on hover */}
-            <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-black/50 backdrop-blur-sm rounded-lg z-10">
-                <div className="text-sm font-mono text-zinc-200 font-bold">
+            <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-black/80 z-10">
+                <div className="text-sm font-mono text-zinc-200 font-bold bg-black border border-white px-2 py-1">
                     {new Date(timestamp).toLocaleTimeString([], {
                         hour: '2-digit',
                         minute: '2-digit',
@@ -46,57 +47,43 @@ export function AnomalyCard({ anomaly }: AnomalyCardProps) {
                 </div>
             </div>
 
-            <div className="flex justify-between items-start mb-2">
-                <h3 className="text-sm font-medium text-zinc-200 line-clamp-2 flex-1 mr-4" title={title}>
-                    {title}
-                </h3>
+            <div className="grid grid-cols-[1fr_auto] gap-4">
+                {/* Top Left: Title */}
+                <div className="flex items-start">
+                    <h3 className="text-sm font-bold uppercase tracking-tight text-zinc-100 line-clamp-2" title={title}>
+                        {title}
+                    </h3>
+                </div>
+
+                {/* Top Right: Amount */}
+                <div className="flex items-start justify-end">
                     <div className={cn(
-                        "text-lg font-bold font-mono whitespace-nowrap",
-                        side === 'SELL' ? "text-red-400" : "text-emerald-400"
+                        "text-lg font-bold font-mono border-b",
+                        isMega ? "text-purple-300 border-purple-300/60" :
+                            isWhale ? "text-blue-300 border-blue-300/60" :
+                                "text-zinc-300 border-zinc-300/60"
                     )}>
                         {amount}
                     </div>
-            </div>
+                </div>
 
-            <div className="flex justify-between items-end">
-                <div className="flex flex-col">
-                    <div className="relative overflow-hidden rounded-md bg-zinc-900/60 border border-zinc-800/60 px-3 py-1.5 min-w-[120px] shadow-sm">
-                        <div 
-                            className="absolute bottom-0 left-0 h-0.5 transition-all duration-500"
-                            style={{ 
-                                width: `${odds}%`,
-                                backgroundColor: `hsl(${20 + (odds / 100) * 140}, 85%, 55%)`
-                            }} 
-                        />
-                        <div className="flex items-center justify-between gap-3">
-                            <span className="text-sm font-medium text-zinc-200 whitespace-nowrap">
-                                {outcome}
-                            </span>
-                            <span 
-                                className="text-xs font-mono font-bold transition-colors duration-300"
-                                style={{ color: `hsl(${20 + (odds / 100) * 140}, 85%, 55%)` }}
-                            >
-                                {odds}¢
-                            </span>
+                {/* Bottom Left: Outcome */}
+                <div className="flex items-end">
+                    <div className="flex flex-col justify-end">
+                        <div className={cn(
+                            "px-2 py-0.5 border-2 font-black text-sm uppercase bg-zinc-900",
+                            side === 'SELL'
+                                ? "border-[#ff3b3b] text-[#ff3b3b] shadow-[3px_3px_0px_0px_#ff3b3b]"
+                                : "border-[#21ff99] text-[#21ff99] shadow-[3px_3px_0px_0px_#21ff99]"
+                        )}>
+                            {outcome}
                         </div>
                     </div>
                 </div>
 
-                <div className="flex flex-col items-end">
-                    {isContra && (
-                        <span className="text-[10px] font-bold text-amber-500 uppercase tracking-wider mb-1">
-                            CONTRA
-                        </span>
-                    )}
-                    <div className={cn(
-                        "flex items-center gap-1 text-xs font-bold px-2 py-1 rounded-full",
-                        isBadgeMega ? "bg-purple-500/20 text-purple-400" :
-                        isBadgeWhale ? "bg-blue-500/20 text-blue-400" :
-                        "bg-zinc-500/20 text-zinc-400"
-                    )}>
-                        {isBadgeMega && <Flame size={12} />}
-                        <span>{multiplier}</span>
-                    </div>
+                {/* Bottom Right: Gauge */}
+                <div className="flex items-end justify-end">
+                    <Gauge value={odds} label={side} size={64} strokeWidth={2} />
                 </div>
             </div>
         </Card>
