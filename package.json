@@ -12,6 +12,8 @@
     "db:generate": "prisma generate"
   },
   "dependencies": {
+    "@neondatabase/serverless": "^1.0.2",
+    "@prisma/adapter-neon": "^7.0.0",
     "@prisma/adapter-pg": "^7.0.0",
     "@prisma/client": "^7.0.0",
     "@types/ws": "^8.18.1",
@@ -30,6 +32,7 @@
     "tailwind-merge": "^3.4.0",
     "tailwindcss-animate": "^1.0.7",
     "ts-node": "^10.9.2",
+    "vercel": "^48.10.10",
     "viem": "^2.39.3",
     "ws": "^8.18.3",
     "zustand": "^5.0.8"
