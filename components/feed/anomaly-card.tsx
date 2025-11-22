@@ -166,12 +166,12 @@ export function AnomalyCard({ anomaly }: AnomalyCardProps) {
                     {/* Top Right: Amount */}
                     <div className="flex items-start justify-end">
                         <div className={cn(
-                            "text-lg font-bold font-mono border-b",
-                            isGod ? "text-yellow-300 border-yellow-300/60" :
-                                isSuper ? "text-red-300 border-red-300/60" :
-                                    isMega ? "text-purple-300 border-purple-300/60" :
-                                        isWhale ? "text-blue-300 border-blue-300/60" :
-                                            "text-zinc-300 border-zinc-300/60"
+                            "px-3 py-1 rounded-md font-bold font-mono text-lg shadow-lg",
+                            isGod ? "bg-yellow-500/20 text-yellow-300 border border-yellow-500/40 shadow-yellow-500/25" :
+                                isSuper ? "bg-red-500/20 text-red-300 border border-red-500/40 shadow-red-500/25" :
+                                    isMega ? "bg-purple-500/20 text-purple-300 border border-purple-500/40 shadow-purple-500/25" :
+                                        isWhale ? "bg-blue-500/20 text-blue-300 border border-blue-500/40 shadow-blue-500/25" :
+                                            "bg-zinc-500/20 text-zinc-300 border border-zinc-500/40"
                         )}>
                             {amount}
                         </div>
