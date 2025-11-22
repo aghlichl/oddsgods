@@ -12,10 +12,7 @@ export function convertAnomalyToCardProps(anomaly: Anomaly) {
         title: anomaly.event,
         amount: `$${Math.round(anomaly.value).toLocaleString()}`,
         bet: `${anomaly.outcome} | ${anomaly.odds}¢`,
-        type: anomaly.type,
-        multiplier: anomaly.multiplier,
-        zScore: anomaly.zScore,
-        isContra: anomaly.isContra
+        type: anomaly.type
     };
 }
 

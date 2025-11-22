@@ -1,4 +1,3 @@
-import { RunningStats } from './stats';
 import { Anomaly, UserPreferences, MarketMeta, AssetOutcome, AnomalyType, PolymarketMarket } from './types';
 import { CONFIG } from './config';
 import { parseMarketData } from './polymarket';
@@ -9,9 +8,6 @@ export type { Anomaly, UserPreferences, AnomalyType };
 // Maps
 let marketsByCondition = new Map<string, MarketMeta>();
 let assetIdToOutcome = new Map<string, AssetOutcome>();
-
-const marketStats = new Map<string, RunningStats>();
-const globalStats = new RunningStats();
 
 // Helper function to check if anomaly passes user preferences
 function passesPreferences(anomaly: Anomaly, preferences?: UserPreferences): boolean {
@@ -147,19 +143,7 @@ export function startFirehose(onAnomaly: (a: Anomaly) => void, getPreferences?: 
 
                         if (!marketMeta) return;
 
-                        // 3. Get or Create Stats
-                        let stats = marketStats.get(conditionId);
-                        if (!stats) {
-                            stats = new RunningStats();
-                            marketStats.set(conditionId, stats);
-                        }
-
-                        // 4. Stats Calculation
-                        const marketZScore = stats.getZScore(value);
-                        globalStats.push(value);
-                        stats.push(value);
-
-                        // 5. Basic Classification
+                        // 3. Basic Classification
                         let type: AnomalyType = 'STANDARD';
 
                         if (value > CONFIG.THRESHOLDS.GOD_WHALE) type = 'GOD_WHALE';
@@ -167,7 +151,7 @@ export function startFirehose(onAnomaly: (a: Anomaly) => void, getPreferences?: 
                         else if (value > CONFIG.THRESHOLDS.MEGA_WHALE) type = 'MEGA_WHALE';
                         else if (value > CONFIG.THRESHOLDS.WHALE) type = 'WHALE';
 
-                        // 6. Create Anomaly
+                        // 4. Create Anomaly
                         const odds = Math.round(price * 100);
 
                         // Filter out very likely outcomes
@@ -176,9 +160,6 @@ export function startFirehose(onAnomaly: (a: Anomaly) => void, getPreferences?: 
                         // Filter out 99c and 100c bets (already covered by odds threshold mostly, but explicit check exists)
                         if (odds === 99 || odds === 100) return;
 
-                        const isContra = odds < CONFIG.CONSTANTS.MAX_ODDS_FOR_CONTRA && marketZScore > CONFIG.CONSTANTS.Z_SCORE_CONTRA_THRESHOLD;
-                        const multiplier = `x${marketZScore.toFixed(1)}`;
-
                         const anomaly: Anomaly = {
                             id: Math.random().toString(36).substring(7),
                             type,
@@ -186,10 +167,7 @@ export function startFirehose(onAnomaly: (a: Anomaly) => void, getPreferences?: 
                             outcome: outcomeLabel,
                             odds,
                             value,
-                            multiplier,
-                            zScore: marketZScore,
                             timestamp: Date.now(),
-                            isContra,
                             side
                         };
 

@@ -16,10 +16,7 @@ export interface Anomaly {
     outcome: string;
     odds: number;
     value: number;
-    multiplier: string;
-    zScore: number;
     timestamp: number;
-    isContra?: boolean;
     side: 'BUY' | 'SELL';
     // Optional fields for enriched display
     wallet_context?: {

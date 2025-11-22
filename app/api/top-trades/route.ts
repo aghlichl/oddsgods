@@ -83,10 +83,7 @@ export async function GET(request: Request) {
         outcome: trade.outcome || 'Unknown',
         odds: Math.round(price * 100),
         value,
-        multiplier: 'x1.0', // Default multiplier for historical data
-        zScore: 1.0, // Default z-score for historical data
         timestamp: trade.timestamp.getTime(),
-        isContra: false, // Default for historical data
         side: trade.side,
       };
     });
