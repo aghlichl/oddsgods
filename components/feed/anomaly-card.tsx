@@ -153,40 +153,63 @@ export function AnomalyCard({ anomaly }: AnomalyCardProps) {
                 )}
 
                 <div className={cn(
-                    "relative z-10 grid grid-cols-[1fr_auto] gap-4",
+                    "relative z-10 grid grid-cols-[1fr_auto] gap-2",
                     isSuper && "animate-heat-distortion"
                 )}>
                     {/* Top Left: Title */}
-                    <div className="flex items-start">
-                        <h3 className="text-sm font-bold uppercase tracking-tight text-zinc-100 line-clamp-2" title={title}>
+                    <div className="flex items-center">
+                        <h3 className="text-lg font-bold uppercase tracking-tight text-zinc-100 line-clamp-2 leading-tight" title={title}>
                             {title}
                         </h3>
                     </div>
 
                     {/* Top Right: Amount */}
                     <div className="flex items-start justify-end">
-                        <div className="relative">
-                            {/* Shadow Layer */}
+                        <div className="relative group">
+                            {/* Quantum Energy Core - Compact Aura */}
                             <div className={cn(
-                                "absolute -bottom-1 -right-1 font-black text-lg font-mono tabular-nums opacity-60",
-                                isGod ? "text-yellow-800" :
-                                    isSuper ? "text-red-800" :
-                                        isMega ? "text-purple-800" :
-                                            isWhale ? "text-blue-800" :
-                                                "text-zinc-700"
-                            )}>
-                                {amount}
-                            </div>
-                            {/* Main Layer */}
-                            <div className={cn(
-                                "relative font-black text-lg font-mono tabular-nums border-2 px-1",
-                                isGod ? "text-yellow-300 border-yellow-400/60 bg-yellow-900/20" :
-                                    isSuper ? "text-red-300 border-red-400/60 bg-red-900/20" :
-                                        isMega ? "text-purple-300 border-purple-400/60 bg-purple-900/20" :
-                                            isWhale ? "text-blue-300 border-blue-400/60 bg-blue-900/20" :
-                                                "text-zinc-300 border-zinc-400/40 bg-zinc-800/30"
-                            )}>
-                                {amount}
+                                "absolute -inset-1 rounded-full blur-sm opacity-50",
+                                isGod ? "bg-[radial-gradient(circle,rgba(251,191,36,0.7)_0%,rgba(251,191,36,0.3)_70%,transparent_100%)]" :
+                                    isSuper ? "bg-[radial-gradient(circle,rgba(239,68,68,0.7)_0%,rgba(239,68,68,0.3)_70%,transparent_100%)]" :
+                                        isMega ? "bg-[radial-gradient(circle,rgba(168,85,247,0.7)_0%,rgba(168,85,247,0.3)_70%,transparent_100%)]" :
+                                            isWhale ? "bg-[radial-gradient(circle,rgba(59,130,246,0.7)_0%,rgba(59,130,246,0.3)_70%,transparent_100%)]" :
+                                                "bg-[radial-gradient(circle,rgba(161,161,170,0.5)_0%,rgba(161,161,170,0.2)_70%,transparent_100%)]"
+                            )} />
+
+                            {/* Holographic Display Panel */}
+                            <div className="relative bg-black/85 backdrop-blur-sm border border-white/25 rounded-md px-2 py-0.5 shadow-lg">
+                                {/* Scan Lines */}
+                                <div className="absolute inset-0 bg-gradient-to-b from-transparent via-white/8 to-transparent bg-[length:100%_3px] animate-pulse opacity-40" />
+
+                                {/* Amount Display with Digital Effect */}
+                                <div className="relative flex items-center gap-0.5">
+                                    {/* Currency Symbol */}
+                                    <span className={cn(
+                                        "text-xs font-bold",
+                                        isGod ? "text-yellow-400" :
+                                            isSuper ? "text-red-400" :
+                                                isMega ? "text-purple-400" :
+                                                    isWhale ? "text-blue-400" :
+                                                        "text-zinc-400"
+                                    )}>
+                                        $
+                                    </span>
+
+                                    {/* Main Amount with Matrix-style effect */}
+                                    <span className={cn(
+                                        "font-mono font-black text-lg tabular-nums tracking-wide relative",
+                                        isGod ? "text-yellow-100 drop-shadow-[0_0_8px_rgba(251,191,36,0.9)]" :
+                                            isSuper ? "text-red-100 drop-shadow-[0_0_8px_rgba(239,68,68,0.9)]" :
+                                                isMega ? "text-purple-100 drop-shadow-[0_0_8px_rgba(168,85,247,0.9)]" :
+                                                    isWhale ? "text-blue-100 drop-shadow-[0_0_8px_rgba(59,130,246,0.9)]" :
+                                                        "text-zinc-100 drop-shadow-[0_0_5px_rgba(161,161,170,0.7)]"
+                                    )}>
+                                        {Math.round(value).toLocaleString()}
+                                    </span>
+
+                                    {/* Digital Noise Overlay */}
+                                    <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgdmlld0JveD0iMCAwIDEwMCAxMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGZpbGw9IiNmZmYiIG9wYWNpdHk9IjAuMDMiLz4KPHJlY3QgeD0iMyIgeT0iMyIgd2lkdGg9IjEiIGhlaWdodD0iMSIgZmlsbD0iI2ZmZiIgb3BhY2l0eT0iMC4wNSIvPgo8cmVjdCB4PSI2IiB5PSIyIiB3aWR0aD0iMSIgaGVpZ2h0PSIxIiBmaWxsPSIjZmZmIiBvcGFjaXR5PSIwLjA4Ii8+Cjwvc3ZnPg==')] opacity-15 animate-pulse" />
+                                </div>
                             </div>
                         </div>
                     </div>
