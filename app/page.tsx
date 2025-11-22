@@ -9,6 +9,7 @@ import { AnomalyCard } from "@/components/feed/anomaly-card";
 import { BottomCarousel } from "@/components/bottom-carousel";
 import { UserPreferences } from "@/components/user-preferences";
 import { TopWhales } from "@/components/top-whales";
+import { SearchButton } from "@/components/search-button";
 import { motion } from "framer-motion";
 
 const PAGES = [
@@ -43,6 +44,7 @@ export default function Home() {
   const { anomalies, startStream, isLoading } = useMarketStore();
   const { preferences, loadPreferences } = usePreferencesStore();
   const [currentPage, setCurrentPage] = useState(1);
+  const [searchQuery, setSearchQuery] = useState("");
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
@@ -50,8 +52,30 @@ export default function Home() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  // Filter anomalies based on current preferences
-  const filteredAnomalies = anomalies.filter(anomaly => passesPreferences(anomaly, preferences));
+  // Intelligent search function
+  const intelligentSearch = (anomaly: Anomaly, query: string): boolean => {
+    if (!query.trim()) return true;
+
+    const searchTerm = query.toLowerCase().trim();
+    const eventName = anomaly.event.toLowerCase();
+    const outcome = anomaly.outcome.toLowerCase();
+
+    // Exact match gets highest priority
+    if (eventName.includes(searchTerm) || outcome.includes(searchTerm)) {
+      return true;
+    }
+
+    // Fuzzy matching - check for partial words
+    const words = searchTerm.split(/\s+/);
+    return words.some(word =>
+      eventName.includes(word) || outcome.includes(word)
+    );
+  };
+
+  // Filter anomalies based on preferences AND search query
+  const filteredAnomalies = anomalies
+    .filter(anomaly => passesPreferences(anomaly, preferences))
+    .filter(anomaly => intelligentSearch(anomaly, searchQuery));
 
   useEffect(() => {
     // Load user preferences on mount
@@ -87,7 +111,7 @@ export default function Home() {
 
               {filteredAnomalies.length === 0 && !isLoading && (
                 <div className="text-center text-zinc-600 mt-20 font-mono">
-                  WAITING FOR SIGNAL...
+                  {searchQuery ? `NO RESULTS FOR "${searchQuery.toUpperCase()}"` : "WAITING FOR SIGNAL..."}
                 </div>
               )}
 
@@ -129,6 +153,9 @@ export default function Home() {
         {/* Right side - Minimal version */}
         <div className="text-[8px] font-mono text-zinc-700">v1.0</div>
       </div>
+
+      {/* Floating Search Button */}
+      {currentPage === 1 && <SearchButton onSearch={setSearchQuery} />}
     </main>
   );
 }
