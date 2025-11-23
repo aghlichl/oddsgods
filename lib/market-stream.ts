@@ -160,6 +160,9 @@ export function startFirehose(onAnomaly: (a: Anomaly) => void, getPreferences?: 
                         // Filter out 99c and 100c bets (already covered by odds threshold mostly, but explicit check exists)
                         if (odds === 99 || odds === 100) return;
 
+                        // Extract wallet address if available
+                        const walletAddress = (trade.user || trade.maker || trade.taker || trade.wallet || '').toLowerCase();
+
                         const anomaly: Anomaly = {
                             id: Math.random().toString(36).substring(7),
                             type,
@@ -168,7 +171,14 @@ export function startFirehose(onAnomaly: (a: Anomaly) => void, getPreferences?: 
                             odds,
                             value,
                             timestamp: Date.now(),
-                            side
+                            side,
+                            wallet_context: walletAddress ? {
+                                address: walletAddress,
+                                label: 'Unknown',
+                                pnl_all_time: '...',
+                                win_rate: '...',
+                                is_fresh_wallet: false
+                            } : undefined
                         };
 
                         // console.log('[Firehose] Enriched Trade:', anomaly);

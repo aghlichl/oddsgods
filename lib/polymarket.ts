@@ -21,7 +21,7 @@ export async function fetchMarketsFromGamma(init?: RequestInit): Promise<Polymar
             ...init?.headers
         }
     });
-    
+
     if (!response.ok) {
         throw new Error(`Failed to fetch markets: ${response.statusText}`);
     }
@@ -59,7 +59,7 @@ export function parseMarketData(markets: PolymarketMarket[]): {
             }
 
             const eventTitle = market.events && market.events.length > 0 ? market.events[0].title : 'Unknown Event';
-            
+
             const meta: MarketMeta = {
                 conditionId: market.conditionId,
                 eventId: market.events && market.events.length > 0 ? market.events[0].id : '',

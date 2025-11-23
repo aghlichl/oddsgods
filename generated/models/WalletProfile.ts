@@ -462,17 +462,41 @@ export type WalletProfileSumOrderByAggregateInput = {
   maxTradeValue?: Prisma.SortOrder
 }
 
-export type WalletProfileNullableScalarRelationFilter = {
-  is?: Prisma.WalletProfileWhereInput | null
-  isNot?: Prisma.WalletProfileWhereInput | null
+export type WalletProfileScalarRelationFilter = {
+  is?: Prisma.WalletProfileWhereInput
+  isNot?: Prisma.WalletProfileWhereInput
+}
+
+export type StringFieldUpdateOperationsInput = {
+  set?: string
 }
 
 export type NullableStringFieldUpdateOperationsInput = {
   set?: string | null
 }
 
+export type FloatFieldUpdateOperationsInput = {
+  set?: number
+  increment?: number
+  decrement?: number
+  multiply?: number
+  divide?: number
+}
+
 export type BoolFieldUpdateOperationsInput = {
   set?: boolean
+}
+
+export type IntFieldUpdateOperationsInput = {
+  set?: number
+  increment?: number
+  decrement?: number
+  multiply?: number
+  divide?: number
+}
+
+export type DateTimeFieldUpdateOperationsInput = {
+  set?: Date | string
 }
 
 export type WalletProfileCreateNestedOneWithoutTradesInput = {
@@ -481,12 +505,10 @@ export type WalletProfileCreateNestedOneWithoutTradesInput = {
   connect?: Prisma.WalletProfileWhereUniqueInput
 }
 
-export type WalletProfileUpdateOneWithoutTradesNestedInput = {
+export type WalletProfileUpdateOneRequiredWithoutTradesNestedInput = {
   create?: Prisma.XOR<Prisma.WalletProfileCreateWithoutTradesInput, Prisma.WalletProfileUncheckedCreateWithoutTradesInput>
   connectOrCreate?: Prisma.WalletProfileCreateOrConnectWithoutTradesInput
   upsert?: Prisma.WalletProfileUpsertWithoutTradesInput
-  disconnect?: Prisma.WalletProfileWhereInput | boolean
-  delete?: Prisma.WalletProfileWhereInput | boolean
   connect?: Prisma.WalletProfileWhereUniqueInput
   update?: Prisma.XOR<Prisma.XOR<Prisma.WalletProfileUpdateToOneWithWhereWithoutTradesInput, Prisma.WalletProfileUpdateWithoutTradesInput>, Prisma.WalletProfileUncheckedUpdateWithoutTradesInput>
 }

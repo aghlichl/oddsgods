@@ -16,11 +16,13 @@ import type * as Prisma from "./prismaNamespace"
 
 
 const config: runtime.GetPrismaClientConfig = {
-  "previewFeatures": [],
+  "previewFeatures": [
+    "driverAdapters"
+  ],
   "clientVersion": "7.0.0",
   "engineVersion": "0c19ccc313cf9911a90d99d2ac2eb0280c76c513",
   "activeProvider": "postgresql",
-  "inlineSchema": "// This is your Prisma schema file,\n// learn more about it in the docs: https://pris.ly/d/prisma-schema\n\ngenerator client {\n  provider = \"prisma-client\"\n  output   = \"../generated\"\n}\n\ndatasource db {\n  provider = \"postgresql\"\n}\n\n// New Core Identity\nmodel TraderIdentity {\n  id String @id @default(cuid())\n\n  // Whale Scoring & Classification\n  tier  WhaleTier @default(STANDARD)\n  score Float     @default(0) // 0-1000\n\n  // Aggregate Stats (Rolling / Persisted)\n  totalVolume  Float @default(0)\n  maxTradeSize Float @default(0)\n  totalPnl     Float @default(0)\n  winRate      Float @default(0)\n  txCount      Int   @default(0)\n\n  // Metadata\n  firstSeenAt  DateTime @default(now())\n  lastActiveAt DateTime @default(now())\n\n  // Relations\n  identifiers RawIdentifier[]\n  trades      Trade[]\n\n  @@index([score])\n  @@index([tier])\n  @@map(\"trader_identities\")\n}\n\n// The \"Access Methods\"\nmodel RawIdentifier {\n  id   String         @id // The raw value: \"0x...\", \"subaccount_123\"\n  type IdentifierType // WALLET, SUBACCOUNT, PROXY, MAKER_ID\n\n  // Relation to the abstract Identity\n  traderIdentityId String\n  traderIdentity   TraderIdentity @relation(fields: [traderIdentityId], references: [id])\n\n  firstSeenAt DateTime @default(now())\n  lastUsedAt  DateTime @default(now())\n\n  @@map(\"raw_identifiers\")\n}\n\n// Legacy WalletProfile (Deprecated, keeping for migration safety if needed, or we can drop it)\nmodel WalletProfile {\n  id            String   @id // wallet address\n  label         String? // e.g., \"Smart Whale\", \"Degen\"\n  totalPnl      Float    @default(0) // Total PnL in USD\n  winRate       Float    @default(0) // Win rate as decimal (0.0 to 1.0)\n  isFresh       Boolean  @default(false) // < 10 transactions\n  txCount       Int      @default(0)\n  maxTradeValue Float    @default(0)\n  activityLevel String? // \"LOW\", \"MEDIUM\", \"HIGH\"\n  lastUpdated   DateTime @default(now())\n  trades        Trade[]\n\n  @@map(\"wallet_profiles\")\n}\n\nmodel Trade {\n  id String @id @default(cuid())\n\n  // Market Data\n  assetId     String\n  conditionId String?\n  question    String?\n  outcome     String?\n\n  // Trade Specifics\n  side       String // \"BUY\" or \"SELL\"\n  size       Float\n  price      Float\n  tradeValue Float\n  timestamp  DateTime\n\n  // Identity Linkage\n  // We keep the raw address for audit, but link to Identity for logic\n  walletAddress String // Keeping this for now as the \"raw\" value, will map to RawIdentifier.id\n  walletProfile WalletProfile? @relation(fields: [walletAddress], references: [id])\n\n  // New Relations (Nullable for backfill)\n  rawIdentifierId  String?\n  traderIdentityId String?\n\n  traderIdentity TraderIdentity? @relation(fields: [traderIdentityId], references: [id])\n\n  // Intelligence Flags (Snapshot at time of trade)\n  isWhale      Boolean @default(false)\n  isSmartMoney Boolean @default(false)\n  isFresh      Boolean @default(false)\n  isSweeper    Boolean @default(false)\n  isInsider    Boolean @default(false)\n\n  @@index([traderIdentityId])\n  @@index([timestamp])\n  @@index([isWhale, timestamp])\n  @@map(\"trades\")\n}\n\nenum WhaleTier {\n  STANDARD\n  WHALE\n  MEGA_WHALE\n  SUPER_WHALE\n  GOD_WHALE\n}\n\nenum IdentifierType {\n  WALLET\n  SUBACCOUNT\n  PROXY\n  OTHER\n}\n",
+  "inlineSchema": "// This is your Prisma schema file,\n// learn more about it in the docs: https://pris.ly/d/prisma-schema\n\ngenerator client {\n  provider        = \"prisma-client\"\n  output          = \"../generated\"\n  previewFeatures = [\"driverAdapters\"]\n}\n\ndatasource db {\n  provider = \"postgresql\"\n}\n\nmodel WalletProfile {\n  id            String   @id // wallet address\n  label         String? // e.g., \"Smart Whale\", \"Degen\"\n  totalPnl      Float    @default(0) // Total PnL in USD\n  winRate       Float    @default(0) // Win rate as decimal (0.0 to 1.0)\n  isFresh       Boolean  @default(false) // < 10 transactions\n  txCount       Int      @default(0)\n  maxTradeValue Float    @default(0)\n  activityLevel String? // \"LOW\", \"MEDIUM\", \"HIGH\"\n  lastUpdated   DateTime @default(now())\n  trades        Trade[]\n\n  @@map(\"wallet_profiles\")\n}\n\nmodel Trade {\n  id            String        @id @default(cuid())\n  assetId       String\n  side          String // \"BUY\" or \"SELL\"\n  size          Float\n  price         Float\n  tradeValue    Float // size * price\n  timestamp     DateTime\n  walletAddress String\n  walletProfile WalletProfile @relation(fields: [walletAddress], references: [id])\n\n  // Intelligence flags\n  isWhale      Boolean @default(false)\n  isSmartMoney Boolean @default(false)\n  isFresh      Boolean @default(false)\n  isSweeper    Boolean @default(false)\n\n  // Market context\n  conditionId String?\n  outcome     String?\n  question    String?\n\n  @@index([walletAddress])\n  @@index([timestamp])\n  @@index([isWhale, timestamp])\n  @@map(\"trades\")\n}\n",
   "runtimeDataModel": {
     "models": {},
     "enums": {},
@@ -28,7 +30,7 @@ const config: runtime.GetPrismaClientConfig = {
   }
 }
 
-config.runtimeDataModel = JSON.parse("{\"models\":{\"TraderIdentity\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"tier\",\"kind\":\"enum\",\"type\":\"WhaleTier\"},{\"name\":\"score\",\"kind\":\"scalar\",\"type\":\"Float\"},{\"name\":\"totalVolume\",\"kind\":\"scalar\",\"type\":\"Float\"},{\"name\":\"maxTradeSize\",\"kind\":\"scalar\",\"type\":\"Float\"},{\"name\":\"totalPnl\",\"kind\":\"scalar\",\"type\":\"Float\"},{\"name\":\"winRate\",\"kind\":\"scalar\",\"type\":\"Float\"},{\"name\":\"txCount\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"firstSeenAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"lastActiveAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"identifiers\",\"kind\":\"object\",\"type\":\"RawIdentifier\",\"relationName\":\"RawIdentifierToTraderIdentity\"},{\"name\":\"trades\",\"kind\":\"object\",\"type\":\"Trade\",\"relationName\":\"TradeToTraderIdentity\"}],\"dbName\":\"trader_identities\"},\"RawIdentifier\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"type\",\"kind\":\"enum\",\"type\":\"IdentifierType\"},{\"name\":\"traderIdentityId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"traderIdentity\",\"kind\":\"object\",\"type\":\"TraderIdentity\",\"relationName\":\"RawIdentifierToTraderIdentity\"},{\"name\":\"firstSeenAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"lastUsedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"}],\"dbName\":\"raw_identifiers\"},\"WalletProfile\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"label\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"totalPnl\",\"kind\":\"scalar\",\"type\":\"Float\"},{\"name\":\"winRate\",\"kind\":\"scalar\",\"type\":\"Float\"},{\"name\":\"isFresh\",\"kind\":\"scalar\",\"type\":\"Boolean\"},{\"name\":\"txCount\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"maxTradeValue\",\"kind\":\"scalar\",\"type\":\"Float\"},{\"name\":\"activityLevel\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"lastUpdated\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"trades\",\"kind\":\"object\",\"type\":\"Trade\",\"relationName\":\"TradeToWalletProfile\"}],\"dbName\":\"wallet_profiles\"},\"Trade\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"assetId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"conditionId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"question\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"outcome\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"side\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"size\",\"kind\":\"scalar\",\"type\":\"Float\"},{\"name\":\"price\",\"kind\":\"scalar\",\"type\":\"Float\"},{\"name\":\"tradeValue\",\"kind\":\"scalar\",\"type\":\"Float\"},{\"name\":\"timestamp\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"walletAddress\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"walletProfile\",\"kind\":\"object\",\"type\":\"WalletProfile\",\"relationName\":\"TradeToWalletProfile\"},{\"name\":\"rawIdentifierId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"traderIdentityId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"traderIdentity\",\"kind\":\"object\",\"type\":\"TraderIdentity\",\"relationName\":\"TradeToTraderIdentity\"},{\"name\":\"isWhale\",\"kind\":\"scalar\",\"type\":\"Boolean\"},{\"name\":\"isSmartMoney\",\"kind\":\"scalar\",\"type\":\"Boolean\"},{\"name\":\"isFresh\",\"kind\":\"scalar\",\"type\":\"Boolean\"},{\"name\":\"isSweeper\",\"kind\":\"scalar\",\"type\":\"Boolean\"},{\"name\":\"isInsider\",\"kind\":\"scalar\",\"type\":\"Boolean\"}],\"dbName\":\"trades\"}},\"enums\":{},\"types\":{}}")
+config.runtimeDataModel = JSON.parse("{\"models\":{\"WalletProfile\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"label\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"totalPnl\",\"kind\":\"scalar\",\"type\":\"Float\"},{\"name\":\"winRate\",\"kind\":\"scalar\",\"type\":\"Float\"},{\"name\":\"isFresh\",\"kind\":\"scalar\",\"type\":\"Boolean\"},{\"name\":\"txCount\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"maxTradeValue\",\"kind\":\"scalar\",\"type\":\"Float\"},{\"name\":\"activityLevel\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"lastUpdated\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"trades\",\"kind\":\"object\",\"type\":\"Trade\",\"relationName\":\"TradeToWalletProfile\"}],\"dbName\":\"wallet_profiles\"},\"Trade\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"assetId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"side\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"size\",\"kind\":\"scalar\",\"type\":\"Float\"},{\"name\":\"price\",\"kind\":\"scalar\",\"type\":\"Float\"},{\"name\":\"tradeValue\",\"kind\":\"scalar\",\"type\":\"Float\"},{\"name\":\"timestamp\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"walletAddress\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"walletProfile\",\"kind\":\"object\",\"type\":\"WalletProfile\",\"relationName\":\"TradeToWalletProfile\"},{\"name\":\"isWhale\",\"kind\":\"scalar\",\"type\":\"Boolean\"},{\"name\":\"isSmartMoney\",\"kind\":\"scalar\",\"type\":\"Boolean\"},{\"name\":\"isFresh\",\"kind\":\"scalar\",\"type\":\"Boolean\"},{\"name\":\"isSweeper\",\"kind\":\"scalar\",\"type\":\"Boolean\"},{\"name\":\"conditionId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"outcome\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"question\",\"kind\":\"scalar\",\"type\":\"String\"}],\"dbName\":\"trades\"}},\"enums\":{},\"types\":{}}")
 
 async function decodeBase64AsWasm(wasmBase64: string): Promise<WebAssembly.Module> {
   const { Buffer } = await import('node:buffer')
@@ -58,8 +60,8 @@ export interface PrismaClientConstructor {
    * @example
    * ```
    * const prisma = new PrismaClient()
-   * // Fetch zero or more TraderIdentities
-   * const traderIdentities = await prisma.traderIdentity.findMany()
+   * // Fetch zero or more WalletProfiles
+   * const walletProfiles = await prisma.walletProfile.findMany()
    * ```
    * 
    * Read more in our [docs](https://www.prisma.io/docs/reference/tools-and-interfaces/prisma-client).
@@ -80,8 +82,8 @@ export interface PrismaClientConstructor {
  * @example
  * ```
  * const prisma = new PrismaClient()
- * // Fetch zero or more TraderIdentities
- * const traderIdentities = await prisma.traderIdentity.findMany()
+ * // Fetch zero or more WalletProfiles
+ * const walletProfiles = await prisma.walletProfile.findMany()
  * ```
  * 
  * Read more in our [docs](https://www.prisma.io/docs/reference/tools-and-interfaces/prisma-client).
@@ -175,26 +177,6 @@ export interface PrismaClient<
   }>>
 
       /**
-   * `prisma.traderIdentity`: Exposes CRUD operations for the **TraderIdentity** model.
-    * Example usage:
-    * ```ts
-    * // Fetch zero or more TraderIdentities
-    * const traderIdentities = await prisma.traderIdentity.findMany()
-    * ```
-    */
-  get traderIdentity(): Prisma.TraderIdentityDelegate<ExtArgs, { omit: OmitOpts }>;
-
-  /**
-   * `prisma.rawIdentifier`: Exposes CRUD operations for the **RawIdentifier** model.
-    * Example usage:
-    * ```ts
-    * // Fetch zero or more RawIdentifiers
-    * const rawIdentifiers = await prisma.rawIdentifier.findMany()
-    * ```
-    */
-  get rawIdentifier(): Prisma.RawIdentifierDelegate<ExtArgs, { omit: OmitOpts }>;
-
-  /**
    * `prisma.walletProfile`: Exposes CRUD operations for the **WalletProfile** model.
     * Example usage:
     * ```ts

@@ -51,8 +51,6 @@ export const AnyNull = runtime.AnyNull
 
 
 export const ModelName = {
-  TraderIdentity: 'TraderIdentity',
-  RawIdentifier: 'RawIdentifier',
   WalletProfile: 'WalletProfile',
   Trade: 'Trade'
 } as const
@@ -73,33 +71,6 @@ export const TransactionIsolationLevel = {
 export type TransactionIsolationLevel = (typeof TransactionIsolationLevel)[keyof typeof TransactionIsolationLevel]
 
 
-export const TraderIdentityScalarFieldEnum = {
-  id: 'id',
-  tier: 'tier',
-  score: 'score',
-  totalVolume: 'totalVolume',
-  maxTradeSize: 'maxTradeSize',
-  totalPnl: 'totalPnl',
-  winRate: 'winRate',
-  txCount: 'txCount',
-  firstSeenAt: 'firstSeenAt',
-  lastActiveAt: 'lastActiveAt'
-} as const
-
-export type TraderIdentityScalarFieldEnum = (typeof TraderIdentityScalarFieldEnum)[keyof typeof TraderIdentityScalarFieldEnum]
-
-
-export const RawIdentifierScalarFieldEnum = {
-  id: 'id',
-  type: 'type',
-  traderIdentityId: 'traderIdentityId',
-  firstSeenAt: 'firstSeenAt',
-  lastUsedAt: 'lastUsedAt'
-} as const
-
-export type RawIdentifierScalarFieldEnum = (typeof RawIdentifierScalarFieldEnum)[keyof typeof RawIdentifierScalarFieldEnum]
-
-
 export const WalletProfileScalarFieldEnum = {
   id: 'id',
   label: 'label',
@@ -118,22 +89,19 @@ export type WalletProfileScalarFieldEnum = (typeof WalletProfileScalarFieldEnum)
 export const TradeScalarFieldEnum = {
   id: 'id',
   assetId: 'assetId',
-  conditionId: 'conditionId',
-  question: 'question',
-  outcome: 'outcome',
   side: 'side',
   size: 'size',
   price: 'price',
   tradeValue: 'tradeValue',
   timestamp: 'timestamp',
   walletAddress: 'walletAddress',
-  rawIdentifierId: 'rawIdentifierId',
-  traderIdentityId: 'traderIdentityId',
   isWhale: 'isWhale',
   isSmartMoney: 'isSmartMoney',
   isFresh: 'isFresh',
   isSweeper: 'isSweeper',
-  isInsider: 'isInsider'
+  conditionId: 'conditionId',
+  outcome: 'outcome',
+  question: 'question'
 } as const
 
 export type TradeScalarFieldEnum = (typeof TradeScalarFieldEnum)[keyof typeof TradeScalarFieldEnum]

@@ -8,8 +8,6 @@
  *
  * 🟢 You can import this file directly.
  */
-export type * from './models/TraderIdentity'
-export type * from './models/RawIdentifier'
 export type * from './models/WalletProfile'
 export type * from './models/Trade'
 export type * from './commonInputTypes'

@@ -22,10 +22,11 @@ redis.connect().catch(() => {
 });
 
 // Polygon RPC client for checking wallet freshness
-const publicClient = createPublicClient({
+export const publicClient = createPublicClient({
   chain: polygon,
   transport: http(process.env.POLYGON_RPC_URL || 'https://polygon-rpc.com'),
 });
+
 
 export interface TraderProfile {
   address: string;
@@ -223,4 +224,47 @@ export async function analyzeMarketImpact(assetId: string, tradeSize: number, si
     return { isSweeper: false, liquidityAvailable: 0, priceImpact: 0 };
   }
 }
+
+/**
+ * Extracts wallet addresses from transaction logs
+ * Looks for OrderFilled event signature: 0xd0a08e8c493f9c94f29311604c9de1b4e8c8d4c06bd0c789af57f2d65bfec0f6
+ */
+export async function getWalletsFromTx(txHash: string): Promise<{ maker: string | null; taker: string | null }> {
+  try {
+    const receipt = await publicClient.getTransactionReceipt({
+      hash: txHash as `0x${string}`,
+    });
+
+    // Find the OrderFilled event
+    // Signature: 0xd0a08e8c493f9c94f29311604c9de1b4e8c8d4c06bd0c789af57f2d65bfec0f6
+    const orderFilledLog = receipt.logs.find(log =>
+      log.topics[0] === '0xd0a08e8c493f9c94f29311604c9de1b4e8c8d4c06bd0c789af57f2d65bfec0f6'
+    );
+
+    if (orderFilledLog && orderFilledLog.topics.length >= 4) {
+      // Based on observation:
+      // Topic 1: ?
+      // Topic 2: Address 1 (Maker or Taker)
+      // Topic 3: Address 2 (Maker or Taker)
+
+      // We'll return both and let the worker decide or use both
+      // Usually the taker is the one who sent the tx, but in a relayer setup it might differ.
+      // For now, we just return them.
+
+      const address1 = orderFilledLog.topics[2] ? `0x${orderFilledLog.topics[2].slice(26)}` : null;
+      const address2 = orderFilledLog.topics[3] ? `0x${orderFilledLog.topics[3].slice(26)}` : null;
+
+      return {
+        maker: address1,
+        taker: address2
+      };
+    }
+
+    return { maker: null, taker: null };
+  } catch (error) {
+    console.error(`[Intelligence] Error fetching tx ${txHash}:`, error);
+    return { maker: null, taker: null };
+  }
+}
+
 

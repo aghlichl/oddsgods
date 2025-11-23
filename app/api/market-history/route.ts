@@ -35,7 +35,7 @@ export async function GET(request: Request) {
         if (walletAddress) {
             walletHistory = await prisma.trade.findMany({
                 where: {
-                    walletAddress: walletAddress,
+                    walletAddress: walletAddress.toLowerCase(),
                 },
                 orderBy: {
                     timestamp: 'desc',

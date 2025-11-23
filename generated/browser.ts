@@ -18,16 +18,6 @@ export { Prisma }
 export * as $Enums from './enums'
 export * from './enums';
 /**
- * Model TraderIdentity
- * 
- */
-export type TraderIdentity = Prisma.TraderIdentityModel
-/**
- * Model RawIdentifier
- * 
- */
-export type RawIdentifier = Prisma.RawIdentifierModel
-/**
  * Model WalletProfile
  * 
  */

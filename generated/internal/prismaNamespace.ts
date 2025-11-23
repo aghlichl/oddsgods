@@ -384,8 +384,6 @@ type FieldRefInputType<Model, FieldType> = Model extends never ? never : FieldRe
 
 
 export const ModelName = {
-  TraderIdentity: 'TraderIdentity',
-  RawIdentifier: 'RawIdentifier',
   WalletProfile: 'WalletProfile',
   Trade: 'Trade'
 } as const
@@ -403,158 +401,10 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "traderIdentity" | "rawIdentifier" | "walletProfile" | "trade"
+    modelProps: "walletProfile" | "trade"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
-    TraderIdentity: {
-      payload: Prisma.$TraderIdentityPayload<ExtArgs>
-      fields: Prisma.TraderIdentityFieldRefs
-      operations: {
-        findUnique: {
-          args: Prisma.TraderIdentityFindUniqueArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$TraderIdentityPayload> | null
-        }
-        findUniqueOrThrow: {
-          args: Prisma.TraderIdentityFindUniqueOrThrowArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$TraderIdentityPayload>
-        }
-        findFirst: {
-          args: Prisma.TraderIdentityFindFirstArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$TraderIdentityPayload> | null
-        }
-        findFirstOrThrow: {
-          args: Prisma.TraderIdentityFindFirstOrThrowArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$TraderIdentityPayload>
-        }
-        findMany: {
-          args: Prisma.TraderIdentityFindManyArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$TraderIdentityPayload>[]
-        }
-        create: {
-          args: Prisma.TraderIdentityCreateArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$TraderIdentityPayload>
-        }
-        createMany: {
-          args: Prisma.TraderIdentityCreateManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        createManyAndReturn: {
-          args: Prisma.TraderIdentityCreateManyAndReturnArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$TraderIdentityPayload>[]
-        }
-        delete: {
-          args: Prisma.TraderIdentityDeleteArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$TraderIdentityPayload>
-        }
-        update: {
-          args: Prisma.TraderIdentityUpdateArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$TraderIdentityPayload>
-        }
-        deleteMany: {
-          args: Prisma.TraderIdentityDeleteManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        updateMany: {
-          args: Prisma.TraderIdentityUpdateManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        updateManyAndReturn: {
-          args: Prisma.TraderIdentityUpdateManyAndReturnArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$TraderIdentityPayload>[]
-        }
-        upsert: {
-          args: Prisma.TraderIdentityUpsertArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$TraderIdentityPayload>
-        }
-        aggregate: {
-          args: Prisma.TraderIdentityAggregateArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.AggregateTraderIdentity>
-        }
-        groupBy: {
-          args: Prisma.TraderIdentityGroupByArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.TraderIdentityGroupByOutputType>[]
-        }
-        count: {
-          args: Prisma.TraderIdentityCountArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.TraderIdentityCountAggregateOutputType> | number
-        }
-      }
-    }
-    RawIdentifier: {
-      payload: Prisma.$RawIdentifierPayload<ExtArgs>
-      fields: Prisma.RawIdentifierFieldRefs
-      operations: {
-        findUnique: {
-          args: Prisma.RawIdentifierFindUniqueArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$RawIdentifierPayload> | null
-        }
-        findUniqueOrThrow: {
-          args: Prisma.RawIdentifierFindUniqueOrThrowArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$RawIdentifierPayload>
-        }
-        findFirst: {
-          args: Prisma.RawIdentifierFindFirstArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$RawIdentifierPayload> | null
-        }
-        findFirstOrThrow: {
-          args: Prisma.RawIdentifierFindFirstOrThrowArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$RawIdentifierPayload>
-        }
-        findMany: {
-          args: Prisma.RawIdentifierFindManyArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$RawIdentifierPayload>[]
-        }
-        create: {
-          args: Prisma.RawIdentifierCreateArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$RawIdentifierPayload>
-        }
-        createMany: {
-          args: Prisma.RawIdentifierCreateManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        createManyAndReturn: {
-          args: Prisma.RawIdentifierCreateManyAndReturnArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$RawIdentifierPayload>[]
-        }
-        delete: {
-          args: Prisma.RawIdentifierDeleteArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$RawIdentifierPayload>
-        }
-        update: {
-          args: Prisma.RawIdentifierUpdateArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$RawIdentifierPayload>
-        }
-        deleteMany: {
-          args: Prisma.RawIdentifierDeleteManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        updateMany: {
-          args: Prisma.RawIdentifierUpdateManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        updateManyAndReturn: {
-          args: Prisma.RawIdentifierUpdateManyAndReturnArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$RawIdentifierPayload>[]
-        }
-        upsert: {
-          args: Prisma.RawIdentifierUpsertArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$RawIdentifierPayload>
-        }
-        aggregate: {
-          args: Prisma.RawIdentifierAggregateArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.AggregateRawIdentifier>
-        }
-        groupBy: {
-          args: Prisma.RawIdentifierGroupByArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.RawIdentifierGroupByOutputType>[]
-        }
-        count: {
-          args: Prisma.RawIdentifierCountArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.RawIdentifierCountAggregateOutputType> | number
-        }
-      }
-    }
     WalletProfile: {
       payload: Prisma.$WalletProfilePayload<ExtArgs>
       fields: Prisma.WalletProfileFieldRefs
@@ -742,33 +592,6 @@ export const TransactionIsolationLevel = runtime.makeStrictEnum({
 export type TransactionIsolationLevel = (typeof TransactionIsolationLevel)[keyof typeof TransactionIsolationLevel]
 
 
-export const TraderIdentityScalarFieldEnum = {
-  id: 'id',
-  tier: 'tier',
-  score: 'score',
-  totalVolume: 'totalVolume',
-  maxTradeSize: 'maxTradeSize',
-  totalPnl: 'totalPnl',
-  winRate: 'winRate',
-  txCount: 'txCount',
-  firstSeenAt: 'firstSeenAt',
-  lastActiveAt: 'lastActiveAt'
-} as const
-
-export type TraderIdentityScalarFieldEnum = (typeof TraderIdentityScalarFieldEnum)[keyof typeof TraderIdentityScalarFieldEnum]
-
-
-export const RawIdentifierScalarFieldEnum = {
-  id: 'id',
-  type: 'type',
-  traderIdentityId: 'traderIdentityId',
-  firstSeenAt: 'firstSeenAt',
-  lastUsedAt: 'lastUsedAt'
-} as const
-
-export type RawIdentifierScalarFieldEnum = (typeof RawIdentifierScalarFieldEnum)[keyof typeof RawIdentifierScalarFieldEnum]
-
-
 export const WalletProfileScalarFieldEnum = {
   id: 'id',
   label: 'label',
@@ -787,22 +610,19 @@ export type WalletProfileScalarFieldEnum = (typeof WalletProfileScalarFieldEnum)
 export const TradeScalarFieldEnum = {
   id: 'id',
   assetId: 'assetId',
-  conditionId: 'conditionId',
-  question: 'question',
-  outcome: 'outcome',
   side: 'side',
   size: 'size',
   price: 'price',
   tradeValue: 'tradeValue',
   timestamp: 'timestamp',
   walletAddress: 'walletAddress',
-  rawIdentifierId: 'rawIdentifierId',
-  traderIdentityId: 'traderIdentityId',
   isWhale: 'isWhale',
   isSmartMoney: 'isSmartMoney',
   isFresh: 'isFresh',
   isSweeper: 'isSweeper',
-  isInsider: 'isInsider'
+  conditionId: 'conditionId',
+  outcome: 'outcome',
+  question: 'question'
 } as const
 
 export type TradeScalarFieldEnum = (typeof TradeScalarFieldEnum)[keyof typeof TradeScalarFieldEnum]
@@ -853,20 +673,6 @@ export type ListStringFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaMod
 
 
 /**
- * Reference to a field of type 'WhaleTier'
- */
-export type EnumWhaleTierFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'WhaleTier'>
-    
-
-
-/**
- * Reference to a field of type 'WhaleTier[]'
- */
-export type ListEnumWhaleTierFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'WhaleTier[]'>
-    
-
-
-/**
  * Reference to a field of type 'Float'
  */
 export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float'>
@@ -877,6 +683,13 @@ export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, '
  * Reference to a field of type 'Float[]'
  */
 export type ListFloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float[]'>
+    
+
+
+/**
+ * Reference to a field of type 'Boolean'
+ */
+export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
     
 
 
@@ -905,27 +718,6 @@ export type DateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel
  * Reference to a field of type 'DateTime[]'
  */
 export type ListDateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DateTime[]'>
-    
-
-
-/**
- * Reference to a field of type 'IdentifierType'
- */
-export type EnumIdentifierTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'IdentifierType'>
-    
-
-
-/**
- * Reference to a field of type 'IdentifierType[]'
- */
-export type ListEnumIdentifierTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'IdentifierType[]'>
-    
-
-
-/**
- * Reference to a field of type 'Boolean'
- */
-export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
     
 
 /**
@@ -1007,8 +799,6 @@ export type PrismaClientOptions = ({
   omit?: GlobalOmitConfig
 }
 export type GlobalOmitConfig = {
-  traderIdentity?: Prisma.TraderIdentityOmit
-  rawIdentifier?: Prisma.RawIdentifierOmit
   walletProfile?: Prisma.WalletProfileOmit
   trade?: Prisma.TradeOmit
 }

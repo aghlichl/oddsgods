@@ -4,7 +4,7 @@ import Redis from 'ioredis';
 import { Server as SocketIOServer } from 'socket.io';
 import { createServer } from 'http';
 import WebSocket from 'ws';
-import { getTraderProfile, analyzeMarketImpact } from '../lib/intelligence';
+import { getTraderProfile, analyzeMarketImpact, getWalletsFromTx } from '../lib/intelligence';
 import { fetchMarketsFromGamma, parseMarketData } from '../lib/polymarket';
 import { MarketMeta, AssetOutcome } from '../lib/types';
 import { CONFIG } from '../lib/config';
@@ -21,9 +21,11 @@ const io = new SocketIOServer(httpServer, {
   },
 });
 
-httpServer.listen(3001, () => {
-  // console.log('[Worker] Socket.io server listening on port 3001');
-});
+if (process.argv[1].endsWith('worker.ts')) {
+  httpServer.listen(3001, () => {
+    // console.log('[Worker] Socket.io server listening on port 3001');
+  });
+}
 
 // Market metadata cache
 // We use mutable maps to store state
@@ -54,7 +56,7 @@ async function updateMarketMetadata(): Promise<string[]> {
 /**
  * Process and enrich a trade
  */
-async function processTrade(trade: any) {
+export async function processTrade(trade: any) {
   try {
     if (!trade.price || !trade.size || !trade.asset_id) return;
 
@@ -72,6 +74,19 @@ async function processTrade(trade: any) {
     let walletAddress = trade.user || trade.maker || trade.taker || trade.wallet || '';
 
     // If no wallet address is found, we can't profile the trader
+    if (!walletAddress && trade.transaction_hash) {
+      // Fallback: Try to get wallet from transaction hash
+      // console.log(`[Worker] Fetching wallet from tx ${trade.transaction_hash}...`);
+      const { maker, taker } = await getWalletsFromTx(trade.transaction_hash);
+      // Prefer taker as the active trader, but use maker if taker is null
+      walletAddress = taker || maker || '';
+
+      if (walletAddress) {
+        // console.log(`[Worker] Found wallet ${walletAddress} from tx`);
+      }
+    }
+
+
     if (!walletAddress) {
       // console.log('[Worker] Trade missing wallet address, skipping profile enrichment');
       // We can still process the trade, but without wallet context
@@ -296,5 +311,7 @@ process.on('SIGINT', async () => {
 });
 
 // Start the worker
-// console.log('[Worker] Starting Polymarket Intelligence Worker...');
-connectToPolymarket();
+if (process.argv[1].endsWith('worker.ts')) {
+  // console.log('[Worker] Starting Polymarket Intelligence Worker...');
+  connectToPolymarket();
+}
