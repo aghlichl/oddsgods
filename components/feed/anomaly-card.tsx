@@ -256,16 +256,38 @@ export function AnomalyCard({ anomaly }: AnomalyCardProps) {
                     </div>
                 </Card>
 
-                {/* Timestamp Reveal - Appears behind the lifting card */}
-                <div className="absolute bottom-0 left-0 right-0 flex justify-center items-end z-0 opacity-0 group-hover:opacity-100 group-hover:translate-y-6 transition-all duration-300 delay-75">
-                    <span className="text-[10px] font-mono font-bold text-zinc-400 uppercase tracking-wider bg-black/50 px-2 py-0.5 rounded">
-                        {new Date(timestamp).toLocaleTimeString([], {
-                            hour: '2-digit',
+                {/* Card Docked Plate - Timestamp Footer */}
+                <div className={cn(
+                    "mx-auto mt-1 w-[92%] px-4 py-1.5 text-[10px] font-mono rounded-md",
+                    "backdrop-blur-sm border-t",
+                    // Base styling - more subtle
+                    "bg-black/20 text-zinc-500 border-[rgba(255,255,255,0.03)] shadow-inner shadow-black/20",
+                    // Tier-specific styling - premium tiers more subtle
+                    isGod && "bg-black/10 border-t-yellow-400/20 text-yellow-400/80",
+                    isSuper && "bg-black/10 border-t-red-400/20 text-red-400/80",
+                    isMega && "bg-black/15 border-t-purple-400/25 text-purple-300/85 shadow-purple-900/15",
+                    isWhale && "bg-black/15 border-t-blue-400/25 text-blue-300/85 shadow-blue-900/15"
+                )}>
+                    {(() => {
+                        const date = new Date(timestamp);
+                        const now = new Date();
+                        const isToday = date.toDateString() === now.toDateString();
+
+                        const timeString = date.toLocaleTimeString([], {
+                            hour: 'numeric',
                             minute: '2-digit',
                             second: '2-digit',
-                            hour12: false
-                        })}
-                    </span>
+                            hour12: true
+                        });
+
+                        if (isToday) {
+                            return `Today • ${timeString}`;
+                        } else {
+                            const month = date.toLocaleDateString([], { month: 'short' });
+                            const day = date.getDate();
+                            return `${month} ${day} • ${timeString}`;
+                        }
+                    })()}
                 </div>
             </div>
 
