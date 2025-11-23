@@ -10,6 +10,7 @@ import { BottomCarousel } from "@/components/bottom-carousel";
 import { UserPreferences } from "@/components/user-preferences";
 import { TopWhales } from "@/components/top-whales";
 import { SearchButton } from "@/components/search-button";
+import { QuickSearchFilters } from "@/components/quick-search-filters";
 import { motion } from "framer-motion";
 
 
@@ -40,11 +41,18 @@ export default function Home() {
   const { preferences, loadPreferences } = usePreferencesStore();
   const [currentPage, setCurrentPage] = useState(1);
   const [searchQuery, setSearchQuery] = useState("");
+  const [activeFilter, setActiveFilter] = useState<string>();
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
     // Scroll to top when switching tabs
     window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const handleFilterSelect = (query: string) => {
+    setActiveFilter(query);
+    setSearchQuery(query);
+    setCurrentPage(1); // Switch to main feed if not already there
   };
 
   // Intelligent search function
@@ -88,7 +96,7 @@ export default function Home() {
     <main className="min-h-screen bg-background">
       <Ticker />
 
-      <div className="pt-12 pb-14 overflow-y-auto p-4 scrollbar-hide min-h-screen">
+      <div className="pb-14 overflow-y-auto p-4 scrollbar-hide min-h-screen pt-8">
         <motion.div
           className="max-w-md mx-auto w-full"
           key={currentPage}
@@ -98,6 +106,13 @@ export default function Home() {
         >
           {currentPage === 1 && (
             <>
+              {/* Quick Search Filters - Centered like anomaly cards */}
+              <QuickSearchFilters
+                onFilterSelect={handleFilterSelect}
+                activeFilter={activeFilter}
+                anomalies={anomalies}
+              />
+
               <SlotReel>
                 {filteredAnomalies.map((anomaly) => (
                   <AnomalyCard key={anomaly.id} anomaly={anomaly} />

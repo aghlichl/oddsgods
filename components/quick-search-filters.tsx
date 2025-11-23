@@ -1,0 +1,318 @@
+"use client";
+
+import { useEffect, useState } from "react";
+import { motion } from "framer-motion";
+import { Anomaly } from "@/lib/market-stream";
+
+
+interface QuickSearchFiltersProps {
+  onFilterSelect: (query: string) => void;
+  activeFilter?: string;
+  anomalies?: Anomaly[];
+}
+
+type CategoryType = 'sports' | 'politics' | 'crypto' | 'markets' | 'companies' | null;
+
+export function QuickSearchFilters({ onFilterSelect, activeFilter, anomalies = [] }: QuickSearchFiltersProps) {
+  const [expandedCategory, setExpandedCategory] = useState<CategoryType>(null);
+  const [drillDownLevel, setDrillDownLevel] = useState(0); // 0: categories, 1: leagues/items, 2: teams (sports only)
+  const [selectedLeague, setSelectedLeague] = useState<string | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    // Show loading for a brief moment, then show filters
+    const timer = setTimeout(() => setLoading(false), 1000);
+    return () => clearTimeout(timer);
+  }, []);
+
+  // Parent categories
+  const parentCategories = ['sports', 'politics', 'crypto', 'markets', 'companies'];
+
+  // Sports leagues mapping
+  const leaguePatterns = {
+    'NBA': /\b(nba|nba)\b/g,
+    'NFL': /\b(nfl|nfl)\b/g,
+    'MLB': /\b(mlb|mlb)\b/g,
+    'NCAA': /\b(ncaa|ncaa)\b/g,
+    'UFC': /\b(ufc|ufc)\b/g,
+    'Soccer': /\b(premier|league|epl|bundesliga|serie.?a|laliga|soccer|football)\b/g,
+    'Tennis': /\b(tennis|atp|wta)\b/g,
+    'Golf': /\b(golf|pga)\b/g,
+    'Formula 1': /\b(f1|formula.?1)\b/g,
+    'NHL': /\b(nhl|nhl)\b/g
+  };
+
+  // Get sports leagues sorted by volume
+  const getSportsLeagues = (): string[] => {
+    const leagueCounts = new Map<string, number>();
+    const recentAnomalies = anomalies.slice(0, 100);
+
+    recentAnomalies.forEach(anomaly => {
+      const eventText = (anomaly.event + ' ' + anomaly.outcome).toLowerCase();
+
+      Object.entries(leaguePatterns).forEach(([league, pattern]) => {
+        if (pattern.test(eventText)) {
+          leagueCounts.set(league, (leagueCounts.get(league) || 0) + 1);
+        }
+      });
+    });
+
+    // Return leagues sorted by frequency, with some defaults if none found
+    const sortedLeagues = Array.from(leagueCounts.entries())
+      .sort((a, b) => b[1] - a[1])
+      .map(([league]) => league);
+
+    // Add some popular leagues if they're not in the data
+    const popularLeagues = ['NBA', 'NFL', 'MLB', 'NCAA', 'Soccer'];
+    popularLeagues.forEach(league => {
+      if (!sortedLeagues.includes(league)) {
+        sortedLeagues.push(league);
+      }
+    });
+
+    return sortedLeagues.slice(0, 8);
+  };
+
+  // Get teams for a specific league
+  const getTeamsForLeague = (league: string): string[] => {
+    const teamCounts = new Map<string, number>();
+    const recentAnomalies = anomalies.slice(0, 100);
+
+    recentAnomalies.forEach(anomaly => {
+      const eventText = (anomaly.event + ' ' + anomaly.outcome).toLowerCase();
+
+      let teamPatterns: RegExp[] = [];
+
+      switch (league.toUpperCase()) {
+        case 'NBA':
+          teamPatterns = [/\b(knicks|nets|celtics|sixers|raptors|bulls|cavaliers|pistons|pacers|bucks|hawks|heat|magic|wizards|hornets|grizzlies|pelicans|thunder|timberwolves|blazers|kings|warriors|clippers|lakers|suns|jazz|mavericks|rockets|spurs|nuggets)\b/g];
+          break;
+        case 'NFL':
+          teamPatterns = [/\b(chiefs|eagles|patriots|packers|seahawks|bears|bengals|bills|broncos|browns|buccaneers|cardinals|chargers|colts|commanders|cowboys|dolphins|falcons|giants|jaguars|jets|niners|panthers|raiders|rams|raven|redskins|saints|steelers|texans|titans|viking|washington)\b/g];
+          break;
+        case 'MLB':
+          teamPatterns = [/\b(yankees|red.?sox|rays|blue.?jays|orioles|white.?sox|guardians|tigers|twins|royals|angels|astros|athletics|rangers|mariners|dodgers|diamondbacks|giants|padres|rockies|phillies|pirates|marlins|mets|nationals|braves|brewers|cubs|cardinals|reds)\b/g];
+          break;
+        case 'NHL':
+          teamPatterns = [/\b(oilers|flames|canucks|golden.?knights|kings|ducks|sharks|blackhawks|blue.?jackets|stars|wild|predators|blues|jets|senators|maple.?leafs|canadiens|bruins|rangers|islanders|devils|flyers|penguins|capitals|hurricanes|panthers|lightning|avalanche|kraken)\b/g];
+          break;
+        default:
+          // For other leagues, try to extract general sports team names
+          teamPatterns = [/\b([a-z]+(?:\s+[a-z]+)*)\b/g]; // Simple fallback
+          break;
+      }
+
+      teamPatterns.forEach(pattern => {
+        const matches = eventText.match(pattern);
+        if (matches) {
+          matches.forEach(match => {
+            const cleanMatch = match.trim();
+            if (cleanMatch.length > 2 && cleanMatch !== league.toLowerCase()) {
+              teamCounts.set(cleanMatch, (teamCounts.get(cleanMatch) || 0) + 1);
+            }
+          });
+        }
+      });
+    });
+
+    // Return teams sorted by frequency
+    return Array.from(teamCounts.entries())
+      .sort((a, b) => b[1] - a[1])
+      .map(([team]) => team)
+      .slice(0, 8);
+  };
+
+  // Get sub-items for a specific category and level
+  const getCategorySubItems = (category: CategoryType, level: number = 1, league?: string): string[] => {
+    if (!category || !anomalies.length) return [];
+
+    // Special handling for sports multi-level navigation
+    if (category === 'sports') {
+      if (level === 1) {
+        // Return leagues
+        return getSportsLeagues();
+      } else if (level === 2 && league) {
+        // Return teams for specific league
+        return getTeamsForLeague(league);
+      }
+    }
+
+    // For other categories or sports level 1, use original logic
+    const termCounts = new Map<string, number>();
+    const recentAnomalies = anomalies.slice(0, 50);
+
+    recentAnomalies.forEach(anomaly => {
+      const eventText = (anomaly.event + ' ' + anomaly.outcome).toLowerCase();
+
+      let patterns: RegExp[] = [];
+
+      switch (category) {
+        case 'politics':
+          patterns = [
+            /\b(trump|biden|obama|clinton|harris|pence|pelosi|mcconnell|aoc|cruz|sanders|warren|buttigieg|klobuchar|macron|johnson|zelenskyy|putin|netanyahu|erdogan|jinping|sunak|modi|bachelet|marcos|boris|emmanuel|angela|olaf|luis|jair|andres|gabriel|alberto|boric)\b/g,
+          ];
+          break;
+        case 'crypto':
+          patterns = [
+            /\b(bitcoin|ethereum|solana|cardano|polygon|chainlink|uniswap|compound|aave|maker|sushi|avalanche|polkadot|cosmos|algorand|stellar|vechain|iota|neo|qtum|zilliqa|icon|ontology|thorchain|pancakeswap|1inch|sushiswap|curve|yearn|compound|synthetix)\b/g,
+          ];
+          break;
+        case 'markets':
+          patterns = [
+            /\b(spy|qqq|iwm|vti|vxus|BND|bnd|vtip|tlt|ief|shy|lqd|emb|hyg|iglb|spy|qqq|iwm|vti|vxus|bnd|vtip|tlt|ief|shy|lqd|emb|hyg|iglb)\b/g,
+          ];
+          break;
+        case 'companies':
+          patterns = [
+            /\b(tesla|apple|microsoft|google|amazon|meta|netflix|spotify|nvidia|amd|intel|oracle|ibm|salesforce|adobe|paypal|shopify|square|block|coinbase|roku|zoom|slack|discord|twilio|atlassian|mongodb|datadog|crowdstrike|palantir)\b/g,
+          ];
+          break;
+      }
+
+      patterns.forEach(pattern => {
+        const matches = eventText.match(pattern);
+        if (matches) {
+          matches.forEach(match => {
+            const cleanMatch = match.trim();
+            if (cleanMatch.length > 2) {
+              termCounts.set(cleanMatch, (termCounts.get(cleanMatch) || 0) + 1);
+            }
+          });
+        }
+      });
+    });
+
+    // Return top 8 items for this category, sorted by frequency
+    return Array.from(termCounts.entries())
+      .sort((a, b) => b[1] - a[1])
+      .map(([term]) => term)
+      .slice(0, 80);
+  };
+
+  const handleCategoryClick = (category: string) => {
+    if (drillDownLevel === 0) {
+      // Clicking from main categories
+      setExpandedCategory(category as CategoryType);
+      setDrillDownLevel(1);
+      if (category === 'sports') {
+        setSelectedLeague(null); // Reset league selection
+      }
+    } else if (drillDownLevel === 1 && expandedCategory === 'sports') {
+      // Clicking a league within sports
+      setSelectedLeague(category);
+      setDrillDownLevel(2);
+    }
+  };
+
+  const handleBackToCategories = () => {
+    if (drillDownLevel === 2) {
+      // Back from teams to leagues
+      setDrillDownLevel(1);
+      setSelectedLeague(null);
+    } else if (drillDownLevel === 1) {
+      // Back from leagues/items to main categories
+      setDrillDownLevel(0);
+      setExpandedCategory(null);
+      setSelectedLeague(null);
+    }
+  };
+
+  // Get current items to display based on drill-down level
+  const getCurrentItems = (): { items: string[], title: string } => {
+    if (drillDownLevel === 0) {
+      // Main categories
+      return {
+        items: parentCategories,
+        title: ""
+      };
+    } else if (drillDownLevel === 1) {
+      // Leagues for sports, or final items for other categories
+      if (expandedCategory === 'sports') {
+        return {
+          items: getSportsLeagues(),
+          title: "" // No title for sports leagues
+        };
+      } else {
+        const subItems = getCategorySubItems(expandedCategory, 1);
+        return {
+          items: subItems.length > 0 ? subItems : [expandedCategory || 'unknown'],
+          title: "" // No title for other categories
+        };
+      }
+    } else if (drillDownLevel === 2 && selectedLeague) {
+      // Teams within a league
+      return {
+        items: getTeamsForLeague(selectedLeague),
+        title: selectedLeague
+      };
+    }
+
+    // Fallback
+    return {
+      items: parentCategories,
+      title: "Hot Topics"
+    };
+  };
+
+  if (loading) {
+    return (
+      <div className="mb-4 flex items-center justify-center">
+        <div className="px-4 py-3 text-xs font-mono text-zinc-500">LOADING...</div>
+      </div>
+    );
+  }
+
+  const { items: displayItems, title: displayTitle } = getCurrentItems();
+
+  return (
+    <div className="mb-4">
+      <div className="px-4 py-3">
+        <div className="flex items-center gap-2 overflow-x-auto scrollbar-hide">
+          {drillDownLevel > 0 && (
+            <motion.button
+              onClick={handleBackToCategories}
+              className="flex items-center gap-1 text-xs font-mono text-zinc-400 hover:text-zinc-100 transition-colors duration-200 mr-2 whitespace-nowrap"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              ← Back
+            </motion.button>
+          )}
+
+          {/* Show league name only for level 2 (teams within league) */}
+          {drillDownLevel === 2 && displayTitle && (
+            <span className="text-xs font-mono text-zinc-500 uppercase tracking-wider whitespace-nowrap mr-2">
+              {displayTitle}:
+            </span>
+          )}
+
+          <div className="flex gap-2">
+            {displayItems.map((item) => (
+              <motion.button
+                key={item}
+                onClick={() => {
+                  if (drillDownLevel === 2 || (drillDownLevel === 1 && expandedCategory !== 'sports')) {
+                    // Final level - filter the results
+                    onFilterSelect(item);
+                  } else {
+                    // Navigate to next level
+                    handleCategoryClick(item);
+                  }
+                }}
+                className={`px-3 py-1 text-xs font-mono rounded whitespace-nowrap transition-colors duration-200 ${
+                  activeFilter === item
+                    ? 'bg-primary text-black border border-primary'
+                    : 'bg-zinc-800/50 text-zinc-300 hover:bg-zinc-700/50 border border-zinc-700 hover:border-zinc-600'
+                }`}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                {item}
+              </motion.button>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}

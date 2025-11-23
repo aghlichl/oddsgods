@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { Search, X } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { motion, AnimatePresence } from "framer-motion";
 
 interface SearchButtonProps {
   onSearch: (query: string) => void;
@@ -8,101 +9,154 @@ interface SearchButtonProps {
 }
 
 export function SearchButton({ onSearch, className }: SearchButtonProps) {
-  const [isOpen, setIsOpen] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [query, setQuery] = useState("");
   const inputRef = useRef<HTMLInputElement>(null);
-  const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     onSearch(query);
   }, [query, onSearch]);
 
   useEffect(() => {
-    if (isOpen && inputRef.current) {
-      inputRef.current.focus();
+    if (isModalOpen && inputRef.current) {
+      // Focus input after modal animation completes
+      setTimeout(() => {
+        inputRef.current?.focus();
+      }, 300);
     }
-  }, [isOpen]);
-
-  // Close search when clicking outside
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
-        setQuery("");
-        setIsOpen(false);
-      }
-    };
-
-    if (isOpen) {
-      document.addEventListener('mousedown', handleClickOutside);
-      return () => document.removeEventListener('mousedown', handleClickOutside);
-    }
-  }, [isOpen]);
+  }, [isModalOpen]);
 
   const handleToggle = () => {
-    if (isOpen) {
+    if (isModalOpen) {
       setQuery("");
-      setIsOpen(false);
+      setIsModalOpen(false);
     } else {
-      setIsOpen(true);
+      setIsModalOpen(true);
     }
   };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'Escape') {
       setQuery("");
-      setIsOpen(false);
+      setIsModalOpen(false);
+    } else if (e.key === 'Enter') {
+      // Enter key explicitly triggers search (though it already searches on change)
+      e.preventDefault();
+      // Could add additional search logic here if needed
     }
   };
 
+  const handleSuggestionClick = (suggestion: string) => {
+    setQuery(suggestion);
+    // Focus back to input after selecting suggestion
+    setTimeout(() => {
+      inputRef.current?.focus();
+    }, 100);
+  };
+
+  // Minimalist search suggestions
+  const searchSuggestions = [
+    "trump",
+    "election",
+    "crypto",
+    "bitcoin",
+    "sports",
+    "football",
+    "basketball",
+    "whale",
+    "god whale"
+  ];
+
   return (
-    <div ref={containerRef} className={cn("fixed bottom-16 right-4 z-[60]", className)}>
-      {/* Floating Search Input */}
-      <div
-        className={cn(
-          "flex items-center transition-all duration-300 ease-out overflow-hidden",
-          "bg-zinc-950/95 backdrop-blur-xl border-2 border-zinc-600 shadow-[4px_4px_0px_0px_#27272a]",
-          "hover:shadow-[6px_6px_0px_0px_#27272a] hover:-translate-y-1",
-          isOpen ? "w-72 h-12 opacity-100 scale-100" : "w-12 h-12 opacity-70 scale-90 hover:opacity-100 hover:scale-100"
-        )}
-      >
-        {/* Search Icon Button */}
+    <>
+      {/* Floating Search Button */}
+      <div className={cn("fixed bottom-16 right-4 z-60", className)}>
         <button
           onClick={handleToggle}
           className={cn(
-            "flex items-center justify-center w-12 h-12 flex-shrink-0",
-            "text-zinc-400 hover:text-zinc-100 transition-colors duration-200",
-            "border-r-2 border-zinc-600",
-            isOpen && "border-r-0"
+            "flex items-center justify-center w-12 h-12",
+            "bg-zinc-950/95 backdrop-blur-xl border-2 border-zinc-600 shadow-[4px_4px_0px_0px_#27272a]",
+            "hover:shadow-[6px_6px_0px_0px_#27272a] hover:-translate-y-1",
+            "text-zinc-400 hover:text-zinc-100 transition-colors duration-200"
           )}
         >
-          {isOpen ? <X size={20} /> : <Search size={20} />}
+          <Search size={20} />
         </button>
-
-        {/* Input Field */}
-        <input
-          ref={inputRef}
-          type="text"
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-          onKeyDown={handleKeyDown}
-          placeholder="Search events..."
-          className={cn(
-            "flex-1 bg-transparent border-none outline-none",
-            "text-zinc-100 placeholder-zinc-500 font-mono text-sm",
-            "px-3 py-2 transition-all duration-300",
-            isOpen ? "opacity-100" : "opacity-0 w-0 p-0"
-          )}
-        />
       </div>
 
-      {/* Search Results Indicator */}
-      {query && (
-        <div className="absolute -top-10 left-0 right-0 text-center">
-          <span className="inline-block px-2 py-1 text-xs font-mono font-bold text-zinc-400 uppercase tracking-wider bg-black/70 border border-zinc-600 rounded">
-            SEARCHING: "{query}"
-          </span>
-        </div>
-      )}
-    </div>
+      {/* Search Modal */}
+      <AnimatePresence>
+        {isModalOpen && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.2 }}
+            className="fixed inset-0 bg-black/80 backdrop-blur-sm z-[70] flex items-center justify-center p-4"
+            onClick={() => setIsModalOpen(false)}
+          >
+            <motion.div
+              initial={{ scale: 0.9, y: 20 }}
+              animate={{ scale: 1, y: 0 }}
+              exit={{ scale: 0.9, y: 20 }}
+              transition={{ duration: 0.3, ease: "easeOut" }}
+              className="w-full max-w-md mx-auto"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="flex items-center bg-zinc-950/95 backdrop-blur-xl border-2 border-zinc-600 shadow-[4px_4px_0px_0px_#27272a] rounded-lg overflow-hidden">
+                <input
+                  ref={inputRef}
+                  type="search"
+                  inputMode="search"
+                  autoComplete="off"
+                  autoCapitalize="off"
+                  autoCorrect="off"
+                  spellCheck="false"
+                  value={query}
+                  onChange={(e) => setQuery(e.target.value)}
+                  onKeyDown={handleKeyDown}
+                  placeholder="Search events..."
+                  className="flex-1 bg-transparent border-none outline-none text-zinc-100 placeholder-zinc-500 font-mono text-lg px-4 py-4"
+                />
+                <button
+                  onClick={() => {
+                    setQuery("");
+                    setIsModalOpen(false);
+                  }}
+                  className="flex items-center justify-center w-12 h-12 text-zinc-400 hover:text-zinc-100 transition-colors duration-200 border-l border-zinc-600"
+                >
+                  <X size={20} />
+                </button>
+              </div>
+
+              {/* Search Suggestions */}
+              {!query && (
+                <motion.div
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.1 }}
+                  className="mt-4 space-y-2"
+                >
+                  <div className="text-xs font-mono text-zinc-500 uppercase tracking-wider mb-3">
+                    Popular searches
+                  </div>
+                  <div className="flex flex-wrap gap-2">
+                    {searchSuggestions.map((suggestion) => (
+                      <button
+                        key={suggestion}
+                        onClick={() => handleSuggestionClick(suggestion)}
+                        className="px-3 py-1 text-sm font-mono text-zinc-400 hover:text-zinc-100 hover:bg-zinc-800/50 border border-zinc-700 rounded transition-colors duration-200"
+                      >
+                        {suggestion}
+                      </button>
+                    ))}
+                  </div>
+                </motion.div>
+              )}
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </>
   );
 }
