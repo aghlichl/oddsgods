@@ -3,38 +3,59 @@
 
 generator client {
   provider = "prisma-client"
-  output   = "../generated"
+  engineType = "library"
 }
 
 datasource db {
   provider = "postgresql"
 }
 
-model WalletProfile {
-  id          String   @id // wallet address
-  label       String?  // e.g., "Smart Whale", "Degen"
-  totalPnl    Float    @default(0) // Total PnL in USD
-  winRate     Float    @default(0) // Win rate as decimal (0.0 to 1.0)
-  isFresh     Boolean  @default(false) // < 10 transactions
-  txCount     Int      @default(0)
-  maxTradeValue Float  @default(0)
-  activityLevel String? // "LOW", "MEDIUM", "HIGH"
-  lastUpdated DateTime @default(now())
-  trades      Trade[]
+model Trader {
+  id              String   @id // wallet address (proxyWallet)
+  pseudonym       String?
+  bio             String?
+  profileImage    String?
+  firstSeenAt     DateTime @default(now())
+  lastSeenAt      DateTime @default(now())
+  totalVolumeUsd  Float    @default(0)
+  tradeCount      Int      @default(0)
+  lastActiveAt    DateTime @default(now())
+  
+  // Legacy/Existing fields (mapped or kept)
+  label           String?  // e.g., "Smart Whale", "Degen"
+  totalPnl        Float    @default(0) // Total PnL in USD
+  winRate         Float    @default(0) // Win rate as decimal (0.0 to 1.0)
+  isFresh         Boolean  @default(false) // < 10 transactions
+  txCount         Int      @default(0)
+  maxTradeValue   Float    @default(0)
+  activityLevel   String? // "LOW", "MEDIUM", "HIGH"
+  lastUpdated     DateTime @default(now())
+  
+  trades          Trade[]
 
   @@map("wallet_profiles")
 }
 
 model Trade {
   id            String   @id @default(cuid())
-  assetId       String
+  transactionHash String?
+  
+  // Market info
+  assetId       String?
+  conditionId   String?
+  outcome       String?
+  title         String?
+  eventSlug     String?
+  
   side          String   // "BUY" or "SELL"
   size          Float
   price         Float
   tradeValue    Float    // size * price
   timestamp     DateTime
+  
+  // Trader relation
   walletAddress String
-  walletProfile WalletProfile @relation(fields: [walletAddress], references: [id])
+  trader        Trader   @relation(fields: [walletAddress], references: [id])
 
   // Intelligence flags
   isWhale       Boolean  @default(false)
@@ -42,13 +63,72 @@ model Trade {
   isFresh       Boolean  @default(false)
   isSweeper     Boolean  @default(false)
 
-  // Market context
-  conditionId   String?
-  outcome       String?
+  // Legacy/Optional
   question      String?
 
   @@index([walletAddress])
   @@index([timestamp])
   @@index([isWhale, timestamp])
+  @@index([conditionId])
   @@map("trades")
+}
+
+model User {
+  id            String   @id // Privy DID (e.g., "did:privy:...")
+  email         String?  @unique
+  walletAddress String?  @unique // Primary connected wallet
+  displayName   String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  
+  // Premium/Subscription status
+  tier          SubscriptionTier @default(FREE)
+  stripeCustomerId String?
+
+  // User preferences
+  watchlist     Watchlist[]
+  alerts        Alert[]
+
+  @@map("users")
+}
+
+enum SubscriptionTier {
+  FREE
+  PRO
+  WHALE
+}
+
+model Watchlist {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  
+  // What they are watching
+  walletAddress String? // Watching a specific whale
+  marketId      String? // Watching a specific market
+  
+  createdAt DateTime @default(now())
+  
+  @@unique([userId, walletAddress])
+  @@unique([userId, marketId])
+  @@map("watchlists")
+}
+
+model Alert {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  
+  type      AlertType
+  config    Json     // e.g., { "threshold": 10000, "wallet": "0x..." }
+  
+  createdAt DateTime @default(now())
+
+  @@map("alerts")
+}
+
+enum AlertType {
+  WHALE_MOVEMENT
+  MARKET_SPIKE
+  SMART_MONEY_ENTRY
 }

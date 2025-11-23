@@ -8,6 +8,9 @@
  *
  * 🟢 You can import this file directly.
  */
-export type * from './models/WalletProfile'
+export type * from './models/Trader'
 export type * from './models/Trade'
+export type * from './models/User'
+export type * from './models/Watchlist'
+export type * from './models/Alert'
 export type * from './commonInputTypes'

@@ -51,8 +51,11 @@ export const AnyNull = runtime.AnyNull
 
 
 export const ModelName = {
-  WalletProfile: 'WalletProfile',
-  Trade: 'Trade'
+  Trader: 'Trader',
+  Trade: 'Trade',
+  User: 'User',
+  Watchlist: 'Watchlist',
+  Alert: 'Alert'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -71,8 +74,16 @@ export const TransactionIsolationLevel = {
 export type TransactionIsolationLevel = (typeof TransactionIsolationLevel)[keyof typeof TransactionIsolationLevel]
 
 
-export const WalletProfileScalarFieldEnum = {
+export const TraderScalarFieldEnum = {
   id: 'id',
+  pseudonym: 'pseudonym',
+  bio: 'bio',
+  profileImage: 'profileImage',
+  firstSeenAt: 'firstSeenAt',
+  lastSeenAt: 'lastSeenAt',
+  totalVolumeUsd: 'totalVolumeUsd',
+  tradeCount: 'tradeCount',
+  lastActiveAt: 'lastActiveAt',
   label: 'label',
   totalPnl: 'totalPnl',
   winRate: 'winRate',
@@ -83,12 +94,17 @@ export const WalletProfileScalarFieldEnum = {
   lastUpdated: 'lastUpdated'
 } as const
 
-export type WalletProfileScalarFieldEnum = (typeof WalletProfileScalarFieldEnum)[keyof typeof WalletProfileScalarFieldEnum]
+export type TraderScalarFieldEnum = (typeof TraderScalarFieldEnum)[keyof typeof TraderScalarFieldEnum]
 
 
 export const TradeScalarFieldEnum = {
   id: 'id',
+  transactionHash: 'transactionHash',
   assetId: 'assetId',
+  conditionId: 'conditionId',
+  outcome: 'outcome',
+  title: 'title',
+  eventSlug: 'eventSlug',
   side: 'side',
   size: 'size',
   price: 'price',
@@ -99,12 +115,46 @@ export const TradeScalarFieldEnum = {
   isSmartMoney: 'isSmartMoney',
   isFresh: 'isFresh',
   isSweeper: 'isSweeper',
-  conditionId: 'conditionId',
-  outcome: 'outcome',
   question: 'question'
 } as const
 
 export type TradeScalarFieldEnum = (typeof TradeScalarFieldEnum)[keyof typeof TradeScalarFieldEnum]
+
+
+export const UserScalarFieldEnum = {
+  id: 'id',
+  email: 'email',
+  walletAddress: 'walletAddress',
+  displayName: 'displayName',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  tier: 'tier',
+  stripeCustomerId: 'stripeCustomerId'
+} as const
+
+export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
+
+
+export const WatchlistScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  walletAddress: 'walletAddress',
+  marketId: 'marketId',
+  createdAt: 'createdAt'
+} as const
+
+export type WatchlistScalarFieldEnum = (typeof WatchlistScalarFieldEnum)[keyof typeof WatchlistScalarFieldEnum]
+
+
+export const AlertScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  type: 'type',
+  config: 'config',
+  createdAt: 'createdAt'
+} as const
+
+export type AlertScalarFieldEnum = (typeof AlertScalarFieldEnum)[keyof typeof AlertScalarFieldEnum]
 
 
 export const SortOrder = {
@@ -113,6 +163,13 @@ export const SortOrder = {
 } as const
 
 export type SortOrder = (typeof SortOrder)[keyof typeof SortOrder]
+
+
+export const JsonNullValueInput = {
+  JsonNull: 'JsonNull'
+} as const
+
+export type JsonNullValueInput = (typeof JsonNullValueInput)[keyof typeof JsonNullValueInput]
 
 
 export const QueryMode = {
@@ -129,4 +186,13 @@ export const NullsOrder = {
 } as const
 
 export type NullsOrder = (typeof NullsOrder)[keyof typeof NullsOrder]
+
+
+export const JsonNullValueFilter = {
+  DbNull: 'DbNull',
+  JsonNull: 'JsonNull',
+  AnyNull: 'AnyNull'
+} as const
+
+export type JsonNullValueFilter = (typeof JsonNullValueFilter)[keyof typeof JsonNullValueFilter]
 

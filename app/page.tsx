@@ -10,9 +10,11 @@ import { BottomCarousel } from "@/components/bottom-carousel";
 import { UserPreferences } from "@/components/user-preferences";
 import { TopWhales } from "@/components/top-whales";
 import { SearchButton } from "@/components/search-button";
-import { QuickSearchFilters } from "@/components/quick-search-filters";
 import { motion } from "framer-motion";
 
+
+import { Header } from "@/components/header";
+import { QuickSearchFilters } from "@/components/quick-search-filters";
 
 // Helper function to check if anomaly passes user preferences
 function passesPreferences(anomaly: Anomaly, preferences: UserPreferencesType): boolean {
@@ -93,10 +95,27 @@ export default function Home() {
   // that dynamically gets current preferences without needing to restart the stream
 
   return (
-    <main className="min-h-screen bg-background">
+    <main className="h-screen bg-background overflow-hidden relative">
+      <Header />
       <Ticker />
 
-      <div className="pb-14 overflow-y-auto p-4 scrollbar-hide min-h-screen pt-8">
+      {/* Centered Quick Search Filters - Only on Live Feed page */}
+      {currentPage === 1 && (
+        <div className="fixed top-11 left-1/2 transform -translate-x-1/2 z-50 hidden md:block">
+          <div className="relative max-w-[40vw] w-full">
+            {/* Right fade only */}
+            <div className="absolute right-0 top-0 bottom-0 w-8 bg-linear-to-l from-background/95 via-background/70 to-transparent backdrop-blur-md z-10 pointer-events-none" />
+
+            <QuickSearchFilters
+              onFilterSelect={handleFilterSelect}
+              activeFilter={activeFilter}
+              anomalies={anomalies}
+            />
+          </div>
+        </div>
+      )}
+
+      <div className="h-full overflow-y-auto p-4 scrollbar-hide pt-24 pb-20">
         <motion.div
           className="max-w-md mx-auto w-full"
           key={currentPage}
@@ -106,13 +125,6 @@ export default function Home() {
         >
           {currentPage === 1 && (
             <>
-              {/* Quick Search Filters - Centered like anomaly cards */}
-              <QuickSearchFilters
-                onFilterSelect={handleFilterSelect}
-                activeFilter={activeFilter}
-                anomalies={anomalies}
-              />
-
               <SlotReel>
                 {filteredAnomalies.map((anomaly) => (
                   <AnomalyCard key={anomaly.id} anomaly={anomaly} />

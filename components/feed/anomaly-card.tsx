@@ -2,7 +2,7 @@ import { Anomaly } from "@/lib/market-stream";
 import { cn } from "@/lib/utils";
 import { Card } from "@/components/ui/card";
 import { Gauge } from "./gauge";
-import { useState } from "react";
+import { useState, memo } from "react";
 import { TradeDetailsModal } from "./trade-details-modal";
 
 interface AnomalyCardProps {
@@ -18,7 +18,7 @@ export function convertAnomalyToCardProps(anomaly: Anomaly) {
     };
 }
 
-export function AnomalyCard({ anomaly }: AnomalyCardProps) {
+export const AnomalyCard = memo(function AnomalyCard({ anomaly }: AnomalyCardProps) {
     const { event: title, value, outcome, odds, type, timestamp, side } = anomaly;
     const amount = `$${Math.round(value).toLocaleString()}`;
     const isGod = type === 'GOD_WHALE';
@@ -31,9 +31,38 @@ export function AnomalyCard({ anomaly }: AnomalyCardProps) {
     return (
         <>
             <div
-                className="group relative h-full select-none hover:z-50 cursor-pointer"
+                className="group relative h-full select-none hover:z-30 cursor-pointer"
                 onClick={() => setIsModalOpen(true)}
             >
+                {/* Dragon Ball Z/Demon Slayer Aura - Only for God Whale */}
+                {isGod && (
+                    <>
+                        {/* Demonic Flame Rings - Around Card Border */}
+                        <div className="absolute -inset-1 z-0 pointer-events-none">
+                            {/* Outer Ring - Slow Pulsing */}
+                            <div className="absolute inset-0 bg-[conic-gradient(from_0deg_at_50%_50%,transparent_0deg,rgba(251,191,36,0.8)_45deg,rgba(239,68,68,0.9)_90deg,rgba(251,191,36,0.7)_135deg,transparent_180deg,rgba(168,85,247,0.6)_225deg,rgba(239,68,68,0.8)_270deg,rgba(251,191,36,0.7)_315deg,transparent_360deg)] animate-[spin_8s_linear_infinite] opacity-70 blur-sm rounded-[60%_40%_70%_30%/40%_60%_30%_70%]" />
+
+                            {/* Inner Ring - Faster Rotation */}
+                            <div className="absolute inset-1 bg-[conic-gradient(from_0deg_at_50%_50%,transparent_0deg,rgba(239,68,68,1.0)_30deg,rgba(251,191,36,1.0)_60deg,rgba(239,68,68,0.9)_90deg,transparent_120deg,rgba(251,191,36,0.8)_150deg,rgba(239,68,68,1.0)_180deg,rgba(251,191,36,0.9)_210deg,transparent_240deg,rgba(168,85,247,0.7)_270deg,rgba(239,68,68,0.8)_300deg,rgba(251,191,36,1.0)_330deg,transparent_360deg)] animate-spin-reverse opacity-60 blur-sm rounded-[60%_40%_70%_30%/40%_60%_30%_70%]" />
+                        </div>
+
+                        {/* Energy Wisps - Floating Demonic Particles Around Border */}
+                        <div className="absolute -inset-0.5 z-0 pointer-events-none">
+                            {/* Top wisps */}
+                            <div className="absolute -top-0.5 left-1/4 w-0.5 h-3 bg-linear-to-t from-transparent via-yellow-400 to-transparent animate-energy-wisp" style={{ animationDelay: '0s' }} />
+                            <div className="absolute -top-0.5 right-1/3 w-0.5 h-2 bg-linear-to-t from-transparent via-red-400 to-transparent animate-energy-wisp" style={{ animationDelay: '1s' }} />
+
+                            {/* Side wisps */}
+                            <div className="absolute top-1/2 -left-0.5 w-2 h-0.5 bg-linear-to-r from-transparent via-orange-400 to-transparent animate-energy-wisp" style={{ animationDelay: '0.5s' }} />
+                            <div className="absolute top-1/3 -right-0.5 w-1.5 h-0.5 bg-linear-to-l from-transparent via-yellow-300 to-transparent animate-energy-wisp" style={{ animationDelay: '1.5s' }} />
+
+                            {/* Bottom wisps */}
+                            <div className="absolute -bottom-0.5 left-1/3 w-0.5 h-2.5 bg-linear-to-t from-yellow-500 via-orange-400 to-transparent animate-energy-wisp" style={{ animationDelay: '2s' }} />
+                            <div className="absolute -bottom-0.5 right-1/4 w-0.5 h-1.5 bg-linear-to-t from-red-500 via-yellow-400 to-transparent animate-energy-wisp" style={{ animationDelay: '0.8s' }} />
+                        </div>
+                    </>
+                )}
+
                 <Card className={cn(
                     "relative z-10 h-full p-4 border-2 transition-all duration-300 ease-out rounded-none overflow-hidden",
                     // Standard Tier (Default)
@@ -299,5 +328,5 @@ export function AnomalyCard({ anomaly }: AnomalyCardProps) {
             />
         </>
     );
-}
+});
 

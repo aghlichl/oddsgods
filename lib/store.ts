@@ -65,93 +65,93 @@ export const usePreferencesStore = create<PreferencesStore>((set, get) => ({
 type TopTradesPeriod = 'today' | 'weekly' | 'monthly' | 'yearly' | 'max';
 
 interface TopTradesResponse {
-    period: TopTradesPeriod;
-    count: number;
-    trades: Anomaly[];
+  period: TopTradesPeriod;
+  count: number;
+  trades: Anomaly[];
 }
 
 interface MarketStore {
-    anomalies: Anomaly[];
-    volume: number;
-    tickerItems: string[];
-    isLoading: boolean;
-    addAnomaly: (anomaly: Anomaly) => void;
-    loadHistory: () => Promise<void>;
-    startStream: (getPreferences?: () => UserPreferences) => () => void;
+  anomalies: Anomaly[];
+  volume: number;
+  tickerItems: string[];
+  isLoading: boolean;
+  addAnomaly: (anomaly: Anomaly) => void;
+  loadHistory: () => Promise<void>;
+  startStream: (getPreferences?: () => UserPreferences) => () => void;
 
-    // Top trades functionality
-    topTrades: Anomaly[];
-    topTradesLoading: boolean;
-    selectedPeriod: TopTradesPeriod;
-    fetchTopTrades: (period: TopTradesPeriod) => Promise<void>;
-    setSelectedPeriod: (period: TopTradesPeriod) => void;
+  // Top trades functionality
+  topTrades: Anomaly[];
+  topTradesLoading: boolean;
+  selectedPeriod: TopTradesPeriod;
+  fetchTopTrades: (period: TopTradesPeriod) => Promise<void>;
+  setSelectedPeriod: (period: TopTradesPeriod) => void;
 }
 
 export const useMarketStore = create<MarketStore>((set, get) => ({
-    anomalies: [],
-    volume: 0,
-    tickerItems: [],
-    isLoading: false,
+  anomalies: [],
+  volume: 0,
+  tickerItems: [],
+  isLoading: false,
 
-    // Top trades state
-    topTrades: [],
-    topTradesLoading: false,
-    selectedPeriod: 'weekly',
-    addAnomaly: (anomaly) => set((state) => ({
-        anomalies: [anomaly, ...state.anomalies].slice(0, 100), // Increased limit for historical + real-time
-        volume: state.volume + anomaly.value,
-        tickerItems: [`${anomaly.event} ${anomaly.type === 'GOD_WHALE' || anomaly.type === 'SUPER_WHALE' || anomaly.type === 'MEGA_WHALE' ? 'WHALE' : 'TRADE'} $${(anomaly.value / 1000).toFixed(1)}k`, ...state.tickerItems].slice(0, 20)
-    })),
-    loadHistory: async () => {
-        set({ isLoading: true });
-        try {
-            const response = await fetch('/api/history');
-            if (response.ok) {
-                const historicalAnomalies: Anomaly[] = await response.json();
-                set((state) => ({
-                    anomalies: [...historicalAnomalies, ...state.anomalies],
-                    isLoading: false,
-                }));
-            }
-        } catch (error) {
-            console.error('Failed to load historical data:', error);
-            set({ isLoading: false });
-        }
-    },
-    startStream: (getPreferences) => {
-        // Load historical data first
-        get().loadHistory();
-
-        // Start the WebSocket Firehose with preferences getter
-        const cleanup = startFirehose((anomaly) => {
-            get().addAnomaly(anomaly);
-        }, getPreferences);
-        return cleanup;
-    },
-
-    // Top trades functions
-    fetchTopTrades: async (period) => {
-        set({ topTradesLoading: true });
-        try {
-            const response = await fetch(`/api/top-trades?period=${period}`);
-            if (response.ok) {
-                const data: TopTradesResponse = await response.json();
-                set({
-                    topTrades: data.trades,
-                    selectedPeriod: period,
-                    topTradesLoading: false
-                });
-            } else {
-                console.error('Failed to fetch top trades');
-                set({ topTradesLoading: false });
-            }
-        } catch (error) {
-            console.error('Error fetching top trades:', error);
-            set({ topTradesLoading: false });
-        }
-    },
-    setSelectedPeriod: (period) => {
-        set({ selectedPeriod: period });
-        get().fetchTopTrades(period);
+  // Top trades state
+  topTrades: [],
+  topTradesLoading: false,
+  selectedPeriod: 'weekly',
+  addAnomaly: (anomaly) => set((state) => ({
+    anomalies: [anomaly, ...state.anomalies].slice(0, 100), // Increased limit for historical + real-time
+    volume: state.volume + anomaly.value,
+    tickerItems: [`${anomaly.event} ${anomaly.type === 'GOD_WHALE' || anomaly.type === 'SUPER_WHALE' || anomaly.type === 'MEGA_WHALE' ? 'WHALE' : 'TRADE'} $${(anomaly.value / 1000).toFixed(1)}k`, ...state.tickerItems].slice(0, 20)
+  })),
+  loadHistory: async () => {
+    set({ isLoading: true });
+    try {
+      const response = await fetch('/api/history');
+      if (response.ok) {
+        const historicalAnomalies: Anomaly[] = await response.json();
+        set((state) => ({
+          anomalies: [...historicalAnomalies, ...state.anomalies],
+          isLoading: false,
+        }));
+      }
+    } catch (error) {
+      console.error('Failed to load historical data:', error);
+      set({ isLoading: false });
     }
+  },
+  startStream: (getPreferences) => {
+    // Load historical data first
+    get().loadHistory();
+
+    // Start the WebSocket Firehose with preferences getter
+    const cleanup = startFirehose((anomaly) => {
+      get().addAnomaly(anomaly);
+    }, getPreferences);
+    return cleanup;
+  },
+
+  // Top trades functions
+  fetchTopTrades: async (period) => {
+    set({ topTradesLoading: true });
+    try {
+      const response = await fetch(`/api/top-trades?period=${period}`);
+      if (response.ok) {
+        const data: TopTradesResponse = await response.json();
+        set({
+          topTrades: data.trades,
+          selectedPeriod: period,
+          topTradesLoading: false
+        });
+      } else {
+        console.error('Failed to fetch top trades');
+        set({ topTradesLoading: false });
+      }
+    } catch (error) {
+      console.error('Error fetching top trades:', error);
+      set({ topTradesLoading: false });
+    }
+  },
+  setSelectedPeriod: (period) => {
+    set({ selectedPeriod: period });
+    get().fetchTopTrades(period);
+  }
 }));

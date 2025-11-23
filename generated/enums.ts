@@ -9,7 +9,19 @@
 * 🟢 You can import this file directly.
 */
 
+export const SubscriptionTier = {
+  FREE: 'FREE',
+  PRO: 'PRO',
+  WHALE: 'WHALE'
+} as const
+
+export type SubscriptionTier = (typeof SubscriptionTier)[keyof typeof SubscriptionTier]
 
 
-// This file is empty because there are no enums in the schema.
-export {}
+export const AlertType = {
+  WHALE_MOVEMENT: 'WHALE_MOVEMENT',
+  MARKET_SPIKE: 'MARKET_SPIKE',
+  SMART_MONEY_ENTRY: 'SMART_MONEY_ENTRY'
+} as const
+
+export type AlertType = (typeof AlertType)[keyof typeof AlertType]

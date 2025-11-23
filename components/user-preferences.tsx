@@ -117,97 +117,87 @@ export function UserPreferences() {
         </h2>
 
         {/* STANDARD Card */}
-        <div className={`relative p-4 border-2 transition-all duration-200 cursor-pointer ${
-          preferences.showStandard
+        <div className={`relative p-4 border-2 transition-all duration-200 cursor-pointer ${preferences.showStandard
             ? 'border-zinc-500 bg-zinc-900 shadow-[3px_3px_0px_0px_rgba(0,0,0,0.8)]'
             : 'border-zinc-700 bg-zinc-950 shadow-[2px_2px_0px_0px_rgba(0,0,0,0.4)] opacity-60'
-        }`} onClick={() => setPreferences({ showStandard: !preferences.showStandard })}>
+          }`} onClick={() => setPreferences({ showStandard: !preferences.showStandard })}>
           <div className="flex items-center justify-between">
             <div>
               <div className="font-mono font-bold text-zinc-400">STANDARD</div>
               <div className="text-xs text-zinc-600 font-mono">$0 - $8,000</div>
             </div>
-            <div className={`w-4 h-4 border-2 transition-all duration-200 ${
-              preferences.showStandard
+            <div className={`w-4 h-4 border-2 transition-all duration-200 ${preferences.showStandard
                 ? 'border-zinc-400 bg-zinc-400'
                 : 'border-zinc-600'
-            }`} />
+              }`} />
           </div>
         </div>
 
         {/* WHALE Card */}
-        <div className={`relative p-4 border-2 transition-all duration-200 cursor-pointer ${
-          preferences.showWhale
+        <div className={`relative p-4 border-2 transition-all duration-200 cursor-pointer ${preferences.showWhale
             ? 'border-blue-500 bg-blue-950/20 shadow-[3px_3px_0px_0px_rgba(59,130,246,0.8)]'
             : 'border-blue-700/50 bg-zinc-950 shadow-[2px_2px_0px_0px_rgba(0,0,0,0.4)] opacity-60'
-        }`} onClick={() => setPreferences({ showWhale: !preferences.showWhale })}>
+          }`} onClick={() => setPreferences({ showWhale: !preferences.showWhale })}>
           <div className="flex items-center justify-between">
             <div>
               <div className="font-mono font-bold text-blue-400">WHALE</div>
               <div className="text-xs text-zinc-600 font-mono">$8,000 - $15,000</div>
             </div>
-            <div className={`w-4 h-4 border-2 transition-all duration-200 ${
-              preferences.showWhale
+            <div className={`w-4 h-4 border-2 transition-all duration-200 ${preferences.showWhale
                 ? 'border-blue-400 bg-blue-400'
                 : 'border-blue-600/50'
-            }`} />
+              }`} />
           </div>
         </div>
 
         {/* MEGA_WHALE Card */}
-        <div className={`relative p-4 border-2 transition-all duration-200 cursor-pointer ${
-          preferences.showMegaWhale
+        <div className={`relative p-4 border-2 transition-all duration-200 cursor-pointer ${preferences.showMegaWhale
             ? 'border-purple-500 bg-purple-950/20 shadow-[3px_3px_0px_0px_rgba(147,51,234,0.8)]'
             : 'border-purple-700/50 bg-zinc-950 shadow-[2px_2px_0px_0px_rgba(0,0,0,0.4)] opacity-60'
-        }`} onClick={() => setPreferences({ showMegaWhale: !preferences.showMegaWhale })}>
+          }`} onClick={() => setPreferences({ showMegaWhale: !preferences.showMegaWhale })}>
           <div className="flex items-center justify-between">
             <div>
               <div className="font-mono font-bold text-purple-400">MEGA WHALE</div>
               <div className="text-xs text-zinc-600 font-mono">$15,000 - $50,000</div>
             </div>
-            <div className={`w-4 h-4 border-2 transition-all duration-200 ${
-              preferences.showMegaWhale
+            <div className={`w-4 h-4 border-2 transition-all duration-200 ${preferences.showMegaWhale
                 ? 'border-purple-400 bg-purple-400'
                 : 'border-purple-600/50'
-            }`} />
+              }`} />
           </div>
         </div>
 
         {/* SUPER_WHALE Card */}
-        <div className={`relative p-4 border-2 transition-all duration-200 cursor-pointer ${
-          preferences.showSuperWhale
+        <div className={`relative p-4 border-2 transition-all duration-200 cursor-pointer ${preferences.showSuperWhale
             ? 'border-red-500 bg-red-950/20 shadow-[3px_3px_0px_0px_rgba(239,68,68,0.8)]'
             : 'border-red-700/50 bg-zinc-950 shadow-[2px_2px_0px_0px_rgba(0,0,0,0.4)] opacity-60'
-        }`} onClick={() => setPreferences({ showSuperWhale: !preferences.showSuperWhale })}>
+          }`} onClick={() => setPreferences({ showSuperWhale: !preferences.showSuperWhale })}>
           <div className="flex items-center justify-between">
             <div>
               <div className="font-mono font-bold text-red-400">SUPER WHALE</div>
               <div className="text-xs text-zinc-600 font-mono">$50,000 - $100,000</div>
             </div>
-            <div className={`w-4 h-4 border-2 transition-all duration-200 ${
-              preferences.showSuperWhale
+            <div className={`w-4 h-4 border-2 transition-all duration-200 ${preferences.showSuperWhale
                 ? 'border-red-400 bg-red-400'
                 : 'border-red-600/50'
-            }`} />
+              }`} />
           </div>
         </div>
 
         {/* GOD_WHALE Card */}
-        <div className={`relative p-4 border-2 transition-all duration-200 cursor-pointer ${
-          preferences.showGodWhale
+        <div className={`relative p-4 border-2 transition-all duration-200 cursor-pointer ${preferences.showGodWhale
             ? 'border-yellow-500 bg-yellow-950/20 shadow-[3px_3px_0px_0px_rgba(251,191,36,0.8)]'
             : 'border-yellow-700/50 bg-zinc-950 shadow-[2px_2px_0px_0px_rgba(0,0,0,0.4)] opacity-60'
-        }`} onClick={() => setPreferences({ showGodWhale: !preferences.showGodWhale })}>
+          }`} onClick={() => setPreferences({ showGodWhale: !preferences.showGodWhale })}>
           <div className="flex items-center justify-between">
             <div>
               <div className="font-mono font-bold text-yellow-400">GOD WHALE</div>
               <div className="text-xs text-zinc-600 font-mono">$100,000+</div>
             </div>
-            <div className={`w-4 h-4 border-2 transition-all duration-200 ${
-              preferences.showGodWhale
+            <div className={`w-4 h-4 border-2 transition-all duration-200 ${preferences.showGodWhale
                 ? 'border-yellow-400 bg-yellow-400'
                 : 'border-yellow-600/50'
-            }`} />
+              }`} />
           </div>
         </div>
       </div>
@@ -319,19 +309,18 @@ export function UserPreferences() {
         {/* Tier indicator */}
         <div className="text-center">
           <div className="inline-flex items-center px-3 py-1 bg-zinc-900 border border-zinc-700 rounded-full">
-            <div className={`w-2 h-2 rounded-full mr-2 ${
-              preferences.minValueThreshold >= CONFIG.THRESHOLDS.GOD_WHALE ? 'bg-yellow-400' :
-              preferences.minValueThreshold >= CONFIG.THRESHOLDS.SUPER_WHALE ? 'bg-red-400' :
-              preferences.minValueThreshold >= CONFIG.THRESHOLDS.MEGA_WHALE ? 'bg-purple-400' :
-              preferences.minValueThreshold >= CONFIG.THRESHOLDS.WHALE ? 'bg-blue-400' :
-              'bg-zinc-400'
-            }`} />
+            <div className={`w-2 h-2 rounded-full mr-2 ${preferences.minValueThreshold >= CONFIG.THRESHOLDS.GOD_WHALE ? 'bg-yellow-400' :
+                preferences.minValueThreshold >= CONFIG.THRESHOLDS.SUPER_WHALE ? 'bg-red-400' :
+                  preferences.minValueThreshold >= CONFIG.THRESHOLDS.MEGA_WHALE ? 'bg-purple-400' :
+                    preferences.minValueThreshold >= CONFIG.THRESHOLDS.WHALE ? 'bg-blue-400' :
+                      'bg-zinc-400'
+              }`} />
             <span className="text-xs font-mono text-zinc-400">
               {preferences.minValueThreshold >= CONFIG.THRESHOLDS.GOD_WHALE ? 'GOD WHALE +' :
-               preferences.minValueThreshold >= CONFIG.THRESHOLDS.SUPER_WHALE ? 'SUPER WHALE +' :
-               preferences.minValueThreshold >= CONFIG.THRESHOLDS.MEGA_WHALE ? 'MEGA WHALE +' :
-               preferences.minValueThreshold >= CONFIG.THRESHOLDS.WHALE ? 'WHALE +' :
-               'ALL TRADES'}
+                preferences.minValueThreshold >= CONFIG.THRESHOLDS.SUPER_WHALE ? 'SUPER WHALE +' :
+                  preferences.minValueThreshold >= CONFIG.THRESHOLDS.MEGA_WHALE ? 'MEGA WHALE +' :
+                    preferences.minValueThreshold >= CONFIG.THRESHOLDS.WHALE ? 'WHALE +' :
+                      'ALL TRADES'}
             </span>
           </div>
         </div>
