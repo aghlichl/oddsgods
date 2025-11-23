@@ -2,7 +2,7 @@ import { Anomaly } from "@/lib/market-stream";
 import { cn } from "@/lib/utils";
 import { Card } from "@/components/ui/card";
 import { Gauge } from "./gauge";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { TradeDetailsModal } from "./trade-details-modal";
 
 interface AnomalyCardProps {
@@ -27,17 +27,6 @@ export function AnomalyCard({ anomaly }: AnomalyCardProps) {
     const isWhale = type === 'WHALE';
 
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [supportsHover, setSupportsHover] = useState(true);
-
-    useEffect(() => {
-        // Check if device supports hover (desktop vs mobile)
-        const mediaQuery = window.matchMedia('(hover: hover)');
-        setSupportsHover(mediaQuery.matches);
-
-        const handleChange = (e: MediaQueryListEvent) => setSupportsHover(e.matches);
-        mediaQuery.addEventListener('change', handleChange);
-        return () => mediaQuery.removeEventListener('change', handleChange);
-    }, []);
 
     return (
         <>
@@ -268,12 +257,7 @@ export function AnomalyCard({ anomaly }: AnomalyCardProps) {
                 </Card>
 
                 {/* Timestamp Reveal - Appears behind the lifting card */}
-                <div className={cn(
-                    "absolute bottom-0 left-0 right-0 flex justify-center items-end z-0 transition-all duration-300 delay-75",
-                    supportsHover
-                        ? "opacity-0 group-hover:opacity-100 group-hover:translate-y-6" // Desktop: hover to show
-                        : "opacity-100 translate-y-2" // Mobile: always visible, slightly raised
-                )}>
+                <div className="absolute bottom-0 left-0 right-0 flex justify-center items-end z-0 opacity-0 group-hover:opacity-100 group-hover:translate-y-6 transition-all duration-300 delay-75">
                     <span className="text-[10px] font-mono font-bold text-zinc-400 uppercase tracking-wider bg-black/50 px-2 py-0.5 rounded">
                         {new Date(timestamp).toLocaleTimeString([], {
                             hour: '2-digit',
