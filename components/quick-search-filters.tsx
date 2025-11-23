@@ -13,6 +13,39 @@ interface QuickSearchFiltersProps {
 
 type CategoryType = 'sports' | 'politics' | 'crypto' | 'markets' | 'companies' | null;
 
+// Keyword definitions - extracted for reuse
+const CATEGORY_KEYWORDS: Record<string, string[]> = {
+  politics: ['trump', 'biden', 'obama', 'clinton', 'harris', 'pence', 'pelosi', 'mcconnell', 'aoc', 'cruz', 'sanders', 'warren', 'buttigieg', 'klobuchar', 'macron', 'johnson', 'zelenskyy', 'putin', 'netanyahu', 'erdogan', 'jinping', 'sunak', 'modi', 'bachelet', 'marcos', 'boris', 'emmanuel', 'angela', 'olaf', 'luis', 'jair', 'andres', 'gabriel', 'alberto', 'boric'],
+  crypto: ['bitcoin', 'ethereum', 'solana', 'cardano', 'polygon', 'chainlink', 'uniswap', 'compound', 'aave', 'maker', 'sushi', 'avalanche', 'polkadot', 'cosmos', 'algorand', 'stellar', 'vechain', 'iota', 'neo', 'qtum', 'zilliqa', 'icon', 'ontology', 'thorchain', 'pancakeswap', '1inch', 'sushiswap', 'curve', 'yearn', 'synthetix'],
+  markets: ['spy', 'qqq', 'iwm', 'vti', 'vxus', 'bnd', 'vtip', 'tlt', 'ief', 'shy', 'lqd', 'emb', 'hyg', 'iglb'],
+  companies: ['tesla', 'apple', 'microsoft', 'google', 'amazon', 'meta', 'netflix', 'spotify', 'nvidia', 'amd', 'intel', 'oracle', 'ibm', 'salesforce', 'adobe', 'paypal', 'shopify', 'square', 'block', 'coinbase', 'roku', 'zoom', 'slack', 'discord', 'twilio', 'atlassian', 'mongodb', 'datadog', 'crowdstrike', 'palantir']
+};
+
+// Sports leagues
+const SPORTS_LEAGUES = ['NBA', 'NFL', 'MLB', 'NCAA', 'UFC', 'Soccer', 'Tennis', 'Golf', 'Formula 1', 'NHL'];
+
+// League team mappings
+const LEAGUE_TEAMS: Record<string, string[]> = {
+  'NBA': ['knicks', 'nets', 'celtics', 'sixers', 'raptors', 'bulls', 'cavaliers', 'pistons', 'pacers', 'bucks', 'hawks', 'heat', 'magic', 'wizards', 'hornets', 'grizzlies', 'pelicans', 'thunder', 'timberwolves', 'blazers', 'kings', 'warriors', 'clippers', 'lakers', 'suns', 'jazz', 'mavericks', 'rockets', 'spurs', 'nuggets'],
+  'NFL': ['chiefs', 'eagles', 'patriots', 'packers', 'seahawks', 'bears', 'bengals', 'bills', 'broncos', 'browns', 'buccaneers', 'cardinals', 'chargers', 'colts', 'commanders', 'cowboys', 'dolphins', 'falcons', 'giants', 'jaguars', 'jets', 'niners', 'panthers', 'raiders', 'rams', 'raven', 'redskins', 'saints', 'steelers', 'texans', 'titans', 'viking', 'washington'],
+  'MLB': ['yankees', 'red sox', 'rays', 'blue jays', 'orioles', 'white sox', 'guardians', 'tigers', 'twins', 'royals', 'angels', 'astros', 'athletics', 'rangers', 'mariners', 'dodgers', 'diamondbacks', 'giants', 'padres', 'rockies', 'phillies', 'pirates', 'marlins', 'mets', 'nationals', 'braves', 'brewers', 'cubs', 'cardinals', 'reds'],
+  'NHL': ['oilers', 'flames', 'canucks', 'golden knights', 'kings', 'ducks', 'sharks', 'blackhawks', 'blue jackets', 'stars', 'wild', 'predators', 'blues', 'jets', 'senators', 'maple leafs', 'canadiens', 'bruins', 'rangers', 'islanders', 'devils', 'flyers', 'penguins', 'capitals', 'hurricanes', 'panthers', 'lightning', 'avalanche', 'kraken']
+};
+
+// Sports leagues mapping for pattern matching
+const leaguePatterns = {
+  'NBA': /\b(nba|nba)\b/g,
+  'NFL': /\b(nfl|nfl)\b/g,
+  'MLB': /\b(mlb|mlb)\b/g,
+  'NCAA': /\b(ncaa|ncaa)\b/g,
+  'UFC': /\b(ufc|ufc)\b/g,
+  'Soccer': /\b(premier|league|epl|bundesliga|serie.?a|laliga|soccer|football)\b/g,
+  'Tennis': /\b(tennis|atp|wta)\b/g,
+  'Golf': /\b(golf|pga)\b/g,
+  'Formula 1': /\b(f1|formula.?1)\b/g,
+  'NHL': /\b(nhl|nhl)\b/g
+};
+
 export function QuickSearchFilters({ onFilterSelect, activeFilter, anomalies = [] }: QuickSearchFiltersProps) {
   const [expandedCategory, setExpandedCategory] = useState<CategoryType>(null);
   const [drillDownLevel, setDrillDownLevel] = useState(0); // 0: categories, 1: leagues/items, 2: teams (sports only)
@@ -28,18 +61,24 @@ export function QuickSearchFilters({ onFilterSelect, activeFilter, anomalies = [
   // Parent categories
   const parentCategories = ['sports', 'politics', 'crypto', 'markets', 'companies'];
 
-  // Sports leagues mapping
-  const leaguePatterns = {
-    'NBA': /\b(nba|nba)\b/g,
-    'NFL': /\b(nfl|nfl)\b/g,
-    'MLB': /\b(mlb|mlb)\b/g,
-    'NCAA': /\b(ncaa|ncaa)\b/g,
-    'UFC': /\b(ufc|ufc)\b/g,
-    'Soccer': /\b(premier|league|epl|bundesliga|serie.?a|laliga|soccer|football)\b/g,
-    'Tennis': /\b(tennis|atp|wta)\b/g,
-    'Golf': /\b(golf|pga)\b/g,
-    'Formula 1': /\b(f1|formula.?1)\b/g,
-    'NHL': /\b(nhl|nhl)\b/g
+  // Query generation helpers
+  const getKeywordsForCategory = (category: CategoryType): string => {
+    if (!category) return '';
+    
+    if (category === 'sports') {
+      // For sports, combine all league names
+      return SPORTS_LEAGUES.join(' ');
+    }
+    
+    // For other categories, use their keyword lists
+    const keywords = CATEGORY_KEYWORDS[category] || [];
+    return keywords.join(' ');
+  };
+
+  const getKeywordsForLeague = (league: string): string => {
+    const teams = LEAGUE_TEAMS[league] || [];
+    // Return league name + all team names
+    return [league.toLowerCase(), ...teams].join(' ');
   };
 
   // Get sports leagues sorted by volume
@@ -77,33 +116,21 @@ export function QuickSearchFilters({ onFilterSelect, activeFilter, anomalies = [
   const getTeamsForLeague = (league: string): string[] => {
     const teamCounts = new Map<string, number>();
     const recentAnomalies = anomalies.slice(0, 100);
+    
+    // Get teams from LEAGUE_TEAMS constant
+    const knownTeams = LEAGUE_TEAMS[league] || [];
 
     recentAnomalies.forEach(anomaly => {
       const eventText = (anomaly.event + ' ' + anomaly.outcome).toLowerCase();
 
-      let teamPatterns: RegExp[] = [];
-
-      switch (league.toUpperCase()) {
-        case 'NBA':
-          teamPatterns = [/\b(knicks|nets|celtics|sixers|raptors|bulls|cavaliers|pistons|pacers|bucks|hawks|heat|magic|wizards|hornets|grizzlies|pelicans|thunder|timberwolves|blazers|kings|warriors|clippers|lakers|suns|jazz|mavericks|rockets|spurs|nuggets)\b/g];
-          break;
-        case 'NFL':
-          teamPatterns = [/\b(chiefs|eagles|patriots|packers|seahawks|bears|bengals|bills|broncos|browns|buccaneers|cardinals|chargers|colts|commanders|cowboys|dolphins|falcons|giants|jaguars|jets|niners|panthers|raiders|rams|raven|redskins|saints|steelers|texans|titans|viking|washington)\b/g];
-          break;
-        case 'MLB':
-          teamPatterns = [/\b(yankees|red.?sox|rays|blue.?jays|orioles|white.?sox|guardians|tigers|twins|royals|angels|astros|athletics|rangers|mariners|dodgers|diamondbacks|giants|padres|rockies|phillies|pirates|marlins|mets|nationals|braves|brewers|cubs|cardinals|reds)\b/g];
-          break;
-        case 'NHL':
-          teamPatterns = [/\b(oilers|flames|canucks|golden.?knights|kings|ducks|sharks|blackhawks|blue.?jackets|stars|wild|predators|blues|jets|senators|maple.?leafs|canadiens|bruins|rangers|islanders|devils|flyers|penguins|capitals|hurricanes|panthers|lightning|avalanche|kraken)\b/g];
-          break;
-        default:
-          // For other leagues, try to extract general sports team names
-          teamPatterns = [/\b([a-z]+(?:\s+[a-z]+)*)\b/g]; // Simple fallback
-          break;
-      }
-
-      teamPatterns.forEach(pattern => {
-        const matches = eventText.match(pattern);
+      // Create pattern from known teams
+      if (knownTeams.length > 0) {
+        // Escape special regex characters and create pattern
+        const escapedTeams = knownTeams.map(team => 
+          team.replace(/[.*+?^${}()|[\]\\]/g, '\\$&').replace(/\s+/g, '[\\s.]+')
+        );
+        const teamPattern = new RegExp(`\\b(${escapedTeams.join('|')})\\b`, 'gi');
+        const matches = eventText.match(teamPattern);
         if (matches) {
           matches.forEach(match => {
             const cleanMatch = match.trim();
@@ -112,14 +139,29 @@ export function QuickSearchFilters({ onFilterSelect, activeFilter, anomalies = [
             }
           });
         }
-      });
+      } else {
+        // Fallback for unknown leagues
+        const fallbackPattern = /\b([a-z]+(?:\s+[a-z]+)*)\b/g;
+        const matches = eventText.match(fallbackPattern);
+        if (matches) {
+          matches.forEach(match => {
+            const cleanMatch = match.trim();
+            if (cleanMatch.length > 2 && cleanMatch !== league.toLowerCase()) {
+              teamCounts.set(cleanMatch, (teamCounts.get(cleanMatch) || 0) + 1);
+            }
+          });
+        }
+      }
     });
 
-    // Return teams sorted by frequency
-    return Array.from(teamCounts.entries())
+    // Return teams sorted by frequency, but prioritize known teams
+    const sortedByFrequency = Array.from(teamCounts.entries())
       .sort((a, b) => b[1] - a[1])
-      .map(([team]) => team)
-      .slice(0, 8);
+      .map(([team]) => team);
+    
+    // Merge with known teams, prioritizing those found in data
+    const result = [...new Set([...sortedByFrequency, ...knownTeams])];
+    return result.slice(0, 8);
   };
 
   // Get sub-items for a specific category and level
@@ -137,40 +179,21 @@ export function QuickSearchFilters({ onFilterSelect, activeFilter, anomalies = [
       }
     }
 
-    // For other categories or sports level 1, use original logic
+    // For other categories, use CATEGORY_KEYWORDS constant
+    const knownKeywords = CATEGORY_KEYWORDS[category] || [];
     const termCounts = new Map<string, number>();
     const recentAnomalies = anomalies.slice(0, 50);
 
     recentAnomalies.forEach(anomaly => {
       const eventText = (anomaly.event + ' ' + anomaly.outcome).toLowerCase();
 
-      let patterns: RegExp[] = [];
-
-      switch (category) {
-        case 'politics':
-          patterns = [
-            /\b(trump|biden|obama|clinton|harris|pence|pelosi|mcconnell|aoc|cruz|sanders|warren|buttigieg|klobuchar|macron|johnson|zelenskyy|putin|netanyahu|erdogan|jinping|sunak|modi|bachelet|marcos|boris|emmanuel|angela|olaf|luis|jair|andres|gabriel|alberto|boric)\b/g,
-          ];
-          break;
-        case 'crypto':
-          patterns = [
-            /\b(bitcoin|ethereum|solana|cardano|polygon|chainlink|uniswap|compound|aave|maker|sushi|avalanche|polkadot|cosmos|algorand|stellar|vechain|iota|neo|qtum|zilliqa|icon|ontology|thorchain|pancakeswap|1inch|sushiswap|curve|yearn|compound|synthetix)\b/g,
-          ];
-          break;
-        case 'markets':
-          patterns = [
-            /\b(spy|qqq|iwm|vti|vxus|BND|bnd|vtip|tlt|ief|shy|lqd|emb|hyg|iglb|spy|qqq|iwm|vti|vxus|bnd|vtip|tlt|ief|shy|lqd|emb|hyg|iglb)\b/g,
-          ];
-          break;
-        case 'companies':
-          patterns = [
-            /\b(tesla|apple|microsoft|google|amazon|meta|netflix|spotify|nvidia|amd|intel|oracle|ibm|salesforce|adobe|paypal|shopify|square|block|coinbase|roku|zoom|slack|discord|twilio|atlassian|mongodb|datadog|crowdstrike|palantir)\b/g,
-          ];
-          break;
-      }
-
-      patterns.forEach(pattern => {
-        const matches = eventText.match(pattern);
+      // Create pattern from known keywords
+      if (knownKeywords.length > 0) {
+        const escapedKeywords = knownKeywords.map(keyword => 
+          keyword.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+        );
+        const keywordPattern = new RegExp(`\\b(${escapedKeywords.join('|')})\\b`, 'gi');
+        const matches = eventText.match(keywordPattern);
         if (matches) {
           matches.forEach(match => {
             const cleanMatch = match.trim();
@@ -179,41 +202,57 @@ export function QuickSearchFilters({ onFilterSelect, activeFilter, anomalies = [
             }
           });
         }
-      });
+      }
     });
 
-    // Return top 8 items for this category, sorted by frequency
-    return Array.from(termCounts.entries())
+    // Return top items for this category, sorted by frequency, but include all known keywords
+    const sortedByFrequency = Array.from(termCounts.entries())
       .sort((a, b) => b[1] - a[1])
-      .map(([term]) => term)
-      .slice(0, 80);
+      .map(([term]) => term);
+    
+    // Merge with known keywords, prioritizing those found in data
+    const result = [...new Set([...sortedByFrequency, ...knownKeywords])];
+    return result.slice(0, 80);
   };
 
   const handleCategoryClick = (category: string) => {
     if (drillDownLevel === 0) {
-      // Clicking from main categories
-      setExpandedCategory(category as CategoryType);
+      // Clicking from main categories - apply category filter
+      const categoryType = category as CategoryType;
+      setExpandedCategory(categoryType);
       setDrillDownLevel(1);
       if (category === 'sports') {
         setSelectedLeague(null); // Reset league selection
       }
+      // Generate and apply filter query for this category
+      const query = getKeywordsForCategory(categoryType);
+      onFilterSelect(query);
     } else if (drillDownLevel === 1 && expandedCategory === 'sports') {
-      // Clicking a league within sports
+      // Clicking a league within sports - apply league filter
       setSelectedLeague(category);
       setDrillDownLevel(2);
+      // Generate and apply filter query for this league (league + all teams)
+      const query = getKeywordsForLeague(category);
+      onFilterSelect(query);
     }
   };
 
   const handleBackToCategories = () => {
     if (drillDownLevel === 2) {
-      // Back from teams to leagues
+      // Back from teams to leagues - restore category filter
       setDrillDownLevel(1);
       setSelectedLeague(null);
+      // Re-apply the category-level filter
+      if (expandedCategory) {
+        const query = getKeywordsForCategory(expandedCategory);
+        onFilterSelect(query);
+      }
     } else if (drillDownLevel === 1) {
-      // Back from leagues/items to main categories
+      // Back from leagues/items to main categories - clear filter
       setDrillDownLevel(0);
       setExpandedCategory(null);
       setSelectedLeague(null);
+      onFilterSelect('');
     }
   };
 
