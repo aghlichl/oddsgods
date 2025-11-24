@@ -2,7 +2,7 @@
 
 import { Anomaly } from "@/lib/types";
 import { Modal } from "@/components/ui/modal";
-import { cn } from "@/lib/utils";
+import { cn, formatShortNumber, calculatePositionPL, formatCurrency } from "@/lib/utils";
 import { useState, useEffect } from "react";
 import {
     AreaChart,
@@ -75,47 +75,140 @@ export function TradeDetailsModal({ isOpen, onClose, anomaly }: TradeDetailsModa
         }
     }, [isOpen, anomaly]);
 
+    // Calculate P/L if we have price history
+    const currentPrice = historyData?.priceHistory && historyData.priceHistory.length > 0
+      ? historyData.priceHistory[historyData.priceHistory.length - 1].price
+      : null;
+    const unrealizedPL = currentPrice !== null
+      ? calculatePositionPL(value, odds, currentPrice, side)
+      : 0;
+
     return (
         <Modal isOpen={isOpen} onClose={onClose}>
             <div className="flex flex-col max-h-[85vh] overflow-y-auto custom-scrollbar">
-                {/* Header */}
-                <div className={cn("p-6 border-b border-zinc-800 sticky top-0 z-10 backdrop-blur-xl", bgGlow)}>
-                    <div className="flex items-start justify-between gap-4">
-                        <div>
-                            <div className="flex items-center gap-2 mb-2">
-                                <span className={cn("text-xs font-bold px-2 py-0.5 border rounded-full bg-black/50", themeColor)}>
-                                    {anomaly.type.replace('_', ' ')}
-                                </span>
-                                {isInsider && (
-                                    <span className="text-xs font-bold px-2 py-0.5 border border-red-500 text-red-500 bg-red-500/10 rounded-full animate-pulse">
-                                        INSIDER DETECTED
+                {/* Header - HERO STYLE */}
+                <div className={cn("relative border-b border-zinc-800 overflow-hidden", bgGlow)}>
+                    {/* Background Image Overlay */}
+                    {anomaly.image && (
+                        <div className="absolute inset-0 opacity-10">
+                            <img
+                                src={anomaly.image}
+                                alt={event}
+                                className="w-full h-full object-cover blur-sm scale-110"
+                            />
+                            <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/60 to-transparent" />
+                        </div>
+                    )}
+
+                    <div className="relative z-10 p-6">
+                        <div className="flex items-start gap-6">
+                            {/* Large Hero Thumbnail */}
+                            {anomaly.image && (
+                                <div className="relative shrink-0">
+                                    <div className="relative w-24 h-24 rounded-lg overflow-hidden border-2 border-white/20 shadow-2xl group-hover:border-white/30 transition-all duration-300 backdrop-blur-sm bg-white/5">
+                                        {/* Modern Glass Effect */}
+                                        <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-black/20" />
+
+                                        <img
+                                            src={anomaly.image}
+                                            alt={event}
+                                            className="w-full h-full object-cover relative z-10"
+                                            onError={(e) => {
+                                                (e.target as HTMLImageElement).style.display = 'none';
+                                            }}
+                                        />
+
+                                        {/* Enhanced Scanline Overlay */}
+                                        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-white/10 to-transparent opacity-40 pointer-events-none" />
+
+                                        {/* Subtle Glow Effect */}
+                                        <div className="absolute inset-0 ring-1 ring-white/10 group-hover:ring-white/20 transition-all duration-300" />
+                                    </div>
+                                </div>
+                            )}
+
+                            {/* Title and Badges */}
+                            <div className="flex-1 min-w-0">
+                                <div className="flex items-center gap-2 mb-3">
+                                    <span className={cn("text-xs font-bold px-3 py-1 border rounded-full bg-black/60 backdrop-blur-sm", themeColor)}>
+                                        {anomaly.type.replace('_', ' ')}
                                     </span>
-                                )}
+                                    {isInsider && (
+                                        <span className="text-xs font-bold px-3 py-1 border border-red-500 text-red-500 bg-red-500/10 rounded-full animate-pulse backdrop-blur-sm">
+                                            INSIDER DETECTED
+                                        </span>
+                                    )}
+                                </div>
+
+                                <h2 className="text-2xl font-black text-zinc-100 leading-tight uppercase tracking-tight mb-2">
+                                    {event}
+                                </h2>
+
+                                {/* Event Subtitle */}
+                                <div className="flex items-center gap-4 text-sm text-zinc-400">
+                                    <span className="font-bold">
+                                        {outcome}
+                                    </span>
+                                    <span className={cn("font-bold px-2 py-0.5 rounded text-xs uppercase", side === 'BUY' ? "text-emerald-400 bg-emerald-400/10" : "text-red-400 bg-red-400/10")}>
+                                        {side}
+                                    </span>
+                                    <span className="text-zinc-500">•</span>
+                                    <span className="font-mono">{odds}¢</span>
+                                </div>
                             </div>
-                            <h2 className="text-xl font-bold text-zinc-100 leading-tight">{event}</h2>
                         </div>
                     </div>
                 </div>
 
                 {/* Trade Stats */}
-                <div className="grid grid-cols-2 divide-x divide-zinc-800 border-b border-zinc-800">
+                <div className="grid grid-cols-4 divide-x divide-zinc-800 border-b border-zinc-800">
                     <div className="p-4 flex flex-col items-center justify-center bg-black/20">
-                        <span className="text-xs text-zinc-500 uppercase tracking-wider mb-1">Trade Value</span>
+                        <span className="text-xs text-zinc-500 uppercase tracking-wider mb-1">Trade</span>
                         <span className={cn("text-2xl font-black font-mono", themeColor.split(' ')[0])}>
                             ${Math.round(value).toLocaleString()}
                         </span>
                     </div>
                     <div className="p-4 flex flex-col items-center justify-center bg-black/20">
-                        <span className="text-xs text-zinc-500 uppercase tracking-wider mb-1">Outcome</span>
-                        <div className="flex items-center gap-2">
-                            <span className={cn(
-                                "font-bold text-lg",
-                                side === 'BUY' ? "text-emerald-400" : "text-red-400"
-                            )}>
-                                {side} {outcome}
-                            </span>
-                            <span className="text-zinc-400 font-mono">@{odds}¢</span>
-                        </div>
+                        <span className="text-xs text-zinc-500 uppercase tracking-wider mb-1">Volume</span>
+                        <span className="text-xl font-bold font-mono text-zinc-100">
+                            ${formatShortNumber(historyData?.priceHistory?.reduce((sum, trade) => sum + trade.tradeValue, 0) || 0)}
+                        </span>
+                        <span className="text-zinc-400 text-xs">24h total</span>
+                    </div>
+                    <div className="p-4 flex flex-col items-center justify-center bg-black/20">
+                        <span className="text-xs text-zinc-500 uppercase tracking-wider mb-1">
+                            {historyData?.priceHistory && historyData.priceHistory.length > 0 ?
+                                `Price ${historyData.priceHistory[historyData.priceHistory.length - 1].price > odds ? '↗' : '↘'}` :
+                                'Price'
+                            }
+                        </span>
+                        <span className={cn(
+                            "text-xl font-bold font-mono",
+                            historyData?.priceHistory && historyData.priceHistory.length > 0 ?
+                                (historyData.priceHistory[historyData.priceHistory.length - 1].price > odds ?
+                                    "text-emerald-400" : "text-red-400") :
+                                "text-zinc-100"
+                        )}>
+                            {historyData?.priceHistory && historyData.priceHistory.length > 0 ?
+                                `${Math.abs(historyData.priceHistory[historyData.priceHistory.length - 1].price - odds).toFixed(1)}¢` :
+                                '0¢'
+                            }
+                        </span>
+                        <span className="text-zinc-400 text-xs">vs bet price</span>
+                    </div>
+                    {/* Unrealized P/L Column */}
+                    <div className="p-4 flex flex-col items-center justify-center bg-black/20">
+                        <span className="text-xs text-zinc-500 uppercase tracking-wider mb-1">P/L</span>
+                        <span className={cn(
+                            "text-xl font-bold font-mono",
+                            unrealizedPL > 0 ? "text-emerald-400" :
+                            unrealizedPL < 0 ? "text-red-400" : "text-zinc-100"
+                        )}>
+                            {formatCurrency(unrealizedPL)}
+                        </span>
+                        <span className="text-zinc-400 text-xs">
+                            {unrealizedPL !== 0 ? `${(unrealizedPL / value * 100).toFixed(1)}%` : '0%'}
+                        </span>
                     </div>
                 </div>
 
