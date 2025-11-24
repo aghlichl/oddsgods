@@ -2,6 +2,30 @@ import { create } from 'zustand';
 import { Anomaly, UserPreferences } from './market-stream';
 import { io } from 'socket.io-client';
 
+// Helper function to check if anomaly passes user preferences
+function passesPreferences(anomaly: Anomaly, preferences?: UserPreferences): boolean {
+  if (!preferences) return true; // No preferences means show all
+
+  // Check minimum value threshold
+  if (anomaly.value < preferences.minValueThreshold) return false;
+
+  // Check anomaly type filters
+  switch (anomaly.type) {
+    case 'STANDARD':
+      return preferences.showStandard;
+    case 'WHALE':
+      return preferences.showWhale;
+    case 'MEGA_WHALE':
+      return preferences.showMegaWhale;
+    case 'SUPER_WHALE':
+      return preferences.showSuperWhale;
+    case 'GOD_WHALE':
+      return preferences.showGodWhale;
+    default:
+      return true;
+  }
+}
+
 interface Preferences {
   showStandard: boolean;
   showWhale: boolean;
