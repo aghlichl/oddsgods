@@ -223,7 +223,7 @@ export const useMarketStore = create<MarketStore>((set, get) => ({
         event: enrichedTrade.market.question,
         outcome: enrichedTrade.market.outcome,
         odds: enrichedTrade.market.odds,
-        value: enrichedTrade.trade.value,
+        value: enrichedTrade.trade.tradeValue,
         timestamp: new Date(enrichedTrade.trade.timestamp).getTime(),
         side: enrichedTrade.trade.side as 'BUY' | 'SELL',
         image: enrichedTrade.market.image,
