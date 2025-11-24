@@ -1,5 +1,6 @@
 import { create } from 'zustand';
-import { Anomaly, startFirehose, UserPreferences } from './market-stream';
+import { Anomaly, UserPreferences } from './market-stream';
+import { io } from 'socket.io-client';
 
 interface Preferences {
   showStandard: boolean;
@@ -171,11 +172,58 @@ export const useMarketStore = create<MarketStore>((set, get) => ({
     // Load historical data first
     get().loadHistory();
 
-    // Start the WebSocket Firehose with preferences getter
-    const cleanup = startFirehose((anomaly) => {
-      get().addAnomaly(anomaly);
-    }, getPreferences);
-    return cleanup;
+    // Connect to worker's Socket.io server instead of direct WebSocket
+    const socket = io(process.env.NEXT_PUBLIC_SOCKET_URL || 'http://localhost:3001', {
+      transports: ['websocket'],
+      reconnection: true,
+      reconnectionDelay: 1000,
+      reconnectionAttempts: 5,
+    });
+
+    socket.on('connect', () => {
+      console.log('[Store] Connected to worker Socket.io');
+    });
+
+    socket.on('disconnect', () => {
+      console.log('[Store] Disconnected from worker Socket.io');
+    });
+
+    socket.on('trade', (enrichedTrade) => {
+      // Convert worker's enriched trade format to anomaly format
+      const anomaly: Anomaly = {
+        id: enrichedTrade.trade.assetId + '_' + enrichedTrade.trade.timestamp,
+        type: enrichedTrade.analysis.tags.includes('WHALE') ? 'WHALE' :
+              enrichedTrade.analysis.tags.includes('MEGA_WHALE') ? 'MEGA_WHALE' :
+              enrichedTrade.analysis.tags.includes('SUPER_WHALE') ? 'SUPER_WHALE' :
+              enrichedTrade.analysis.tags.includes('GOD_WHALE') ? 'GOD_WHALE' : 'STANDARD',
+        event: enrichedTrade.market.question,
+        outcome: enrichedTrade.market.outcome,
+        odds: enrichedTrade.market.odds,
+        value: enrichedTrade.trade.value,
+        timestamp: new Date(enrichedTrade.trade.timestamp).getTime(),
+        side: enrichedTrade.trade.side as 'BUY' | 'SELL',
+        image: enrichedTrade.market.image,
+        wallet_context: {
+          address: enrichedTrade.analysis.wallet_context.address,
+          label: enrichedTrade.analysis.wallet_context.label,
+          pnl_all_time: enrichedTrade.analysis.wallet_context.pnl_all_time,
+          win_rate: enrichedTrade.analysis.wallet_context.win_rate,
+          is_fresh_wallet: enrichedTrade.analysis.wallet_context.is_fresh_wallet,
+        }
+      };
+
+      // Only add if it passes user preferences
+      const currentPreferences = getPreferences?.();
+      if (!currentPreferences || passesPreferences(anomaly, currentPreferences)) {
+        get().addAnomaly(anomaly);
+      }
+    });
+
+    socket.on('error', (error) => {
+      console.error('[Store] Socket.io error:', error);
+    });
+
+    return () => socket.disconnect();
   },
 
   // Top trades functions
