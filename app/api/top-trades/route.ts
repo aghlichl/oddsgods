@@ -29,6 +29,7 @@ function getDateFilter(period: Period): Date | null {
 
 export async function GET(request: Request) {
   try {
+
     const { searchParams } = new URL(request.url);
     const period = (searchParams.get('period') as Period) || 'weekly';
 
@@ -86,10 +87,10 @@ export async function GET(request: Request) {
         timestamp: trade.timestamp.getTime(),
         side: trade.side,
         wallet_context: {
-          address: trade.walletProfile?.id || trade.walletAddress,
-          label: trade.walletProfile?.label || 'Unknown',
-          pnl_all_time: `$${trade.walletProfile?.totalPnl.toLocaleString()}`,
-          win_rate: `${((trade.walletProfile?.winRate || 0) * 100).toFixed(0)}%`,
+          address: (trade.walletProfile?.id && trade.walletProfile.id.trim()) || (trade.walletAddress && trade.walletAddress.trim()) || null,
+          label: (trade.walletProfile?.label && trade.walletProfile.label.trim()) || 'Unknown',
+          pnl_all_time: trade.walletProfile?.totalPnl ? `$${trade.walletProfile.totalPnl.toLocaleString()}` : '$0',
+          win_rate: trade.walletProfile?.winRate ? `${(trade.walletProfile.winRate * 100).toFixed(0)}%` : '0%',
           is_fresh_wallet: trade.walletProfile?.isFresh || false,
         },
         trader_context: {

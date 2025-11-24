@@ -9,9 +9,6 @@ import { fetchMarketsFromGamma, parseMarketData } from '../lib/polymarket';
 import { MarketMeta, AssetOutcome } from '../lib/types';
 import { CONFIG } from '../lib/config';
 
-// Polywhaler Data API URL
-const DATA_API_URL = 'https://data-api.polymarket.com';
-
 // Initialize services
 const redis = new Redis(process.env.REDIS_URL || 'redis://localhost:6379');
 
@@ -170,8 +167,8 @@ export async function processTrade(trade: any) {
 
     // Persist to database
     try {
-      // Ensure trader profile exists
-      await prisma.trader.upsert({
+      // Ensure wallet profile exists
+      await prisma.walletProfile.upsert({
         where: { id: walletAddress.toLowerCase() },
         update: {
           label: profile.label || null,
@@ -225,113 +222,6 @@ export async function processTrade(trade: any) {
   } catch (error) {
     console.error('[Worker] Error processing trade:', error);
   }
-}
-
-/**
- * Ingest trades from Polymarket Data API (Polywhaler)
- */
-async function ingestWhaleTrades() {
-  const POLLING_INTERVAL = 2000; // 2 seconds
-  let lastSeenTimestamp = Math.floor(Date.now() / 1000) - 60; // Start from 1 min ago
-
-  const poll = async () => {
-    try {
-      // Fetch trades
-      const url = `${DATA_API_URL}/trades?limit=100&filterType=CASH&filterAmount=500`;
-      const response = await fetch(url);
-
-      if (!response.ok) {
-        console.warn(`[Polywhaler] Failed to fetch trades: ${response.statusText}`);
-        setTimeout(poll, POLLING_INTERVAL);
-        return;
-      }
-
-      const trades = await response.json();
-
-      // Sort by timestamp asc to process in order
-      trades.sort((a: any, b: any) => a.timestamp - b.timestamp);
-
-      let newTradesCount = 0;
-
-      for (const t of trades) {
-        if (t.timestamp <= lastSeenTimestamp) continue;
-
-        lastSeenTimestamp = Math.max(lastSeenTimestamp, t.timestamp);
-        newTradesCount++;
-
-        // Upsert Trader
-        if (t.proxyWallet) {
-          await prisma.trader.upsert({
-            where: { id: t.proxyWallet.toLowerCase() },
-            create: {
-              id: t.proxyWallet.toLowerCase(),
-              pseudonym: t.pseudonym,
-              bio: t.bio,
-              profileImage: t.profileImage,
-              firstSeenAt: new Date(t.timestamp * 1000),
-              lastSeenAt: new Date(t.timestamp * 1000),
-              totalVolumeUsd: t.size * t.price,
-              tradeCount: 1,
-              lastActiveAt: new Date(t.timestamp * 1000),
-            },
-            update: {
-              pseudonym: t.pseudonym,
-              bio: t.bio,
-              profileImage: t.profileImage,
-              lastSeenAt: new Date(t.timestamp * 1000),
-              totalVolumeUsd: { increment: t.size * t.price },
-              tradeCount: { increment: 1 },
-              lastActiveAt: new Date(t.timestamp * 1000),
-            },
-          });
-        }
-
-        // Insert Trade if not exists (using transactionHash + asset or similar unique constraint if possible, but ID is CUID)
-        // We check if we already have this trade by transactionHash and assetId if available
-        if (t.transactionHash) {
-          const existing = await prisma.trade.findFirst({
-            where: {
-              transactionHash: t.transactionHash,
-              assetId: t.asset,
-            }
-          });
-
-          if (!existing) {
-            await prisma.trade.create({
-              data: {
-                transactionHash: t.transactionHash,
-                assetId: t.asset,
-                conditionId: t.conditionId,
-                outcome: t.outcome,
-                title: t.title,
-                eventSlug: t.eventSlug,
-                side: t.side,
-                size: Number(t.size),
-                price: Number(t.price),
-                tradeValue: Number(t.size) * Number(t.price),
-                timestamp: new Date(t.timestamp * 1000),
-                walletAddress: t.proxyWallet ? t.proxyWallet.toLowerCase() : 'unknown', // Should we allow unknown? Schema says required.
-                // Intelligence flags (basic defaults)
-                isWhale: (Number(t.size) * Number(t.price)) > 10000,
-              }
-            });
-          }
-        }
-      }
-
-      if (newTradesCount > 0) {
-        // console.log(`[Polywhaler] Ingested ${newTradesCount} new trades`);
-      }
-
-    } catch (error) {
-      console.error('[Polywhaler] Error polling trades:', error);
-    }
-
-    setTimeout(poll, POLLING_INTERVAL);
-  };
-
-  console.log('[Polywhaler] Starting ingestion loop...');
-  poll();
 }
 
 /**
@@ -424,5 +314,4 @@ process.on('SIGINT', async () => {
 if (process.argv[1].endsWith('worker.ts')) {
   // console.log('[Worker] Starting Polymarket Intelligence Worker...');
   connectToPolymarket();
-  ingestWhaleTrades(); // Start Polywhaler ingestion
 }

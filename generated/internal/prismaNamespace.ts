@@ -384,7 +384,7 @@ type FieldRefInputType<Model, FieldType> = Model extends never ? never : FieldRe
 
 
 export const ModelName = {
-  Trader: 'Trader',
+  WalletProfile: 'WalletProfile',
   Trade: 'Trade',
   User: 'User',
   Watchlist: 'Watchlist',
@@ -404,81 +404,81 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "trader" | "trade" | "user" | "watchlist" | "alert"
+    modelProps: "walletProfile" | "trade" | "user" | "watchlist" | "alert"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
-    Trader: {
-      payload: Prisma.$TraderPayload<ExtArgs>
-      fields: Prisma.TraderFieldRefs
+    WalletProfile: {
+      payload: Prisma.$WalletProfilePayload<ExtArgs>
+      fields: Prisma.WalletProfileFieldRefs
       operations: {
         findUnique: {
-          args: Prisma.TraderFindUniqueArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$TraderPayload> | null
+          args: Prisma.WalletProfileFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WalletProfilePayload> | null
         }
         findUniqueOrThrow: {
-          args: Prisma.TraderFindUniqueOrThrowArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$TraderPayload>
+          args: Prisma.WalletProfileFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WalletProfilePayload>
         }
         findFirst: {
-          args: Prisma.TraderFindFirstArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$TraderPayload> | null
+          args: Prisma.WalletProfileFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WalletProfilePayload> | null
         }
         findFirstOrThrow: {
-          args: Prisma.TraderFindFirstOrThrowArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$TraderPayload>
+          args: Prisma.WalletProfileFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WalletProfilePayload>
         }
         findMany: {
-          args: Prisma.TraderFindManyArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$TraderPayload>[]
+          args: Prisma.WalletProfileFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WalletProfilePayload>[]
         }
         create: {
-          args: Prisma.TraderCreateArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$TraderPayload>
+          args: Prisma.WalletProfileCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WalletProfilePayload>
         }
         createMany: {
-          args: Prisma.TraderCreateManyArgs<ExtArgs>
+          args: Prisma.WalletProfileCreateManyArgs<ExtArgs>
           result: BatchPayload
         }
         createManyAndReturn: {
-          args: Prisma.TraderCreateManyAndReturnArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$TraderPayload>[]
+          args: Prisma.WalletProfileCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WalletProfilePayload>[]
         }
         delete: {
-          args: Prisma.TraderDeleteArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$TraderPayload>
+          args: Prisma.WalletProfileDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WalletProfilePayload>
         }
         update: {
-          args: Prisma.TraderUpdateArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$TraderPayload>
+          args: Prisma.WalletProfileUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WalletProfilePayload>
         }
         deleteMany: {
-          args: Prisma.TraderDeleteManyArgs<ExtArgs>
+          args: Prisma.WalletProfileDeleteManyArgs<ExtArgs>
           result: BatchPayload
         }
         updateMany: {
-          args: Prisma.TraderUpdateManyArgs<ExtArgs>
+          args: Prisma.WalletProfileUpdateManyArgs<ExtArgs>
           result: BatchPayload
         }
         updateManyAndReturn: {
-          args: Prisma.TraderUpdateManyAndReturnArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$TraderPayload>[]
+          args: Prisma.WalletProfileUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WalletProfilePayload>[]
         }
         upsert: {
-          args: Prisma.TraderUpsertArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$TraderPayload>
+          args: Prisma.WalletProfileUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WalletProfilePayload>
         }
         aggregate: {
-          args: Prisma.TraderAggregateArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.AggregateTrader>
+          args: Prisma.WalletProfileAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateWalletProfile>
         }
         groupBy: {
-          args: Prisma.TraderGroupByArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.TraderGroupByOutputType>[]
+          args: Prisma.WalletProfileGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.WalletProfileGroupByOutputType>[]
         }
         count: {
-          args: Prisma.TraderCountArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.TraderCountAggregateOutputType> | number
+          args: Prisma.WalletProfileCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.WalletProfileCountAggregateOutputType> | number
         }
       }
     }
@@ -817,16 +817,8 @@ export const TransactionIsolationLevel = runtime.makeStrictEnum({
 export type TransactionIsolationLevel = (typeof TransactionIsolationLevel)[keyof typeof TransactionIsolationLevel]
 
 
-export const TraderScalarFieldEnum = {
+export const WalletProfileScalarFieldEnum = {
   id: 'id',
-  pseudonym: 'pseudonym',
-  bio: 'bio',
-  profileImage: 'profileImage',
-  firstSeenAt: 'firstSeenAt',
-  lastSeenAt: 'lastSeenAt',
-  totalVolumeUsd: 'totalVolumeUsd',
-  tradeCount: 'tradeCount',
-  lastActiveAt: 'lastActiveAt',
   label: 'label',
   totalPnl: 'totalPnl',
   winRate: 'winRate',
@@ -837,17 +829,12 @@ export const TraderScalarFieldEnum = {
   lastUpdated: 'lastUpdated'
 } as const
 
-export type TraderScalarFieldEnum = (typeof TraderScalarFieldEnum)[keyof typeof TraderScalarFieldEnum]
+export type WalletProfileScalarFieldEnum = (typeof WalletProfileScalarFieldEnum)[keyof typeof WalletProfileScalarFieldEnum]
 
 
 export const TradeScalarFieldEnum = {
   id: 'id',
-  transactionHash: 'transactionHash',
   assetId: 'assetId',
-  conditionId: 'conditionId',
-  outcome: 'outcome',
-  title: 'title',
-  eventSlug: 'eventSlug',
   side: 'side',
   size: 'size',
   price: 'price',
@@ -858,6 +845,8 @@ export const TradeScalarFieldEnum = {
   isSmartMoney: 'isSmartMoney',
   isFresh: 'isFresh',
   isSweeper: 'isSweeper',
+  conditionId: 'conditionId',
+  outcome: 'outcome',
   question: 'question'
 } as const
 
@@ -868,7 +857,6 @@ export const UserScalarFieldEnum = {
   id: 'id',
   email: 'email',
   walletAddress: 'walletAddress',
-  displayName: 'displayName',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
   tier: 'tier',
@@ -961,20 +949,6 @@ export type ListStringFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaMod
 
 
 /**
- * Reference to a field of type 'DateTime'
- */
-export type DateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DateTime'>
-    
-
-
-/**
- * Reference to a field of type 'DateTime[]'
- */
-export type ListDateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DateTime[]'>
-    
-
-
-/**
  * Reference to a field of type 'Float'
  */
 export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float'>
@@ -985,6 +959,13 @@ export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, '
  * Reference to a field of type 'Float[]'
  */
 export type ListFloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float[]'>
+    
+
+
+/**
+ * Reference to a field of type 'Boolean'
+ */
+export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
     
 
 
@@ -1003,9 +984,16 @@ export type ListIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel,
 
 
 /**
- * Reference to a field of type 'Boolean'
+ * Reference to a field of type 'DateTime'
  */
-export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
+export type DateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DateTime'>
+    
+
+
+/**
+ * Reference to a field of type 'DateTime[]'
+ */
+export type ListDateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DateTime[]'>
     
 
 
@@ -1129,7 +1117,7 @@ export type PrismaClientOptions = ({
   omit?: GlobalOmitConfig
 }
 export type GlobalOmitConfig = {
-  trader?: Prisma.TraderOmit
+  walletProfile?: Prisma.WalletProfileOmit
   trade?: Prisma.TradeOmit
   user?: Prisma.UserOmit
   watchlist?: Prisma.WatchlistOmit

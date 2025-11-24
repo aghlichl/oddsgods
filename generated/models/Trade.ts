@@ -40,12 +40,7 @@ export type TradeSumAggregateOutputType = {
 
 export type TradeMinAggregateOutputType = {
   id: string | null
-  transactionHash: string | null
   assetId: string | null
-  conditionId: string | null
-  outcome: string | null
-  title: string | null
-  eventSlug: string | null
   side: string | null
   size: number | null
   price: number | null
@@ -56,17 +51,14 @@ export type TradeMinAggregateOutputType = {
   isSmartMoney: boolean | null
   isFresh: boolean | null
   isSweeper: boolean | null
+  conditionId: string | null
+  outcome: string | null
   question: string | null
 }
 
 export type TradeMaxAggregateOutputType = {
   id: string | null
-  transactionHash: string | null
   assetId: string | null
-  conditionId: string | null
-  outcome: string | null
-  title: string | null
-  eventSlug: string | null
   side: string | null
   size: number | null
   price: number | null
@@ -77,17 +69,14 @@ export type TradeMaxAggregateOutputType = {
   isSmartMoney: boolean | null
   isFresh: boolean | null
   isSweeper: boolean | null
+  conditionId: string | null
+  outcome: string | null
   question: string | null
 }
 
 export type TradeCountAggregateOutputType = {
   id: number
-  transactionHash: number
   assetId: number
-  conditionId: number
-  outcome: number
-  title: number
-  eventSlug: number
   side: number
   size: number
   price: number
@@ -98,6 +87,8 @@ export type TradeCountAggregateOutputType = {
   isSmartMoney: number
   isFresh: number
   isSweeper: number
+  conditionId: number
+  outcome: number
   question: number
   _all: number
 }
@@ -117,12 +108,7 @@ export type TradeSumAggregateInputType = {
 
 export type TradeMinAggregateInputType = {
   id?: true
-  transactionHash?: true
   assetId?: true
-  conditionId?: true
-  outcome?: true
-  title?: true
-  eventSlug?: true
   side?: true
   size?: true
   price?: true
@@ -133,17 +119,14 @@ export type TradeMinAggregateInputType = {
   isSmartMoney?: true
   isFresh?: true
   isSweeper?: true
+  conditionId?: true
+  outcome?: true
   question?: true
 }
 
 export type TradeMaxAggregateInputType = {
   id?: true
-  transactionHash?: true
   assetId?: true
-  conditionId?: true
-  outcome?: true
-  title?: true
-  eventSlug?: true
   side?: true
   size?: true
   price?: true
@@ -154,17 +137,14 @@ export type TradeMaxAggregateInputType = {
   isSmartMoney?: true
   isFresh?: true
   isSweeper?: true
+  conditionId?: true
+  outcome?: true
   question?: true
 }
 
 export type TradeCountAggregateInputType = {
   id?: true
-  transactionHash?: true
   assetId?: true
-  conditionId?: true
-  outcome?: true
-  title?: true
-  eventSlug?: true
   side?: true
   size?: true
   price?: true
@@ -175,6 +155,8 @@ export type TradeCountAggregateInputType = {
   isSmartMoney?: true
   isFresh?: true
   isSweeper?: true
+  conditionId?: true
+  outcome?: true
   question?: true
   _all?: true
 }
@@ -267,12 +249,7 @@ export type TradeGroupByArgs<ExtArgs extends runtime.Types.Extensions.InternalAr
 
 export type TradeGroupByOutputType = {
   id: string
-  transactionHash: string | null
-  assetId: string | null
-  conditionId: string | null
-  outcome: string | null
-  title: string | null
-  eventSlug: string | null
+  assetId: string
   side: string
   size: number
   price: number
@@ -283,6 +260,8 @@ export type TradeGroupByOutputType = {
   isSmartMoney: boolean
   isFresh: boolean
   isSweeper: boolean
+  conditionId: string | null
+  outcome: string | null
   question: string | null
   _count: TradeCountAggregateOutputType | null
   _avg: TradeAvgAggregateOutputType | null
@@ -311,12 +290,7 @@ export type TradeWhereInput = {
   OR?: Prisma.TradeWhereInput[]
   NOT?: Prisma.TradeWhereInput | Prisma.TradeWhereInput[]
   id?: Prisma.StringFilter<"Trade"> | string
-  transactionHash?: Prisma.StringNullableFilter<"Trade"> | string | null
-  assetId?: Prisma.StringNullableFilter<"Trade"> | string | null
-  conditionId?: Prisma.StringNullableFilter<"Trade"> | string | null
-  outcome?: Prisma.StringNullableFilter<"Trade"> | string | null
-  title?: Prisma.StringNullableFilter<"Trade"> | string | null
-  eventSlug?: Prisma.StringNullableFilter<"Trade"> | string | null
+  assetId?: Prisma.StringFilter<"Trade"> | string
   side?: Prisma.StringFilter<"Trade"> | string
   size?: Prisma.FloatFilter<"Trade"> | number
   price?: Prisma.FloatFilter<"Trade"> | number
@@ -327,18 +301,15 @@ export type TradeWhereInput = {
   isSmartMoney?: Prisma.BoolFilter<"Trade"> | boolean
   isFresh?: Prisma.BoolFilter<"Trade"> | boolean
   isSweeper?: Prisma.BoolFilter<"Trade"> | boolean
+  conditionId?: Prisma.StringNullableFilter<"Trade"> | string | null
+  outcome?: Prisma.StringNullableFilter<"Trade"> | string | null
   question?: Prisma.StringNullableFilter<"Trade"> | string | null
-  trader?: Prisma.XOR<Prisma.TraderScalarRelationFilter, Prisma.TraderWhereInput>
+  walletProfile?: Prisma.XOR<Prisma.WalletProfileScalarRelationFilter, Prisma.WalletProfileWhereInput>
 }
 
 export type TradeOrderByWithRelationInput = {
   id?: Prisma.SortOrder
-  transactionHash?: Prisma.SortOrderInput | Prisma.SortOrder
-  assetId?: Prisma.SortOrderInput | Prisma.SortOrder
-  conditionId?: Prisma.SortOrderInput | Prisma.SortOrder
-  outcome?: Prisma.SortOrderInput | Prisma.SortOrder
-  title?: Prisma.SortOrderInput | Prisma.SortOrder
-  eventSlug?: Prisma.SortOrderInput | Prisma.SortOrder
+  assetId?: Prisma.SortOrder
   side?: Prisma.SortOrder
   size?: Prisma.SortOrder
   price?: Prisma.SortOrder
@@ -349,8 +320,10 @@ export type TradeOrderByWithRelationInput = {
   isSmartMoney?: Prisma.SortOrder
   isFresh?: Prisma.SortOrder
   isSweeper?: Prisma.SortOrder
+  conditionId?: Prisma.SortOrderInput | Prisma.SortOrder
+  outcome?: Prisma.SortOrderInput | Prisma.SortOrder
   question?: Prisma.SortOrderInput | Prisma.SortOrder
-  trader?: Prisma.TraderOrderByWithRelationInput
+  walletProfile?: Prisma.WalletProfileOrderByWithRelationInput
 }
 
 export type TradeWhereUniqueInput = Prisma.AtLeast<{
@@ -358,12 +331,7 @@ export type TradeWhereUniqueInput = Prisma.AtLeast<{
   AND?: Prisma.TradeWhereInput | Prisma.TradeWhereInput[]
   OR?: Prisma.TradeWhereInput[]
   NOT?: Prisma.TradeWhereInput | Prisma.TradeWhereInput[]
-  transactionHash?: Prisma.StringNullableFilter<"Trade"> | string | null
-  assetId?: Prisma.StringNullableFilter<"Trade"> | string | null
-  conditionId?: Prisma.StringNullableFilter<"Trade"> | string | null
-  outcome?: Prisma.StringNullableFilter<"Trade"> | string | null
-  title?: Prisma.StringNullableFilter<"Trade"> | string | null
-  eventSlug?: Prisma.StringNullableFilter<"Trade"> | string | null
+  assetId?: Prisma.StringFilter<"Trade"> | string
   side?: Prisma.StringFilter<"Trade"> | string
   size?: Prisma.FloatFilter<"Trade"> | number
   price?: Prisma.FloatFilter<"Trade"> | number
@@ -374,18 +342,15 @@ export type TradeWhereUniqueInput = Prisma.AtLeast<{
   isSmartMoney?: Prisma.BoolFilter<"Trade"> | boolean
   isFresh?: Prisma.BoolFilter<"Trade"> | boolean
   isSweeper?: Prisma.BoolFilter<"Trade"> | boolean
+  conditionId?: Prisma.StringNullableFilter<"Trade"> | string | null
+  outcome?: Prisma.StringNullableFilter<"Trade"> | string | null
   question?: Prisma.StringNullableFilter<"Trade"> | string | null
-  trader?: Prisma.XOR<Prisma.TraderScalarRelationFilter, Prisma.TraderWhereInput>
+  walletProfile?: Prisma.XOR<Prisma.WalletProfileScalarRelationFilter, Prisma.WalletProfileWhereInput>
 }, "id">
 
 export type TradeOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
-  transactionHash?: Prisma.SortOrderInput | Prisma.SortOrder
-  assetId?: Prisma.SortOrderInput | Prisma.SortOrder
-  conditionId?: Prisma.SortOrderInput | Prisma.SortOrder
-  outcome?: Prisma.SortOrderInput | Prisma.SortOrder
-  title?: Prisma.SortOrderInput | Prisma.SortOrder
-  eventSlug?: Prisma.SortOrderInput | Prisma.SortOrder
+  assetId?: Prisma.SortOrder
   side?: Prisma.SortOrder
   size?: Prisma.SortOrder
   price?: Prisma.SortOrder
@@ -396,6 +361,8 @@ export type TradeOrderByWithAggregationInput = {
   isSmartMoney?: Prisma.SortOrder
   isFresh?: Prisma.SortOrder
   isSweeper?: Prisma.SortOrder
+  conditionId?: Prisma.SortOrderInput | Prisma.SortOrder
+  outcome?: Prisma.SortOrderInput | Prisma.SortOrder
   question?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.TradeCountOrderByAggregateInput
   _avg?: Prisma.TradeAvgOrderByAggregateInput
@@ -409,12 +376,7 @@ export type TradeScalarWhereWithAggregatesInput = {
   OR?: Prisma.TradeScalarWhereWithAggregatesInput[]
   NOT?: Prisma.TradeScalarWhereWithAggregatesInput | Prisma.TradeScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"Trade"> | string
-  transactionHash?: Prisma.StringNullableWithAggregatesFilter<"Trade"> | string | null
-  assetId?: Prisma.StringNullableWithAggregatesFilter<"Trade"> | string | null
-  conditionId?: Prisma.StringNullableWithAggregatesFilter<"Trade"> | string | null
-  outcome?: Prisma.StringNullableWithAggregatesFilter<"Trade"> | string | null
-  title?: Prisma.StringNullableWithAggregatesFilter<"Trade"> | string | null
-  eventSlug?: Prisma.StringNullableWithAggregatesFilter<"Trade"> | string | null
+  assetId?: Prisma.StringWithAggregatesFilter<"Trade"> | string
   side?: Prisma.StringWithAggregatesFilter<"Trade"> | string
   size?: Prisma.FloatWithAggregatesFilter<"Trade"> | number
   price?: Prisma.FloatWithAggregatesFilter<"Trade"> | number
@@ -425,17 +387,14 @@ export type TradeScalarWhereWithAggregatesInput = {
   isSmartMoney?: Prisma.BoolWithAggregatesFilter<"Trade"> | boolean
   isFresh?: Prisma.BoolWithAggregatesFilter<"Trade"> | boolean
   isSweeper?: Prisma.BoolWithAggregatesFilter<"Trade"> | boolean
+  conditionId?: Prisma.StringNullableWithAggregatesFilter<"Trade"> | string | null
+  outcome?: Prisma.StringNullableWithAggregatesFilter<"Trade"> | string | null
   question?: Prisma.StringNullableWithAggregatesFilter<"Trade"> | string | null
 }
 
 export type TradeCreateInput = {
   id?: string
-  transactionHash?: string | null
-  assetId?: string | null
-  conditionId?: string | null
-  outcome?: string | null
-  title?: string | null
-  eventSlug?: string | null
+  assetId: string
   side: string
   size: number
   price: number
@@ -445,18 +404,15 @@ export type TradeCreateInput = {
   isSmartMoney?: boolean
   isFresh?: boolean
   isSweeper?: boolean
+  conditionId?: string | null
+  outcome?: string | null
   question?: string | null
-  trader: Prisma.TraderCreateNestedOneWithoutTradesInput
+  walletProfile: Prisma.WalletProfileCreateNestedOneWithoutTradesInput
 }
 
 export type TradeUncheckedCreateInput = {
   id?: string
-  transactionHash?: string | null
-  assetId?: string | null
-  conditionId?: string | null
-  outcome?: string | null
-  title?: string | null
-  eventSlug?: string | null
+  assetId: string
   side: string
   size: number
   price: number
@@ -467,17 +423,14 @@ export type TradeUncheckedCreateInput = {
   isSmartMoney?: boolean
   isFresh?: boolean
   isSweeper?: boolean
+  conditionId?: string | null
+  outcome?: string | null
   question?: string | null
 }
 
 export type TradeUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  transactionHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  assetId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  conditionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  outcome?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  eventSlug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  assetId?: Prisma.StringFieldUpdateOperationsInput | string
   side?: Prisma.StringFieldUpdateOperationsInput | string
   size?: Prisma.FloatFieldUpdateOperationsInput | number
   price?: Prisma.FloatFieldUpdateOperationsInput | number
@@ -487,18 +440,15 @@ export type TradeUpdateInput = {
   isSmartMoney?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isFresh?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isSweeper?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  conditionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  outcome?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   question?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  trader?: Prisma.TraderUpdateOneRequiredWithoutTradesNestedInput
+  walletProfile?: Prisma.WalletProfileUpdateOneRequiredWithoutTradesNestedInput
 }
 
 export type TradeUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  transactionHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  assetId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  conditionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  outcome?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  eventSlug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  assetId?: Prisma.StringFieldUpdateOperationsInput | string
   side?: Prisma.StringFieldUpdateOperationsInput | string
   size?: Prisma.FloatFieldUpdateOperationsInput | number
   price?: Prisma.FloatFieldUpdateOperationsInput | number
@@ -509,17 +459,14 @@ export type TradeUncheckedUpdateInput = {
   isSmartMoney?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isFresh?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isSweeper?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  conditionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  outcome?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   question?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type TradeCreateManyInput = {
   id?: string
-  transactionHash?: string | null
-  assetId?: string | null
-  conditionId?: string | null
-  outcome?: string | null
-  title?: string | null
-  eventSlug?: string | null
+  assetId: string
   side: string
   size: number
   price: number
@@ -530,17 +477,14 @@ export type TradeCreateManyInput = {
   isSmartMoney?: boolean
   isFresh?: boolean
   isSweeper?: boolean
+  conditionId?: string | null
+  outcome?: string | null
   question?: string | null
 }
 
 export type TradeUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  transactionHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  assetId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  conditionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  outcome?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  eventSlug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  assetId?: Prisma.StringFieldUpdateOperationsInput | string
   side?: Prisma.StringFieldUpdateOperationsInput | string
   size?: Prisma.FloatFieldUpdateOperationsInput | number
   price?: Prisma.FloatFieldUpdateOperationsInput | number
@@ -550,17 +494,14 @@ export type TradeUpdateManyMutationInput = {
   isSmartMoney?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isFresh?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isSweeper?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  conditionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  outcome?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   question?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type TradeUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  transactionHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  assetId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  conditionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  outcome?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  eventSlug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  assetId?: Prisma.StringFieldUpdateOperationsInput | string
   side?: Prisma.StringFieldUpdateOperationsInput | string
   size?: Prisma.FloatFieldUpdateOperationsInput | number
   price?: Prisma.FloatFieldUpdateOperationsInput | number
@@ -571,6 +512,8 @@ export type TradeUncheckedUpdateManyInput = {
   isSmartMoney?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isFresh?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isSweeper?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  conditionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  outcome?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   question?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
@@ -586,12 +529,7 @@ export type TradeOrderByRelationAggregateInput = {
 
 export type TradeCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
-  transactionHash?: Prisma.SortOrder
   assetId?: Prisma.SortOrder
-  conditionId?: Prisma.SortOrder
-  outcome?: Prisma.SortOrder
-  title?: Prisma.SortOrder
-  eventSlug?: Prisma.SortOrder
   side?: Prisma.SortOrder
   size?: Prisma.SortOrder
   price?: Prisma.SortOrder
@@ -602,6 +540,8 @@ export type TradeCountOrderByAggregateInput = {
   isSmartMoney?: Prisma.SortOrder
   isFresh?: Prisma.SortOrder
   isSweeper?: Prisma.SortOrder
+  conditionId?: Prisma.SortOrder
+  outcome?: Prisma.SortOrder
   question?: Prisma.SortOrder
 }
 
@@ -613,12 +553,7 @@ export type TradeAvgOrderByAggregateInput = {
 
 export type TradeMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
-  transactionHash?: Prisma.SortOrder
   assetId?: Prisma.SortOrder
-  conditionId?: Prisma.SortOrder
-  outcome?: Prisma.SortOrder
-  title?: Prisma.SortOrder
-  eventSlug?: Prisma.SortOrder
   side?: Prisma.SortOrder
   size?: Prisma.SortOrder
   price?: Prisma.SortOrder
@@ -629,17 +564,14 @@ export type TradeMaxOrderByAggregateInput = {
   isSmartMoney?: Prisma.SortOrder
   isFresh?: Prisma.SortOrder
   isSweeper?: Prisma.SortOrder
+  conditionId?: Prisma.SortOrder
+  outcome?: Prisma.SortOrder
   question?: Prisma.SortOrder
 }
 
 export type TradeMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
-  transactionHash?: Prisma.SortOrder
   assetId?: Prisma.SortOrder
-  conditionId?: Prisma.SortOrder
-  outcome?: Prisma.SortOrder
-  title?: Prisma.SortOrder
-  eventSlug?: Prisma.SortOrder
   side?: Prisma.SortOrder
   size?: Prisma.SortOrder
   price?: Prisma.SortOrder
@@ -650,6 +582,8 @@ export type TradeMinOrderByAggregateInput = {
   isSmartMoney?: Prisma.SortOrder
   isFresh?: Prisma.SortOrder
   isSweeper?: Prisma.SortOrder
+  conditionId?: Prisma.SortOrder
+  outcome?: Prisma.SortOrder
   question?: Prisma.SortOrder
 }
 
@@ -659,56 +593,51 @@ export type TradeSumOrderByAggregateInput = {
   tradeValue?: Prisma.SortOrder
 }
 
-export type TradeCreateNestedManyWithoutTraderInput = {
-  create?: Prisma.XOR<Prisma.TradeCreateWithoutTraderInput, Prisma.TradeUncheckedCreateWithoutTraderInput> | Prisma.TradeCreateWithoutTraderInput[] | Prisma.TradeUncheckedCreateWithoutTraderInput[]
-  connectOrCreate?: Prisma.TradeCreateOrConnectWithoutTraderInput | Prisma.TradeCreateOrConnectWithoutTraderInput[]
-  createMany?: Prisma.TradeCreateManyTraderInputEnvelope
+export type TradeCreateNestedManyWithoutWalletProfileInput = {
+  create?: Prisma.XOR<Prisma.TradeCreateWithoutWalletProfileInput, Prisma.TradeUncheckedCreateWithoutWalletProfileInput> | Prisma.TradeCreateWithoutWalletProfileInput[] | Prisma.TradeUncheckedCreateWithoutWalletProfileInput[]
+  connectOrCreate?: Prisma.TradeCreateOrConnectWithoutWalletProfileInput | Prisma.TradeCreateOrConnectWithoutWalletProfileInput[]
+  createMany?: Prisma.TradeCreateManyWalletProfileInputEnvelope
   connect?: Prisma.TradeWhereUniqueInput | Prisma.TradeWhereUniqueInput[]
 }
 
-export type TradeUncheckedCreateNestedManyWithoutTraderInput = {
-  create?: Prisma.XOR<Prisma.TradeCreateWithoutTraderInput, Prisma.TradeUncheckedCreateWithoutTraderInput> | Prisma.TradeCreateWithoutTraderInput[] | Prisma.TradeUncheckedCreateWithoutTraderInput[]
-  connectOrCreate?: Prisma.TradeCreateOrConnectWithoutTraderInput | Prisma.TradeCreateOrConnectWithoutTraderInput[]
-  createMany?: Prisma.TradeCreateManyTraderInputEnvelope
+export type TradeUncheckedCreateNestedManyWithoutWalletProfileInput = {
+  create?: Prisma.XOR<Prisma.TradeCreateWithoutWalletProfileInput, Prisma.TradeUncheckedCreateWithoutWalletProfileInput> | Prisma.TradeCreateWithoutWalletProfileInput[] | Prisma.TradeUncheckedCreateWithoutWalletProfileInput[]
+  connectOrCreate?: Prisma.TradeCreateOrConnectWithoutWalletProfileInput | Prisma.TradeCreateOrConnectWithoutWalletProfileInput[]
+  createMany?: Prisma.TradeCreateManyWalletProfileInputEnvelope
   connect?: Prisma.TradeWhereUniqueInput | Prisma.TradeWhereUniqueInput[]
 }
 
-export type TradeUpdateManyWithoutTraderNestedInput = {
-  create?: Prisma.XOR<Prisma.TradeCreateWithoutTraderInput, Prisma.TradeUncheckedCreateWithoutTraderInput> | Prisma.TradeCreateWithoutTraderInput[] | Prisma.TradeUncheckedCreateWithoutTraderInput[]
-  connectOrCreate?: Prisma.TradeCreateOrConnectWithoutTraderInput | Prisma.TradeCreateOrConnectWithoutTraderInput[]
-  upsert?: Prisma.TradeUpsertWithWhereUniqueWithoutTraderInput | Prisma.TradeUpsertWithWhereUniqueWithoutTraderInput[]
-  createMany?: Prisma.TradeCreateManyTraderInputEnvelope
+export type TradeUpdateManyWithoutWalletProfileNestedInput = {
+  create?: Prisma.XOR<Prisma.TradeCreateWithoutWalletProfileInput, Prisma.TradeUncheckedCreateWithoutWalletProfileInput> | Prisma.TradeCreateWithoutWalletProfileInput[] | Prisma.TradeUncheckedCreateWithoutWalletProfileInput[]
+  connectOrCreate?: Prisma.TradeCreateOrConnectWithoutWalletProfileInput | Prisma.TradeCreateOrConnectWithoutWalletProfileInput[]
+  upsert?: Prisma.TradeUpsertWithWhereUniqueWithoutWalletProfileInput | Prisma.TradeUpsertWithWhereUniqueWithoutWalletProfileInput[]
+  createMany?: Prisma.TradeCreateManyWalletProfileInputEnvelope
   set?: Prisma.TradeWhereUniqueInput | Prisma.TradeWhereUniqueInput[]
   disconnect?: Prisma.TradeWhereUniqueInput | Prisma.TradeWhereUniqueInput[]
   delete?: Prisma.TradeWhereUniqueInput | Prisma.TradeWhereUniqueInput[]
   connect?: Prisma.TradeWhereUniqueInput | Prisma.TradeWhereUniqueInput[]
-  update?: Prisma.TradeUpdateWithWhereUniqueWithoutTraderInput | Prisma.TradeUpdateWithWhereUniqueWithoutTraderInput[]
-  updateMany?: Prisma.TradeUpdateManyWithWhereWithoutTraderInput | Prisma.TradeUpdateManyWithWhereWithoutTraderInput[]
+  update?: Prisma.TradeUpdateWithWhereUniqueWithoutWalletProfileInput | Prisma.TradeUpdateWithWhereUniqueWithoutWalletProfileInput[]
+  updateMany?: Prisma.TradeUpdateManyWithWhereWithoutWalletProfileInput | Prisma.TradeUpdateManyWithWhereWithoutWalletProfileInput[]
   deleteMany?: Prisma.TradeScalarWhereInput | Prisma.TradeScalarWhereInput[]
 }
 
-export type TradeUncheckedUpdateManyWithoutTraderNestedInput = {
-  create?: Prisma.XOR<Prisma.TradeCreateWithoutTraderInput, Prisma.TradeUncheckedCreateWithoutTraderInput> | Prisma.TradeCreateWithoutTraderInput[] | Prisma.TradeUncheckedCreateWithoutTraderInput[]
-  connectOrCreate?: Prisma.TradeCreateOrConnectWithoutTraderInput | Prisma.TradeCreateOrConnectWithoutTraderInput[]
-  upsert?: Prisma.TradeUpsertWithWhereUniqueWithoutTraderInput | Prisma.TradeUpsertWithWhereUniqueWithoutTraderInput[]
-  createMany?: Prisma.TradeCreateManyTraderInputEnvelope
+export type TradeUncheckedUpdateManyWithoutWalletProfileNestedInput = {
+  create?: Prisma.XOR<Prisma.TradeCreateWithoutWalletProfileInput, Prisma.TradeUncheckedCreateWithoutWalletProfileInput> | Prisma.TradeCreateWithoutWalletProfileInput[] | Prisma.TradeUncheckedCreateWithoutWalletProfileInput[]
+  connectOrCreate?: Prisma.TradeCreateOrConnectWithoutWalletProfileInput | Prisma.TradeCreateOrConnectWithoutWalletProfileInput[]
+  upsert?: Prisma.TradeUpsertWithWhereUniqueWithoutWalletProfileInput | Prisma.TradeUpsertWithWhereUniqueWithoutWalletProfileInput[]
+  createMany?: Prisma.TradeCreateManyWalletProfileInputEnvelope
   set?: Prisma.TradeWhereUniqueInput | Prisma.TradeWhereUniqueInput[]
   disconnect?: Prisma.TradeWhereUniqueInput | Prisma.TradeWhereUniqueInput[]
   delete?: Prisma.TradeWhereUniqueInput | Prisma.TradeWhereUniqueInput[]
   connect?: Prisma.TradeWhereUniqueInput | Prisma.TradeWhereUniqueInput[]
-  update?: Prisma.TradeUpdateWithWhereUniqueWithoutTraderInput | Prisma.TradeUpdateWithWhereUniqueWithoutTraderInput[]
-  updateMany?: Prisma.TradeUpdateManyWithWhereWithoutTraderInput | Prisma.TradeUpdateManyWithWhereWithoutTraderInput[]
+  update?: Prisma.TradeUpdateWithWhereUniqueWithoutWalletProfileInput | Prisma.TradeUpdateWithWhereUniqueWithoutWalletProfileInput[]
+  updateMany?: Prisma.TradeUpdateManyWithWhereWithoutWalletProfileInput | Prisma.TradeUpdateManyWithWhereWithoutWalletProfileInput[]
   deleteMany?: Prisma.TradeScalarWhereInput | Prisma.TradeScalarWhereInput[]
 }
 
-export type TradeCreateWithoutTraderInput = {
+export type TradeCreateWithoutWalletProfileInput = {
   id?: string
-  transactionHash?: string | null
-  assetId?: string | null
-  conditionId?: string | null
-  outcome?: string | null
-  title?: string | null
-  eventSlug?: string | null
+  assetId: string
   side: string
   size: number
   price: number
@@ -718,17 +647,14 @@ export type TradeCreateWithoutTraderInput = {
   isSmartMoney?: boolean
   isFresh?: boolean
   isSweeper?: boolean
+  conditionId?: string | null
+  outcome?: string | null
   question?: string | null
 }
 
-export type TradeUncheckedCreateWithoutTraderInput = {
+export type TradeUncheckedCreateWithoutWalletProfileInput = {
   id?: string
-  transactionHash?: string | null
-  assetId?: string | null
-  conditionId?: string | null
-  outcome?: string | null
-  title?: string | null
-  eventSlug?: string | null
+  assetId: string
   side: string
   size: number
   price: number
@@ -738,33 +664,35 @@ export type TradeUncheckedCreateWithoutTraderInput = {
   isSmartMoney?: boolean
   isFresh?: boolean
   isSweeper?: boolean
+  conditionId?: string | null
+  outcome?: string | null
   question?: string | null
 }
 
-export type TradeCreateOrConnectWithoutTraderInput = {
+export type TradeCreateOrConnectWithoutWalletProfileInput = {
   where: Prisma.TradeWhereUniqueInput
-  create: Prisma.XOR<Prisma.TradeCreateWithoutTraderInput, Prisma.TradeUncheckedCreateWithoutTraderInput>
+  create: Prisma.XOR<Prisma.TradeCreateWithoutWalletProfileInput, Prisma.TradeUncheckedCreateWithoutWalletProfileInput>
 }
 
-export type TradeCreateManyTraderInputEnvelope = {
-  data: Prisma.TradeCreateManyTraderInput | Prisma.TradeCreateManyTraderInput[]
+export type TradeCreateManyWalletProfileInputEnvelope = {
+  data: Prisma.TradeCreateManyWalletProfileInput | Prisma.TradeCreateManyWalletProfileInput[]
   skipDuplicates?: boolean
 }
 
-export type TradeUpsertWithWhereUniqueWithoutTraderInput = {
+export type TradeUpsertWithWhereUniqueWithoutWalletProfileInput = {
   where: Prisma.TradeWhereUniqueInput
-  update: Prisma.XOR<Prisma.TradeUpdateWithoutTraderInput, Prisma.TradeUncheckedUpdateWithoutTraderInput>
-  create: Prisma.XOR<Prisma.TradeCreateWithoutTraderInput, Prisma.TradeUncheckedCreateWithoutTraderInput>
+  update: Prisma.XOR<Prisma.TradeUpdateWithoutWalletProfileInput, Prisma.TradeUncheckedUpdateWithoutWalletProfileInput>
+  create: Prisma.XOR<Prisma.TradeCreateWithoutWalletProfileInput, Prisma.TradeUncheckedCreateWithoutWalletProfileInput>
 }
 
-export type TradeUpdateWithWhereUniqueWithoutTraderInput = {
+export type TradeUpdateWithWhereUniqueWithoutWalletProfileInput = {
   where: Prisma.TradeWhereUniqueInput
-  data: Prisma.XOR<Prisma.TradeUpdateWithoutTraderInput, Prisma.TradeUncheckedUpdateWithoutTraderInput>
+  data: Prisma.XOR<Prisma.TradeUpdateWithoutWalletProfileInput, Prisma.TradeUncheckedUpdateWithoutWalletProfileInput>
 }
 
-export type TradeUpdateManyWithWhereWithoutTraderInput = {
+export type TradeUpdateManyWithWhereWithoutWalletProfileInput = {
   where: Prisma.TradeScalarWhereInput
-  data: Prisma.XOR<Prisma.TradeUpdateManyMutationInput, Prisma.TradeUncheckedUpdateManyWithoutTraderInput>
+  data: Prisma.XOR<Prisma.TradeUpdateManyMutationInput, Prisma.TradeUncheckedUpdateManyWithoutWalletProfileInput>
 }
 
 export type TradeScalarWhereInput = {
@@ -772,12 +700,7 @@ export type TradeScalarWhereInput = {
   OR?: Prisma.TradeScalarWhereInput[]
   NOT?: Prisma.TradeScalarWhereInput | Prisma.TradeScalarWhereInput[]
   id?: Prisma.StringFilter<"Trade"> | string
-  transactionHash?: Prisma.StringNullableFilter<"Trade"> | string | null
-  assetId?: Prisma.StringNullableFilter<"Trade"> | string | null
-  conditionId?: Prisma.StringNullableFilter<"Trade"> | string | null
-  outcome?: Prisma.StringNullableFilter<"Trade"> | string | null
-  title?: Prisma.StringNullableFilter<"Trade"> | string | null
-  eventSlug?: Prisma.StringNullableFilter<"Trade"> | string | null
+  assetId?: Prisma.StringFilter<"Trade"> | string
   side?: Prisma.StringFilter<"Trade"> | string
   size?: Prisma.FloatFilter<"Trade"> | number
   price?: Prisma.FloatFilter<"Trade"> | number
@@ -788,17 +711,14 @@ export type TradeScalarWhereInput = {
   isSmartMoney?: Prisma.BoolFilter<"Trade"> | boolean
   isFresh?: Prisma.BoolFilter<"Trade"> | boolean
   isSweeper?: Prisma.BoolFilter<"Trade"> | boolean
+  conditionId?: Prisma.StringNullableFilter<"Trade"> | string | null
+  outcome?: Prisma.StringNullableFilter<"Trade"> | string | null
   question?: Prisma.StringNullableFilter<"Trade"> | string | null
 }
 
-export type TradeCreateManyTraderInput = {
+export type TradeCreateManyWalletProfileInput = {
   id?: string
-  transactionHash?: string | null
-  assetId?: string | null
-  conditionId?: string | null
-  outcome?: string | null
-  title?: string | null
-  eventSlug?: string | null
+  assetId: string
   side: string
   size: number
   price: number
@@ -808,17 +728,14 @@ export type TradeCreateManyTraderInput = {
   isSmartMoney?: boolean
   isFresh?: boolean
   isSweeper?: boolean
+  conditionId?: string | null
+  outcome?: string | null
   question?: string | null
 }
 
-export type TradeUpdateWithoutTraderInput = {
+export type TradeUpdateWithoutWalletProfileInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  transactionHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  assetId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  conditionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  outcome?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  eventSlug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  assetId?: Prisma.StringFieldUpdateOperationsInput | string
   side?: Prisma.StringFieldUpdateOperationsInput | string
   size?: Prisma.FloatFieldUpdateOperationsInput | number
   price?: Prisma.FloatFieldUpdateOperationsInput | number
@@ -828,17 +745,14 @@ export type TradeUpdateWithoutTraderInput = {
   isSmartMoney?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isFresh?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isSweeper?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  conditionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  outcome?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   question?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
-export type TradeUncheckedUpdateWithoutTraderInput = {
+export type TradeUncheckedUpdateWithoutWalletProfileInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  transactionHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  assetId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  conditionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  outcome?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  eventSlug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  assetId?: Prisma.StringFieldUpdateOperationsInput | string
   side?: Prisma.StringFieldUpdateOperationsInput | string
   size?: Prisma.FloatFieldUpdateOperationsInput | number
   price?: Prisma.FloatFieldUpdateOperationsInput | number
@@ -848,17 +762,14 @@ export type TradeUncheckedUpdateWithoutTraderInput = {
   isSmartMoney?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isFresh?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isSweeper?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  conditionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  outcome?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   question?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
-export type TradeUncheckedUpdateManyWithoutTraderInput = {
+export type TradeUncheckedUpdateManyWithoutWalletProfileInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  transactionHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  assetId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  conditionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  outcome?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  eventSlug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  assetId?: Prisma.StringFieldUpdateOperationsInput | string
   side?: Prisma.StringFieldUpdateOperationsInput | string
   size?: Prisma.FloatFieldUpdateOperationsInput | number
   price?: Prisma.FloatFieldUpdateOperationsInput | number
@@ -868,6 +779,8 @@ export type TradeUncheckedUpdateManyWithoutTraderInput = {
   isSmartMoney?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isFresh?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isSweeper?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  conditionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  outcome?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   question?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
@@ -875,12 +788,7 @@ export type TradeUncheckedUpdateManyWithoutTraderInput = {
 
 export type TradeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
-  transactionHash?: boolean
   assetId?: boolean
-  conditionId?: boolean
-  outcome?: boolean
-  title?: boolean
-  eventSlug?: boolean
   side?: boolean
   size?: boolean
   price?: boolean
@@ -891,18 +799,15 @@ export type TradeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   isSmartMoney?: boolean
   isFresh?: boolean
   isSweeper?: boolean
+  conditionId?: boolean
+  outcome?: boolean
   question?: boolean
-  trader?: boolean | Prisma.TraderDefaultArgs<ExtArgs>
+  walletProfile?: boolean | Prisma.WalletProfileDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["trade"]>
 
 export type TradeSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
-  transactionHash?: boolean
   assetId?: boolean
-  conditionId?: boolean
-  outcome?: boolean
-  title?: boolean
-  eventSlug?: boolean
   side?: boolean
   size?: boolean
   price?: boolean
@@ -913,18 +818,15 @@ export type TradeSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   isSmartMoney?: boolean
   isFresh?: boolean
   isSweeper?: boolean
+  conditionId?: boolean
+  outcome?: boolean
   question?: boolean
-  trader?: boolean | Prisma.TraderDefaultArgs<ExtArgs>
+  walletProfile?: boolean | Prisma.WalletProfileDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["trade"]>
 
 export type TradeSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
-  transactionHash?: boolean
   assetId?: boolean
-  conditionId?: boolean
-  outcome?: boolean
-  title?: boolean
-  eventSlug?: boolean
   side?: boolean
   size?: boolean
   price?: boolean
@@ -935,18 +837,15 @@ export type TradeSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   isSmartMoney?: boolean
   isFresh?: boolean
   isSweeper?: boolean
+  conditionId?: boolean
+  outcome?: boolean
   question?: boolean
-  trader?: boolean | Prisma.TraderDefaultArgs<ExtArgs>
+  walletProfile?: boolean | Prisma.WalletProfileDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["trade"]>
 
 export type TradeSelectScalar = {
   id?: boolean
-  transactionHash?: boolean
   assetId?: boolean
-  conditionId?: boolean
-  outcome?: boolean
-  title?: boolean
-  eventSlug?: boolean
   side?: boolean
   size?: boolean
   price?: boolean
@@ -957,33 +856,30 @@ export type TradeSelectScalar = {
   isSmartMoney?: boolean
   isFresh?: boolean
   isSweeper?: boolean
+  conditionId?: boolean
+  outcome?: boolean
   question?: boolean
 }
 
-export type TradeOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "transactionHash" | "assetId" | "conditionId" | "outcome" | "title" | "eventSlug" | "side" | "size" | "price" | "tradeValue" | "timestamp" | "walletAddress" | "isWhale" | "isSmartMoney" | "isFresh" | "isSweeper" | "question", ExtArgs["result"]["trade"]>
+export type TradeOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "assetId" | "side" | "size" | "price" | "tradeValue" | "timestamp" | "walletAddress" | "isWhale" | "isSmartMoney" | "isFresh" | "isSweeper" | "conditionId" | "outcome" | "question", ExtArgs["result"]["trade"]>
 export type TradeInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  trader?: boolean | Prisma.TraderDefaultArgs<ExtArgs>
+  walletProfile?: boolean | Prisma.WalletProfileDefaultArgs<ExtArgs>
 }
 export type TradeIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  trader?: boolean | Prisma.TraderDefaultArgs<ExtArgs>
+  walletProfile?: boolean | Prisma.WalletProfileDefaultArgs<ExtArgs>
 }
 export type TradeIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  trader?: boolean | Prisma.TraderDefaultArgs<ExtArgs>
+  walletProfile?: boolean | Prisma.WalletProfileDefaultArgs<ExtArgs>
 }
 
 export type $TradePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "Trade"
   objects: {
-    trader: Prisma.$TraderPayload<ExtArgs>
+    walletProfile: Prisma.$WalletProfilePayload<ExtArgs>
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
-    transactionHash: string | null
-    assetId: string | null
-    conditionId: string | null
-    outcome: string | null
-    title: string | null
-    eventSlug: string | null
+    assetId: string
     side: string
     size: number
     price: number
@@ -994,6 +890,8 @@ export type $TradePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs 
     isSmartMoney: boolean
     isFresh: boolean
     isSweeper: boolean
+    conditionId: string | null
+    outcome: string | null
     question: string | null
   }, ExtArgs["result"]["trade"]>
   composites: {}
@@ -1389,7 +1287,7 @@ readonly fields: TradeFieldRefs;
  */
 export interface Prisma__TradeClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
-  trader<T extends Prisma.TraderDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.TraderDefaultArgs<ExtArgs>>): Prisma.Prisma__TraderClient<runtime.Types.Result.GetResult<Prisma.$TraderPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  walletProfile<T extends Prisma.WalletProfileDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.WalletProfileDefaultArgs<ExtArgs>>): Prisma.Prisma__WalletProfileClient<runtime.Types.Result.GetResult<Prisma.$WalletProfilePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1420,12 +1318,7 @@ export interface Prisma__TradeClient<T, Null = never, ExtArgs extends runtime.Ty
  */
 export interface TradeFieldRefs {
   readonly id: Prisma.FieldRef<"Trade", 'String'>
-  readonly transactionHash: Prisma.FieldRef<"Trade", 'String'>
   readonly assetId: Prisma.FieldRef<"Trade", 'String'>
-  readonly conditionId: Prisma.FieldRef<"Trade", 'String'>
-  readonly outcome: Prisma.FieldRef<"Trade", 'String'>
-  readonly title: Prisma.FieldRef<"Trade", 'String'>
-  readonly eventSlug: Prisma.FieldRef<"Trade", 'String'>
   readonly side: Prisma.FieldRef<"Trade", 'String'>
   readonly size: Prisma.FieldRef<"Trade", 'Float'>
   readonly price: Prisma.FieldRef<"Trade", 'Float'>
@@ -1436,6 +1329,8 @@ export interface TradeFieldRefs {
   readonly isSmartMoney: Prisma.FieldRef<"Trade", 'Boolean'>
   readonly isFresh: Prisma.FieldRef<"Trade", 'Boolean'>
   readonly isSweeper: Prisma.FieldRef<"Trade", 'Boolean'>
+  readonly conditionId: Prisma.FieldRef<"Trade", 'String'>
+  readonly outcome: Prisma.FieldRef<"Trade", 'String'>
   readonly question: Prisma.FieldRef<"Trade", 'String'>
 }
     

@@ -33,6 +33,60 @@ function passesPreferences(anomaly: Anomaly, preferences?: UserPreferences): boo
     }
 }
 
+// Helper function to save trade to database via API
+async function saveTradeToDatabase(trade: any, anomaly: Anomaly, conditionId?: string) {
+    try {
+        const walletAddress = (trade.user || trade.maker || trade.taker || trade.wallet || '').toLowerCase();
+
+        // Skip if no wallet address
+        if (!walletAddress || walletAddress.trim() === '') {
+            return;
+        }
+
+        // Calculate trade value
+        const price = Number(trade.price);
+        const size = Number(trade.size);
+        const tradeValue = price * size;
+
+        // Skip trades below minimum threshold
+        if (tradeValue < CONFIG.THRESHOLDS.MIN_VALUE) {
+            return;
+        }
+
+        // Prepare trade data for API
+        const tradeData = {
+            assetId: trade.asset_id,
+            side: anomaly.side,
+            size,
+            price,
+            tradeValue,
+            timestamp: anomaly.timestamp,
+            walletAddress,
+            type: anomaly.type,
+            conditionId: conditionId || null,
+            outcome: anomaly.outcome,
+            question: anomaly.event,
+        };
+
+        // Call the save-trade API endpoint
+        const response = await fetch('/api/save-trade', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(tradeData),
+        });
+
+        if (response.ok) {
+            console.log(`[Database] Saved trade: ${walletAddress} - $${tradeValue.toFixed(2)}`);
+        } else {
+            console.error('[Database] Failed to save trade:', await response.text());
+        }
+    } catch (error) {
+        console.error('[Database] Error saving trade:', error);
+    }
+}
+
 async function fetchMarketMetadata() {
     try {
         const response = await fetch('/api/proxy/polymarket/markets');
@@ -180,6 +234,9 @@ export function startFirehose(onAnomaly: (a: Anomaly) => void, getPreferences?: 
                                 is_fresh_wallet: false
                             } : undefined
                         };
+
+                        // Save trade to database (async, don't wait)
+                        saveTradeToDatabase(trade, anomaly, conditionId);
 
                         // console.log('[Firehose] Enriched Trade:', anomaly);
 

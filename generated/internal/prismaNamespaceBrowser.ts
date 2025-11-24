@@ -51,7 +51,7 @@ export const AnyNull = runtime.AnyNull
 
 
 export const ModelName = {
-  Trader: 'Trader',
+  WalletProfile: 'WalletProfile',
   Trade: 'Trade',
   User: 'User',
   Watchlist: 'Watchlist',
@@ -74,16 +74,8 @@ export const TransactionIsolationLevel = {
 export type TransactionIsolationLevel = (typeof TransactionIsolationLevel)[keyof typeof TransactionIsolationLevel]
 
 
-export const TraderScalarFieldEnum = {
+export const WalletProfileScalarFieldEnum = {
   id: 'id',
-  pseudonym: 'pseudonym',
-  bio: 'bio',
-  profileImage: 'profileImage',
-  firstSeenAt: 'firstSeenAt',
-  lastSeenAt: 'lastSeenAt',
-  totalVolumeUsd: 'totalVolumeUsd',
-  tradeCount: 'tradeCount',
-  lastActiveAt: 'lastActiveAt',
   label: 'label',
   totalPnl: 'totalPnl',
   winRate: 'winRate',
@@ -94,17 +86,12 @@ export const TraderScalarFieldEnum = {
   lastUpdated: 'lastUpdated'
 } as const
 
-export type TraderScalarFieldEnum = (typeof TraderScalarFieldEnum)[keyof typeof TraderScalarFieldEnum]
+export type WalletProfileScalarFieldEnum = (typeof WalletProfileScalarFieldEnum)[keyof typeof WalletProfileScalarFieldEnum]
 
 
 export const TradeScalarFieldEnum = {
   id: 'id',
-  transactionHash: 'transactionHash',
   assetId: 'assetId',
-  conditionId: 'conditionId',
-  outcome: 'outcome',
-  title: 'title',
-  eventSlug: 'eventSlug',
   side: 'side',
   size: 'size',
   price: 'price',
@@ -115,6 +102,8 @@ export const TradeScalarFieldEnum = {
   isSmartMoney: 'isSmartMoney',
   isFresh: 'isFresh',
   isSweeper: 'isSweeper',
+  conditionId: 'conditionId',
+  outcome: 'outcome',
   question: 'question'
 } as const
 
@@ -125,7 +114,6 @@ export const UserScalarFieldEnum = {
   id: 'id',
   email: 'email',
   walletAddress: 'walletAddress',
-  displayName: 'displayName',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
   tier: 'tier',

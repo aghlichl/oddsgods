@@ -29,8 +29,8 @@ export * from "./enums"
  * @example
  * ```
  * const prisma = new PrismaClient()
- * // Fetch zero or more Traders
- * const traders = await prisma.trader.findMany()
+ * // Fetch zero or more WalletProfiles
+ * const walletProfiles = await prisma.walletProfile.findMany()
  * ```
  * 
  * Read more in our [docs](https://www.prisma.io/docs/reference/tools-and-interfaces/prisma-client).
@@ -40,10 +40,10 @@ export type PrismaClient<LogOpts extends Prisma.LogLevel = never, OmitOpts exten
 export { Prisma }
 
 /**
- * Model Trader
+ * Model WalletProfile
  * 
  */
-export type Trader = Prisma.TraderModel
+export type WalletProfile = Prisma.WalletProfileModel
 /**
  * Model Trade
  * 

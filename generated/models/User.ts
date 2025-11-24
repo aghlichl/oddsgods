@@ -28,7 +28,6 @@ export type UserMinAggregateOutputType = {
   id: string | null
   email: string | null
   walletAddress: string | null
-  displayName: string | null
   createdAt: Date | null
   updatedAt: Date | null
   tier: $Enums.SubscriptionTier | null
@@ -39,7 +38,6 @@ export type UserMaxAggregateOutputType = {
   id: string | null
   email: string | null
   walletAddress: string | null
-  displayName: string | null
   createdAt: Date | null
   updatedAt: Date | null
   tier: $Enums.SubscriptionTier | null
@@ -50,7 +48,6 @@ export type UserCountAggregateOutputType = {
   id: number
   email: number
   walletAddress: number
-  displayName: number
   createdAt: number
   updatedAt: number
   tier: number
@@ -63,7 +60,6 @@ export type UserMinAggregateInputType = {
   id?: true
   email?: true
   walletAddress?: true
-  displayName?: true
   createdAt?: true
   updatedAt?: true
   tier?: true
@@ -74,7 +70,6 @@ export type UserMaxAggregateInputType = {
   id?: true
   email?: true
   walletAddress?: true
-  displayName?: true
   createdAt?: true
   updatedAt?: true
   tier?: true
@@ -85,7 +80,6 @@ export type UserCountAggregateInputType = {
   id?: true
   email?: true
   walletAddress?: true
-  displayName?: true
   createdAt?: true
   updatedAt?: true
   tier?: true
@@ -169,7 +163,6 @@ export type UserGroupByOutputType = {
   id: string
   email: string | null
   walletAddress: string | null
-  displayName: string | null
   createdAt: Date
   updatedAt: Date
   tier: $Enums.SubscriptionTier
@@ -201,7 +194,6 @@ export type UserWhereInput = {
   id?: Prisma.StringFilter<"User"> | string
   email?: Prisma.StringNullableFilter<"User"> | string | null
   walletAddress?: Prisma.StringNullableFilter<"User"> | string | null
-  displayName?: Prisma.StringNullableFilter<"User"> | string | null
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string
   tier?: Prisma.EnumSubscriptionTierFilter<"User"> | $Enums.SubscriptionTier
@@ -214,7 +206,6 @@ export type UserOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   email?: Prisma.SortOrderInput | Prisma.SortOrder
   walletAddress?: Prisma.SortOrderInput | Prisma.SortOrder
-  displayName?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   tier?: Prisma.SortOrder
@@ -230,7 +221,6 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   AND?: Prisma.UserWhereInput | Prisma.UserWhereInput[]
   OR?: Prisma.UserWhereInput[]
   NOT?: Prisma.UserWhereInput | Prisma.UserWhereInput[]
-  displayName?: Prisma.StringNullableFilter<"User"> | string | null
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string
   tier?: Prisma.EnumSubscriptionTierFilter<"User"> | $Enums.SubscriptionTier
@@ -243,7 +233,6 @@ export type UserOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   email?: Prisma.SortOrderInput | Prisma.SortOrder
   walletAddress?: Prisma.SortOrderInput | Prisma.SortOrder
-  displayName?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   tier?: Prisma.SortOrder
@@ -260,7 +249,6 @@ export type UserScalarWhereWithAggregatesInput = {
   id?: Prisma.StringWithAggregatesFilter<"User"> | string
   email?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
   walletAddress?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
-  displayName?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"User"> | Date | string
   tier?: Prisma.EnumSubscriptionTierWithAggregatesFilter<"User"> | $Enums.SubscriptionTier
@@ -271,7 +259,6 @@ export type UserCreateInput = {
   id: string
   email?: string | null
   walletAddress?: string | null
-  displayName?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   tier?: $Enums.SubscriptionTier
@@ -284,7 +271,6 @@ export type UserUncheckedCreateInput = {
   id: string
   email?: string | null
   walletAddress?: string | null
-  displayName?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   tier?: $Enums.SubscriptionTier
@@ -297,7 +283,6 @@ export type UserUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   walletAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  displayName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   tier?: Prisma.EnumSubscriptionTierFieldUpdateOperationsInput | $Enums.SubscriptionTier
@@ -310,7 +295,6 @@ export type UserUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   walletAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  displayName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   tier?: Prisma.EnumSubscriptionTierFieldUpdateOperationsInput | $Enums.SubscriptionTier
@@ -323,7 +307,6 @@ export type UserCreateManyInput = {
   id: string
   email?: string | null
   walletAddress?: string | null
-  displayName?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   tier?: $Enums.SubscriptionTier
@@ -334,7 +317,6 @@ export type UserUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   walletAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  displayName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   tier?: Prisma.EnumSubscriptionTierFieldUpdateOperationsInput | $Enums.SubscriptionTier
@@ -345,7 +327,6 @@ export type UserUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   walletAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  displayName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   tier?: Prisma.EnumSubscriptionTierFieldUpdateOperationsInput | $Enums.SubscriptionTier
@@ -356,7 +337,6 @@ export type UserCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   email?: Prisma.SortOrder
   walletAddress?: Prisma.SortOrder
-  displayName?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   tier?: Prisma.SortOrder
@@ -367,7 +347,6 @@ export type UserMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   email?: Prisma.SortOrder
   walletAddress?: Prisma.SortOrder
-  displayName?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   tier?: Prisma.SortOrder
@@ -378,7 +357,6 @@ export type UserMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   email?: Prisma.SortOrder
   walletAddress?: Prisma.SortOrder
-  displayName?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   tier?: Prisma.SortOrder
@@ -426,7 +404,6 @@ export type UserCreateWithoutWatchlistInput = {
   id: string
   email?: string | null
   walletAddress?: string | null
-  displayName?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   tier?: $Enums.SubscriptionTier
@@ -438,7 +415,6 @@ export type UserUncheckedCreateWithoutWatchlistInput = {
   id: string
   email?: string | null
   walletAddress?: string | null
-  displayName?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   tier?: $Enums.SubscriptionTier
@@ -466,7 +442,6 @@ export type UserUpdateWithoutWatchlistInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   walletAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  displayName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   tier?: Prisma.EnumSubscriptionTierFieldUpdateOperationsInput | $Enums.SubscriptionTier
@@ -478,7 +453,6 @@ export type UserUncheckedUpdateWithoutWatchlistInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   walletAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  displayName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   tier?: Prisma.EnumSubscriptionTierFieldUpdateOperationsInput | $Enums.SubscriptionTier
@@ -490,7 +464,6 @@ export type UserCreateWithoutAlertsInput = {
   id: string
   email?: string | null
   walletAddress?: string | null
-  displayName?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   tier?: $Enums.SubscriptionTier
@@ -502,7 +475,6 @@ export type UserUncheckedCreateWithoutAlertsInput = {
   id: string
   email?: string | null
   walletAddress?: string | null
-  displayName?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   tier?: $Enums.SubscriptionTier
@@ -530,7 +502,6 @@ export type UserUpdateWithoutAlertsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   walletAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  displayName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   tier?: Prisma.EnumSubscriptionTierFieldUpdateOperationsInput | $Enums.SubscriptionTier
@@ -542,7 +513,6 @@ export type UserUncheckedUpdateWithoutAlertsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   walletAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  displayName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   tier?: Prisma.EnumSubscriptionTierFieldUpdateOperationsInput | $Enums.SubscriptionTier
@@ -594,7 +564,6 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   id?: boolean
   email?: boolean
   walletAddress?: boolean
-  displayName?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   tier?: boolean
@@ -608,7 +577,6 @@ export type UserSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   id?: boolean
   email?: boolean
   walletAddress?: boolean
-  displayName?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   tier?: boolean
@@ -619,7 +587,6 @@ export type UserSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   id?: boolean
   email?: boolean
   walletAddress?: boolean
-  displayName?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   tier?: boolean
@@ -630,14 +597,13 @@ export type UserSelectScalar = {
   id?: boolean
   email?: boolean
   walletAddress?: boolean
-  displayName?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   tier?: boolean
   stripeCustomerId?: boolean
 }
 
-export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "email" | "walletAddress" | "displayName" | "createdAt" | "updatedAt" | "tier" | "stripeCustomerId", ExtArgs["result"]["user"]>
+export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "email" | "walletAddress" | "createdAt" | "updatedAt" | "tier" | "stripeCustomerId", ExtArgs["result"]["user"]>
 export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   watchlist?: boolean | Prisma.User$watchlistArgs<ExtArgs>
   alerts?: boolean | Prisma.User$alertsArgs<ExtArgs>
@@ -656,7 +622,6 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     id: string
     email: string | null
     walletAddress: string | null
-    displayName: string | null
     createdAt: Date
     updatedAt: Date
     tier: $Enums.SubscriptionTier
@@ -1089,7 +1054,6 @@ export interface UserFieldRefs {
   readonly id: Prisma.FieldRef<"User", 'String'>
   readonly email: Prisma.FieldRef<"User", 'String'>
   readonly walletAddress: Prisma.FieldRef<"User", 'String'>
-  readonly displayName: Prisma.FieldRef<"User", 'String'>
   readonly createdAt: Prisma.FieldRef<"User", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"User", 'DateTime'>
   readonly tier: Prisma.FieldRef<"User", 'SubscriptionTier'>
