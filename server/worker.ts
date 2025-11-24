@@ -23,9 +23,18 @@ const io = new SocketIOServer(httpServer, {
 
 if (process.argv[1].endsWith('worker.ts')) {
   httpServer.listen(3001, () => {
-    // console.log('[Worker] Socket.io server listening on port 3001');
+    console.log('[Worker] Socket.io server listening on port 3001');
   });
 }
+
+// Add connection handling for Socket.io clients
+io.on('connection', (socket) => {
+  console.log(`[Worker] Client connected: ${socket.id}`);
+
+  socket.on('disconnect', () => {
+    console.log(`[Worker] Client disconnected: ${socket.id}`);
+  });
+});
 
 // Market metadata cache
 // We use mutable maps to store state
