@@ -6,8 +6,8 @@ export async function GET() {
     // Get top whale profiles by total volume
     const whales = await prisma.walletProfile.findMany({
       where: {
-        totalPnl: {
-          not: null
+        NOT: {
+          totalPnl: null
         }
       },
       orderBy: {
