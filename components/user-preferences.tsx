@@ -104,10 +104,6 @@ export function UserPreferences() {
 
       {/* Anomaly Type Filters */}
       <div className="space-y-4">
-        <h2 className="text-lg font-mono font-semibold text-zinc-400 mb-3">
-          ANOMALY TYPES
-        </h2>
-
         {/* STANDARD Card */}
         <div className={`relative p-4 border-2 transition-all duration-200 cursor-pointer ${preferences.showStandard
             ? 'border-zinc-500 bg-zinc-900 shadow-[3px_3px_0px_0px_rgba(0,0,0,0.8)]'

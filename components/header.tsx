@@ -1,7 +1,7 @@
 "use client";
 
 import { LoginButton } from "@/components/auth/login-button";
-import { PeriodSelector } from "@/components/period-selector";
+
 
 export function Header() {
     return (
@@ -22,7 +22,7 @@ export function Header() {
             </div>
 
             <div className="flex items-center gap-3 flex-shrink-0">
-                <PeriodSelector />
+
                 <LoginButton />
             </div>
         </header>

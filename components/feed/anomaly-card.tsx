@@ -285,9 +285,16 @@ export const AnomalyCard = memo(function AnomalyCard({ anomaly }: AnomalyCardPro
                                         <h3
                                             className={cn(
                                                 bricolage.className,
-                                                "text-sm font-black uppercase tracking-tight leading-tight",
-                                                "text-zinc-100 drop-shadow-sm line-clamp-2",
-                                                "transition-all duration-300 min-h-10 flex flex-col justify-center",
+                                                // Responsive typography:
+                                                // - Mobile: text-sm (14px)
+                                                // - Tablet/Desktop: Scales fluidly up to text-lg (18px)
+                                                "text-[clamp(0.875rem,0.8rem+0.5vw,1.125rem)]",
+                                                "font-black uppercase tracking-tight",
+                                                // Responsive line-height for better readability at larger sizes
+                                                "leading-tight md:leading-snug",
+                                                // Layout: Flex column for vertical centering of the inner text block
+                                                "min-h-10 flex flex-col justify-center",
+                                                "transition-all duration-300",
                                                 // Tier-specific text colors
                                                 isGod ? "text-yellow-100" :
                                                     isSuper ? "text-red-100" :
@@ -297,22 +304,26 @@ export const AnomalyCard = memo(function AnomalyCard({ anomaly }: AnomalyCardPro
                                             )}
                                             title={title}
                                         >
-                                            {/* Split long titles intelligently */}
-                                            {(() => {
-                                                const words = title.split(' ');
-                                                if (words.length <= 4) return title;
+                                            {/* Inner wrapper for line-clamp to work correctly within flex parent */}
+                                            <span className="line-clamp-2 w-full">
+                                                {/* Split long titles intelligently */}
+                                                {(() => {
+                                                    const words = title.split(' ');
+                                                    if (words.length <= 4) return title;
 
-                                                const midPoint = Math.ceil(words.length / 2);
-                                                const firstLine = words.slice(0, midPoint).join(' ');
-                                                const secondLine = words.slice(midPoint).join(' ');
+                                                    const midPoint = Math.ceil(words.length / 2);
+                                                    const firstLine = words.slice(0, midPoint).join(' ');
+                                                    const secondLine = words.slice(midPoint).join(' ');
 
-                                                return (
-                                                    <>
-                                                        <span>{firstLine}</span>
-                                                        <span className="text-xs font-bold opacity-90">{secondLine}</span>
-                                                    </>
-                                                );
-                                            })()}
+                                                    return (
+                                                        <>
+                                                            <span>{firstLine}</span>
+                                                            {' '}
+                                                            <span className="text-[0.9em] font-bold opacity-90">{secondLine}</span>
+                                                        </>
+                                                    );
+                                                })()}
+                                            </span>
                                         </h3>
                                     </div>
                                 </div>

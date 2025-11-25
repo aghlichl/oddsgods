@@ -16,6 +16,7 @@ import { motion } from "framer-motion";
 
 import { Header } from "@/components/header";
 import { QuickSearchFilters } from "@/components/quick-search-filters";
+import { PeriodSelector } from "@/components/period-selector";
 import { DesktopLayout } from "@/components/desktop-layout";
 
 // Helper function to check if anomaly passes user preferences
@@ -150,6 +151,11 @@ export default function Home() {
           </div>
         )}
 
+        {/* Fixed Period Selector - Desktop Only */}
+        <div className="fixed top-11 left-[83.333%] transform -translate-x-1/2 z-50 hidden lg:block">
+          <PeriodSelector />
+        </div>
+
         <div className="overflow-y-auto p-4 scrollbar-hide pt-4 pb-20 scroll-container">
           <motion.div
             className="w-full"
@@ -193,6 +199,9 @@ export default function Home() {
 
             {currentPage === 2 && (
               <div className="lg:hidden">
+                <div className="flex justify-center py-4">
+                  <PeriodSelector />
+                </div>
                 <TopWhales />
               </div>
             )}

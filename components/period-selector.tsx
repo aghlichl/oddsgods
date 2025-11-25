@@ -23,7 +23,7 @@ export function PeriodSelector() {
   } = useMarketStore();
 
   return (
-    <div className="hidden lg:flex items-center gap-2">
+    <div className="flex items-center gap-2">
       {PERIODS.map((period) => (
         <button
           key={period}
