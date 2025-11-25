@@ -40,10 +40,30 @@ export const AnomalyCard = memo(function AnomalyCard({ anomaly }: AnomalyCardPro
 
     // Resolve team logo
     const { resolvedTeam, logoPath, usePolymarketFallback } = useMemo(() => {
+        console.log('[TEAM_RESOLUTION_DEBUG]', {
+            title,
+            outcome,
+            image,
+            timestamp: new Date(timestamp).toISOString(),
+            side,
+            type
+        });
+
         const team = resolveTeamFromMarket({
             marketTitle: title,
             outcomeLabel: outcome,
             question: title, // Anomaly event is usually the question/title
+        });
+
+        console.log('[TEAM_RESOLUTION_RESULT]', {
+            input: { title, outcome },
+            resolvedTeam: team ? {
+                league: team.league,
+                slug: team.slug,
+                name: team.name,
+                logoPath: team.logoPath
+            } : null,
+            finalLogoPath: !team && image && image.trim() !== '' ? image : team ? team.logoPath : '/logos/generic/default.svg'
         });
         const league = team?.league || inferLeagueFromMarket({ question: title } as MarketMeta);
 
@@ -56,7 +76,7 @@ export const AnomalyCard = memo(function AnomalyCard({ anomaly }: AnomalyCardPro
             logoPath: noTeamMatch && hasPolymarketImage ? image : getLogoPathForTeam(team, league),
             usePolymarketFallback: noTeamMatch && hasPolymarketImage
         };
-    }, [title, outcome, image]);
+    }, [title, outcome, image, timestamp, side, type]);
 
     const amount = `$${Math.round(value).toLocaleString()}`;
     const isGod = type === 'GOD_WHALE';

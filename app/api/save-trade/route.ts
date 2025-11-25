@@ -66,7 +66,7 @@ export async function POST(request: Request) {
         size: tradeData.size,
         price: tradeData.price,
         tradeValue: tradeData.tradeValue,
-        timestamp: new Date(tradeData.timestamp),
+        timestamp: new Date(Date.now()),
         walletAddress: tradeData.walletAddress,
         isWhale,
         isSmartMoney,
