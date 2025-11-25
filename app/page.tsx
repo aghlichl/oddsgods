@@ -16,6 +16,7 @@ import { motion } from "framer-motion";
 
 import { Header } from "@/components/header";
 import { QuickSearchFilters } from "@/components/quick-search-filters";
+import { DesktopLayout } from "@/components/desktop-layout";
 
 // Helper function to check if anomaly passes user preferences
 function passesPreferences(anomaly: Anomaly, preferences: UserPreferencesType): boolean {
@@ -109,97 +110,130 @@ export default function Home() {
   // Only depend on startStream, not preferences since we use a getter function
   // that dynamically gets current preferences without needing to restart the stream
 
+  // Determine center panel title based on current page
+  const getCenterTitle = () => {
+    switch (currentPage) {
+      case 0:
+        return <>USER <span className="text-purple-400 animate-pulse">PREFERENCES</span></>;
+      case 1:
+        return <><span className="text-green-400 animate-pulse">LIVE</span> MARKET INTELLIGENCE</>;
+      case 2:
+        return <>TOP <span className="text-blue-400 animate-pulse">WHALES</span></>;
+      default:
+        return <><span className="text-green-400 animate-pulse">LIVE</span> MARKET INTELLIGENCE</>;
+    }
+  };
+
   return (
-    <main className="h-screen bg-background overflow-hidden relative">
-      <Header />
-      <Ticker />
+    <DesktopLayout
+      leftPanel={<UserPreferences />}
+      rightPanel={<TopWhales />}
+      centerTitle={getCenterTitle()}
+    >
+      <main className="bg-background relative">
+        <Header />
+        <Ticker />
 
-      {/* Centered Quick Search Filters - Only on Live Feed page */}
-      {currentPage === 1 && (
-        <div className="fixed top-11 left-1/2 transform -translate-x-1/2 z-50 hidden md:block">
-          <div className="relative max-w-[40vw] w-full">
-            {/* Right fade only */}
-            <div className="absolute right-0 top-0 bottom-0 w-8 bg-linear-to-l from-background/95 via-background/70 to-transparent backdrop-blur-md z-10 pointer-events-none" />
+        {/* Centered Quick Search Filters - Only on Live Feed page */}
+        {currentPage === 1 && (
+          <div className="fixed top-11 left-1/2 transform -translate-x-1/2 z-50 hidden md:block">
+            <div className="relative max-w-[40vw] w-full">
+              {/* Right fade only */}
+              <div className="absolute right-0 top-0 bottom-0 w-8 bg-linear-to-l from-background/95 via-background/70 to-transparent backdrop-blur-md z-10 pointer-events-none" />
 
-            <QuickSearchFilters
-              onFilterSelect={handleFilterSelect}
-              activeFilter={activeFilter}
-              anomalies={anomalies}
+              <QuickSearchFilters
+                onFilterSelect={handleFilterSelect}
+                activeFilter={activeFilter}
+                anomalies={anomalies}
+              />
+            </div>
+          </div>
+        )}
+
+        <div className="overflow-y-auto p-4 scrollbar-hide pt-4 pb-20 scroll-container">
+          <motion.div
+            className="w-full"
+            key={currentPage}
+            initial={{ opacity: 0, x: currentPage === 0 ? -20 : 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.3 }}
+          >
+            {currentPage === 1 && (
+              <>
+                <SlotReel>
+                  {filteredAnomalies.map((anomaly) => (
+                    <AnomalyCard key={anomaly.id} anomaly={anomaly} />
+                  ))}
+                </SlotReel>
+
+                {/* Sentinel for Infinite Scroll */}
+                {hasMoreHistory && !searchQuery && (
+                  <div ref={lastElementRef} className="h-4 w-full" />
+                )}
+
+                {filteredAnomalies.length === 0 && !isLoading && (
+                  <div className="text-center text-zinc-600 mt-20 font-mono">
+                    {searchQuery ? `NO RESULTS FOR "${searchQuery.toUpperCase()}"` : "WAITING FOR SIGNAL..."}
+                  </div>
+                )}
+
+                {isLoading && (
+                  <div className="text-center text-zinc-600 mt-8 font-mono animate-pulse">
+                    LOADING MORE DATA...
+                  </div>
+                )}
+              </>
+            )}
+
+            {currentPage === 0 && (
+              <div className="lg:hidden">
+                <UserPreferences />
+              </div>
+            )}
+
+            {currentPage === 2 && (
+              <div className="lg:hidden">
+                <TopWhales />
+              </div>
+            )}
+          </motion.div>
+        </div>
+
+        {/* Bottom Navigation / Status Bar - Hidden on Desktop */}
+        <div className="fixed bottom-0 left-0 right-0 h-12 border-t border-zinc-800 bg-zinc-950/90 backdrop-blur flex items-center justify-between px-3 z-50 lg:hidden">
+          {/* Left side - Minimal LIVE indicator */}
+          <div className="flex items-center gap-1">
+            <div className="w-1 h-1 bg-primary rounded-full animate-pulse" />
+            <span className="text-[8px] font-mono text-zinc-600 tracking-wider">LIVE</span>
+          </div>
+
+          {/* Center - Carousel Navigation */}
+          <div className="flex-1 flex items-center justify-center">
+            <BottomCarousel
+              currentPage={currentPage}
+              onPageChange={handlePageChange}
             />
           </div>
-        </div>
-      )}
 
-      <div className="h-full overflow-y-auto p-4 scrollbar-hide pt-24 pb-20 scroll-container">
-        <motion.div
-          className="max-w-md mx-auto w-full"
-          key={currentPage}
-          initial={{ opacity: 0, x: currentPage === 0 ? -20 : 20 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.3 }}
-        >
-          {currentPage === 1 && (
-            <>
-              <SlotReel>
-                {filteredAnomalies.map((anomaly) => (
-                  <AnomalyCard key={anomaly.id} anomaly={anomaly} />
-                ))}
-              </SlotReel>
-              
-              {/* Sentinel for Infinite Scroll */}
-              {hasMoreHistory && !searchQuery && (
-                 <div ref={lastElementRef} className="h-4 w-full" />
-              )}
-
-              {filteredAnomalies.length === 0 && !isLoading && (
-                <div className="text-center text-zinc-600 mt-20 font-mono">
-                  {searchQuery ? `NO RESULTS FOR "${searchQuery.toUpperCase()}"` : "WAITING FOR SIGNAL..."}
-                </div>
-              )}
-
-              {isLoading && (
-                <div className="text-center text-zinc-600 mt-8 font-mono animate-pulse">
-                  LOADING MORE DATA...
-                </div>
-              )}
-            </>
-          )}
-
-          {currentPage === 0 && (
-            <UserPreferences />
-          )}
-
-          {currentPage === 2 && (
-            <TopWhales />
-          )}
-        </motion.div>
-      </div>
-
-      {/* Bottom Navigation / Status Bar */}
-      <div className="fixed bottom-0 left-0 right-0 h-12 border-t border-zinc-800 bg-zinc-950/90 backdrop-blur flex items-center justify-between px-3 z-50">
-        {/* Left side - Minimal LIVE indicator */}
-        <div className="flex items-center gap-1">
-          <div className="w-1 h-1 bg-primary rounded-full animate-pulse" />
-          <span className="text-[8px] font-mono text-zinc-600 tracking-wider">LIVE</span>
+          {/* Right side - Minimal version */}
+          <div className="text-[8px] font-mono text-zinc-700">v1.0</div>
         </div>
 
-        {/* Center - Carousel Navigation */}
-        <div className="flex-1 flex items-center justify-center">
-          <BottomCarousel
-            currentPage={currentPage}
-            onPageChange={handlePageChange}
+        {/* Floating Search Button */}
+        {currentPage === 1 && (
+          <SearchButton
+            onSearch={setSearchQuery}
+            className="lg:absolute lg:right-8 lg:bottom-8"
           />
-        </div>
+        )}
 
-        {/* Right side - Minimal version */}
-        <div className="text-[8px] font-mono text-zinc-700">v1.0</div>
-      </div>
-
-      {/* Floating Search Button */}
-      {currentPage === 1 && <SearchButton onSearch={setSearchQuery} />}
-
-      {/* Floating Scroll to Top Button */}
-      {currentPage === 1 && <ScrollToTopButton />}
-    </main>
+        {/* Floating Scroll to Top Button */}
+        {currentPage === 1 && (
+          <ScrollToTopButton
+            className="lg:absolute lg:bottom-8"
+          />
+        )}
+      </main>
+    </DesktopLayout>
   );
 }

@@ -1,50 +1,33 @@
-# Walkthrough - Event Image Integration
+# Desktop Responsive Layout Walkthrough
 
-I have integrated event images into the `AnomalyCard` component, fetching them from the Polymarket API and displaying them in the "Tactical HUD" header.
-
-## Changes
-
-### 1. Type Definitions (`lib/types.ts`)
--   Updated `PolymarketMarket` to include `image`, `icon`, and `twitterCardImage`.
--   Updated `MarketMeta` and `Anomaly` to include an `image` field.
-
-### 2. Data Fetching (`lib/polymarket.ts`)
--   Updated `parseMarketData` to extract the image URL.
--   **Logic**: Prioritizes `twitterCardImage` > `image` > `icon`. Checks both the market object and the nested `events` array.
-
-### 3. Market Stream (`lib/market-stream.ts`)
--   Updated the stream logic to pass the `image` from `MarketMeta` to the `Anomaly` object when a trade occurs.
-
-### 4. UI Component (`components/feed/anomaly-card.tsx`)
--   Updated `AnomalyCard` to render the event image in the top-left header.
--   **Design**:
-    -   Displays as a 40x40px (`w-10 h-10`) rounded square.
-    -   Includes a border and shadow to match the "Tactical HUD" aesthetic.
-    -   Features a "scanline" overlay for a tech feel.
-    -   Gracefully handles loading errors by hiding the image element.
-
-# Walkthrough - Lazy Loading History
-
-I have implemented infinite scrolling for historical data to allow browsing past anomalies without performance impact.
+I have implemented a responsive desktop layout that enhances the user experience on larger screens while preserving the mobile-first design.
 
 ## Changes
 
-### 1. API Update (`app/api/history/route.ts`)
--   Added `cursor` and `limit` query parameters for pagination.
--   Returns `nextCursor` for sequential fetching.
--   Increased time window to 24 hours.
+### 1. New Desktop Layout Component
+Created `components/desktop-layout.tsx` which implements a 3-column grid structure for desktop screens (`lg` breakpoint and above):
+- **Left Panel**: User Preferences
+- **Center Panel**: Main Feed (preserves mobile view)
+- **Right Panel**: Top Whales
 
-### 2. Store Update (`lib/store.ts`)
--   Added `historyCursor` and `hasMoreHistory` state.
--   Updated `loadHistory` to handle pagination.
--   Added `loadMoreHistory` action.
--   Increased anomaly list limit to 2000 items to accommodate history.
+### 2. Page Integration
+Modified `app/page.tsx` to use `DesktopLayout`:
+- Wrapped the main content in `DesktopLayout`.
+- Passed `UserPreferences` and `TopWhales` as side panels.
+- Added responsive logic to hide mobile navigation (`BottomCarousel`) and mobile-specific views of side panels when on desktop.
+- Adjusted positioning of floating elements (`SearchButton`, `ScrollToTopButton`) to stay within the center feed column on desktop.
 
-### 3. UI Integration (`app/page.tsx`)
--   Added `IntersectionObserver` sentinel at the bottom of the feed.
--   Triggers `loadMoreHistory` when user scrolls to bottom.
--   Displays loading indicator while fetching more data.
+## Verification Results
 
-## Visuals
+### Mobile View (< 1024px)
+- **Layout**: Single column, full width.
+- **Navigation**: `BottomCarousel` is visible and functional.
+- **Side Panels**: Hidden.
+- **Behavior**: Identical to previous mobile experience.
 
-The image now appears to the left of the event title, providing immediate visual context for the market (e.g., a photo of a politician, a sports team logo, or a crypto icon). Users can seamlessly scroll down to view older trades.
+### Desktop View (>= 1024px)
+- **Layout**: 3-column grid (Preferences | Feed | Whales).
+- **Navigation**: `BottomCarousel` is hidden (all "pages" are visible simultaneously).
+- **Side Panels**: Visible and sticky.
+- **Feed**: Centered and scrollable, maintaining the mobile aesthetic.
+- **Floating Buttons**: Correctly positioned within the feed column.

@@ -100,15 +100,7 @@ export function UserPreferences() {
   const currentPosition = valueToPosition(preferences.minValueThreshold);
 
   return (
-    <div className="max-w-md mx-auto w-full p-4 space-y-6">
-      <div className="text-center mb-6">
-        <h1 className="text-2xl font-mono font-bold text-zinc-300 mb-2">
-          USER PREFERENCES
-        </h1>
-        <p className="text-sm text-zinc-500 font-mono">
-          Customize your anomaly detection experience
-        </p>
-      </div>
+    <div className="w-full space-y-6">
 
       {/* Anomaly Type Filters */}
       <div className="space-y-4">
