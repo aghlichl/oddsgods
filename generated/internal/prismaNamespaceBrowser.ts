@@ -105,7 +105,11 @@ export const TradeScalarFieldEnum = {
   conditionId: 'conditionId',
   outcome: 'outcome',
   question: 'question',
-  image: 'image'
+  image: 'image',
+  transactionHash: 'transactionHash',
+  blockNumber: 'blockNumber',
+  logIndex: 'logIndex',
+  enrichmentStatus: 'enrichmentStatus'
 } as const
 
 export type TradeScalarFieldEnum = (typeof TradeScalarFieldEnum)[keyof typeof TradeScalarFieldEnum]

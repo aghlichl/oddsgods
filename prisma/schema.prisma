@@ -33,8 +33,8 @@ model Trade {
   price         Float
   tradeValue    Float    // size * price
   timestamp     DateTime
-  walletAddress String
-  walletProfile WalletProfile @relation(fields: [walletAddress], references: [id])
+  walletAddress String   @default("")
+  walletProfile WalletProfile? @relation(fields: [walletAddress], references: [id], map: "trades_walletAddress_fkey")
 
   // Intelligence flags
   isWhale       Boolean  @default(false)
@@ -48,9 +48,17 @@ model Trade {
   question      String?
   image         String?
 
+  // Enrichment fields for wallet identity matching
+  transactionHash  String?  // For Data-API matching
+  blockNumber      BigInt?  // For tx log fallback matching
+  logIndex         Int?     // Unique identifier within block
+  enrichmentStatus String?  @default("pending") // "pending" | "enriched" | "failed"
+
   @@index([walletAddress])
   @@index([timestamp])
   @@index([isWhale, timestamp])
+  @@index([transactionHash])
+  @@index([enrichmentStatus, timestamp])
   @@map("trades")
 }
 

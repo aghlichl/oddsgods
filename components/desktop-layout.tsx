@@ -32,7 +32,7 @@ export function DesktopLayout({ children, leftPanel, rightPanel, centerTitle }: 
                             {centerTitle || <><span className="text-green-400 animate-pulse">LIVE</span> MARKET INTELLIGENCE</>}
                         </h2>
                     </div>
-                    <div className="flex-1 overflow-y-auto scrollbar-hide">
+                    <div className="flex-1 overflow-y-auto scrollbar-hide scroll-container">
                         {children}
                     </div>
                 </div>
@@ -41,7 +41,7 @@ export function DesktopLayout({ children, leftPanel, rightPanel, centerTitle }: 
                 <div className="hidden lg:flex lg:flex-col h-full bg-zinc-950/30">
                     <div className="shrink-0 px-6 py-3 border-b border-zinc-800/30">
                         <h2 className="text-center text-sm font-mono tracking-wider uppercase">
-                             TOP <span className="text-blue-400 animate-pulse">WHALES</span>
+                            TOP <span className="text-blue-400 animate-pulse">WHALES</span>
                         </h2>
                     </div>
                     <div className="flex-1 overflow-y-auto scrollbar-hide">

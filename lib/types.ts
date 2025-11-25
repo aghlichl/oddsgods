@@ -120,3 +120,35 @@ export interface EnrichedTrade {
     };
 }
 
+// Data-API trade response from Polymarket
+export interface DataAPITrade {
+    id: string;
+    taker_order_id: string;
+    market: string;
+    asset_id: string;
+    side: 'BUY' | 'SELL';
+    size: string;
+    fee_rate_bps: string;
+    price: string;
+    status: string;
+    match_time: string;
+    last_update: string;
+    outcome: string;
+    bucket_index: number;
+    owner: string;           // Wallet address (taker)
+    maker_address: string;   // Maker wallet address
+    transaction_hash: string;
+    type: string;
+}
+
+// Enrichment status for trade wallet identity
+export type EnrichmentStatus = 'pending' | 'enriched' | 'failed';
+
+// Result from wallet enrichment attempt
+export interface WalletEnrichmentResult {
+    walletAddress: string;
+    maker: string;
+    taker: string;
+    source: 'websocket' | 'data-api' | 'tx-logs';
+}
+

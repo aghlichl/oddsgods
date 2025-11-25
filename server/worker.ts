@@ -5,9 +5,12 @@ import { Server as SocketIOServer } from 'socket.io';
 import { createServer } from 'http';
 import WebSocket from 'ws';
 import { getTraderProfile, analyzeMarketImpact, getWalletsFromTx } from '../lib/intelligence';
-import { fetchMarketsFromGamma, parseMarketData } from '../lib/polymarket';
-import { MarketMeta, AssetOutcome, PolymarketTrade } from '../lib/types';
+import { fetchMarketsFromGamma, parseMarketData, enrichTradeWithDataAPI } from '../lib/polymarket';
+import { MarketMeta, AssetOutcome, PolymarketTrade, EnrichmentStatus } from '../lib/types';
 import { CONFIG } from '../lib/config';
+
+// Helper function for rate limiting delays
+const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
 // Initialize services
 const redis = new Redis(process.env.REDIS_URL || 'redis://localhost:6379');
@@ -63,7 +66,12 @@ async function updateMarketMetadata(): Promise<string[]> {
 }
 
 /**
- * Process and enrich a trade
+ * Process and enrich a trade with wallet identity
+ * 
+ * Enrichment pipeline:
+ * 1. Try WebSocket fields (fast path) - ~10-20% success
+ * 2. Try Data-API matching if txHash available - primary source
+ * 3. Fall back to tx log parsing - last resort
  */
 export async function processTrade(trade: PolymarketTrade) {
   try {
@@ -79,46 +87,97 @@ export async function processTrade(trade: PolymarketTrade) {
     // Filter out very likely outcomes
     if (price > CONFIG.CONSTANTS.ODDS_THRESHOLD) return;
 
-    // Get wallet address
-    let walletAddress = trade.user || trade.maker || trade.taker || trade.wallet || '';
-
-    // If no wallet address is found, we can't profile the trader
-    if (!walletAddress && trade.transaction_hash) {
-      // Fallback: Try to get wallet from transaction hash
-      // console.log(`[Worker] Fetching wallet from tx ${trade.transaction_hash}...`);
-      const { maker, taker } = await getWalletsFromTx(trade.transaction_hash);
-      // Prefer taker as the active trader, but use maker if taker is null
-      walletAddress = taker || maker || '';
-
-      if (walletAddress) {
-        // console.log(`[Worker] Found wallet ${walletAddress} from tx`);
-      }
-    }
-
-
-    if (!walletAddress) {
-      // console.log('[Worker] Trade missing wallet address, skipping profile enrichment');
-      // We can still process the trade, but without wallet context
-    }
-
-    // Lookup market metadata
+    // Lookup market metadata first (early exit if unknown asset)
     const assetInfo = assetIdToOutcome.get(trade.asset_id);
     if (!assetInfo) {
-      // console.warn(`[Worker] Unknown asset_id: ${trade.asset_id}`);
       return;
     }
 
     const marketMeta = marketsByCondition.get(assetInfo.conditionId);
     if (!marketMeta) {
-      // console.warn(`[Worker] Unknown conditionId: ${assetInfo.conditionId}`);
       return;
+    }
+
+    // === WALLET ENRICHMENT PIPELINE ===
+    let walletAddress = '';
+    let enrichmentStatus: EnrichmentStatus = 'pending';
+    let blockNumber: bigint | null = null;
+    let logIndex: number | null = null;
+    const transactionHash = trade.transaction_hash || null;
+
+    // Step 1: Try WebSocket fields (fast path)
+    walletAddress = trade.user || trade.maker || trade.taker || trade.wallet || '';
+    if (walletAddress) {
+      enrichmentStatus = 'enriched';
+    }
+
+    // Step 2: Try Data-API matching (if has txHash and no wallet yet)
+    if (!walletAddress && transactionHash) {
+      try {
+        const timestamp = trade.timestamp 
+          ? new Date(trade.timestamp) 
+          : new Date();
+        
+        const dataApiResult = await enrichTradeWithDataAPI({
+          assetId: trade.asset_id,
+          price,
+          size,
+          timestamp,
+          transactionHash,
+        });
+        
+        if (dataApiResult) {
+          // Prefer taker (active trader) over maker
+          walletAddress = dataApiResult.taker || dataApiResult.maker || '';
+          if (walletAddress) {
+            enrichmentStatus = 'enriched';
+            // console.log(`[Worker] Enriched wallet via Data-API: ${walletAddress.slice(0, 8)}...`);
+          }
+        }
+      } catch (dataApiError) {
+        console.warn('[Worker] Data-API enrichment failed:', dataApiError);
+      }
+    }
+
+    // Step 3: Fall back to tx log parsing
+    if (!walletAddress && transactionHash) {
+      try {
+        const txResult = await getWalletsFromTx(transactionHash);
+        // Prefer taker as the active trader
+        walletAddress = txResult.taker || txResult.maker || '';
+        blockNumber = txResult.blockNumber;
+        logIndex = txResult.logIndex;
+        
+        if (walletAddress) {
+          enrichmentStatus = 'enriched';
+          // console.log(`[Worker] Enriched wallet via tx logs: ${walletAddress.slice(0, 8)}...`);
+        }
+      } catch (txError) {
+        console.warn('[Worker] Tx log parsing failed:', txError);
+      }
+    }
+
+    // Mark as failed if we couldn't enrich after trying all methods
+    if (!walletAddress && transactionHash) {
+      enrichmentStatus = 'failed';
     }
 
     // Determine side (BUY or SELL)
     const side = trade.side || (trade.type === 'buy' ? 'BUY' : 'SELL') || 'BUY';
 
-    // Enrich with trader profile
-    const profile = await getTraderProfile(walletAddress);
+    // Enrich with trader profile (only if we have a wallet address)
+    const profile = walletAddress ? await getTraderProfile(walletAddress) : {
+      address: '',
+      label: null,
+      totalPnl: 0,
+      winRate: 0,
+      isFresh: false,
+      isSmartMoney: false,
+      isWhale: false,
+      txCount: 0,
+      maxTradeValue: 0,
+      activityLevel: null as 'LOW' | 'MEDIUM' | 'HIGH' | null,
+    };
 
     // Analyze market impact
     const impact = await analyzeMarketImpact(trade.asset_id, size, side as 'BUY' | 'SELL');
@@ -176,32 +235,34 @@ export async function processTrade(trade: PolymarketTrade) {
 
     // Persist to database
     try {
-      // Ensure wallet profile exists
-      await prisma.walletProfile.upsert({
-        where: { id: walletAddress.toLowerCase() },
-        update: {
-          label: profile.label || null,
-          totalPnl: profile.totalPnl,
-          winRate: profile.winRate,
-          isFresh: profile.isFresh,
-          txCount: profile.txCount,
-          maxTradeValue: Math.max(profile.maxTradeValue, value),
-          activityLevel: profile.activityLevel,
-          lastUpdated: new Date(),
-        },
-        create: {
-          id: walletAddress.toLowerCase(),
-          label: profile.label || null,
-          totalPnl: profile.totalPnl,
-          winRate: profile.winRate,
-          isFresh: profile.isFresh,
-          txCount: profile.txCount,
-          maxTradeValue: value,
-          activityLevel: profile.activityLevel,
-        },
-      });
+      // Only upsert wallet profile if we have a wallet address
+      if (walletAddress) {
+        await prisma.walletProfile.upsert({
+          where: { id: walletAddress.toLowerCase() },
+          update: {
+            label: profile.label || null,
+            totalPnl: profile.totalPnl,
+            winRate: profile.winRate,
+            isFresh: profile.isFresh,
+            txCount: profile.txCount,
+            maxTradeValue: Math.max(profile.maxTradeValue, value),
+            activityLevel: profile.activityLevel,
+            lastUpdated: new Date(),
+          },
+          create: {
+            id: walletAddress.toLowerCase(),
+            label: profile.label || null,
+            totalPnl: profile.totalPnl,
+            winRate: profile.winRate,
+            isFresh: profile.isFresh,
+            txCount: profile.txCount,
+            maxTradeValue: value,
+            activityLevel: profile.activityLevel,
+          },
+        });
+      }
 
-      // Save trade
+      // Save trade (always save, even without wallet - can be enriched later)
       await prisma.trade.create({
         data: {
           assetId: trade.asset_id,
@@ -209,7 +270,7 @@ export async function processTrade(trade: PolymarketTrade) {
           size,
           price,
           tradeValue: value,
-          timestamp: new Date(),
+          timestamp: new Date(trade.timestamp || Date.now()),
           walletAddress: walletAddress.toLowerCase(),
           isWhale,
           isSmartMoney,
@@ -219,6 +280,11 @@ export async function processTrade(trade: PolymarketTrade) {
           outcome: assetInfo.outcomeLabel,
           question: marketMeta.question,
           image: marketMeta.image,
+          // New enrichment fields
+          transactionHash,
+          blockNumber,
+          logIndex,
+          enrichmentStatus,
         },
       });
     } catch (dbError) {
@@ -228,9 +294,154 @@ export async function processTrade(trade: PolymarketTrade) {
     // Broadcast to Socket.io clients
     io.emit('trade', enrichedTrade);
 
-    console.log(`[Worker] Processed trade: $${value.toFixed(2)} from ${walletAddress.slice(0, 8)}... (${enrichedTrade.analysis.tags.join(', ')})`);
+    const walletDisplay = walletAddress ? walletAddress.slice(0, 8) + '...' : 'UNKNOWN';
+    console.log(`[Worker] Processed trade: $${value.toFixed(2)} from ${walletDisplay} [${enrichmentStatus}] (${enrichedTrade.analysis.tags.join(', ')})`);
   } catch (error) {
     console.error('[Worker] Error processing trade:', error);
+  }
+}
+
+/**
+ * Batch enrichment job for trades missing wallet addresses
+ * Runs periodically to retry enrichment on pending/failed trades
+ */
+async function runBatchEnrichment() {
+  try {
+    const maxAgeMs = CONFIG.ENRICHMENT.MAX_AGE_HOURS * 60 * 60 * 1000;
+    
+    // Find trades that need enrichment (empty wallet or pending status)
+    const unenrichedTrades = await prisma.trade.findMany({
+      where: {
+        OR: [
+          { walletAddress: '' },
+          { enrichmentStatus: 'pending' },
+        ],
+        timestamp: { 
+          gte: new Date(Date.now() - maxAgeMs) 
+        },
+        // Must have transaction hash to attempt enrichment
+        transactionHash: { not: null },
+      },
+      take: CONFIG.ENRICHMENT.BATCH_SIZE,
+      orderBy: { timestamp: 'desc' },
+    });
+
+    if (unenrichedTrades.length === 0) {
+      return;
+    }
+
+    console.log(`[Enrichment] Processing ${unenrichedTrades.length} unenriched trades...`);
+    
+    let enrichedCount = 0;
+    let failedCount = 0;
+
+    for (const trade of unenrichedTrades) {
+      // Rate limit to stay under 75 req/10s
+      await delay(CONFIG.ENRICHMENT.RATE_LIMIT_DELAY_MS);
+
+      try {
+        let walletAddress = '';
+        let blockNumber: bigint | null = trade.blockNumber;
+        let logIndex: number | null = trade.logIndex;
+        let enrichmentStatus: EnrichmentStatus = 'failed';
+
+        // Try Data-API matching first
+        if (trade.transactionHash) {
+          const dataApiResult = await enrichTradeWithDataAPI({
+            assetId: trade.assetId,
+            price: trade.price,
+            size: trade.size,
+            timestamp: trade.timestamp,
+            transactionHash: trade.transactionHash,
+          });
+
+          if (dataApiResult) {
+            walletAddress = dataApiResult.taker || dataApiResult.maker || '';
+            if (walletAddress) {
+              enrichmentStatus = 'enriched';
+            }
+          }
+        }
+
+        // Fall back to tx log parsing if Data-API didn't work
+        if (!walletAddress && trade.transactionHash) {
+          const txResult = await getWalletsFromTx(trade.transactionHash);
+          walletAddress = txResult.taker || txResult.maker || '';
+          blockNumber = txResult.blockNumber;
+          logIndex = txResult.logIndex;
+          
+          if (walletAddress) {
+            enrichmentStatus = 'enriched';
+          }
+        }
+
+        // Update trade record
+        if (walletAddress) {
+          // Ensure wallet profile exists
+          const profile = await getTraderProfile(walletAddress);
+          
+          await prisma.walletProfile.upsert({
+            where: { id: walletAddress.toLowerCase() },
+            update: {
+              lastUpdated: new Date(),
+            },
+            create: {
+              id: walletAddress.toLowerCase(),
+              label: profile.label || null,
+              totalPnl: profile.totalPnl,
+              winRate: profile.winRate,
+              isFresh: profile.isFresh,
+              txCount: profile.txCount,
+              maxTradeValue: trade.tradeValue,
+              activityLevel: profile.activityLevel,
+            },
+          });
+
+          // Update trade with enriched wallet
+          await prisma.trade.update({
+            where: { id: trade.id },
+            data: {
+              walletAddress: walletAddress.toLowerCase(),
+              blockNumber,
+              logIndex,
+              enrichmentStatus,
+              // Update intelligence flags based on profile
+              isWhale: trade.tradeValue > 10000 || profile.isWhale,
+              isSmartMoney: profile.isSmartMoney,
+              isFresh: profile.isFresh,
+            },
+          });
+
+          enrichedCount++;
+        } else {
+          // Mark as failed after retry
+          await prisma.trade.update({
+            where: { id: trade.id },
+            data: {
+              enrichmentStatus: 'failed',
+              blockNumber,
+              logIndex,
+            },
+          });
+          failedCount++;
+        }
+      } catch (tradeError) {
+        console.error(`[Enrichment] Error enriching trade ${trade.id}:`, tradeError);
+        failedCount++;
+        
+        // Mark as failed
+        await prisma.trade.update({
+          where: { id: trade.id },
+          data: { enrichmentStatus: 'failed' },
+        }).catch(() => {}); // Ignore update errors
+      }
+    }
+
+    if (enrichedCount > 0 || failedCount > 0) {
+      console.log(`[Enrichment] Batch complete: ${enrichedCount} enriched, ${failedCount} failed`);
+    }
+  } catch (error) {
+    console.error('[Enrichment] Batch enrichment error:', error);
   }
 }
 
@@ -278,6 +489,13 @@ function connectToPolymarket() {
           }));
         }
       }, CONFIG.CONSTANTS.METADATA_REFRESH_INTERVAL);
+
+      // Start batch enrichment job
+      console.log('[Worker] Starting batch enrichment job...');
+      setInterval(runBatchEnrichment, CONFIG.ENRICHMENT.BATCH_INTERVAL_MS);
+      
+      // Run initial batch enrichment after a short delay
+      setTimeout(runBatchEnrichment, 10000);
     });
 
     ws.on('message', (data: WebSocket.Data) => {

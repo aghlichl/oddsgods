@@ -1,6 +1,7 @@
 import Redis from 'ioredis';
-import { createPublicClient, http } from 'viem';
+import { createPublicClient, http, decodeEventLog, parseAbi } from 'viem';
 import { polygon } from 'viem/chains';
+import { WalletEnrichmentResult } from './types';
 
 // Initialize Redis with error handling
 const redis = new Redis(process.env.REDIS_URL || 'redis://localhost:6379', {
@@ -225,46 +226,100 @@ export async function analyzeMarketImpact(assetId: string, tradeSize: number, si
   }
 }
 
+// OrderFilled event ABI from Polymarket CTF Exchange contract
+// Event signature: 0xd0a08e8c493f9c94f29311604c9de1b4e8c8d4c06bd0c789af57f2d65bfec0f6
+const ORDER_FILLED_ABI = parseAbi([
+  'event OrderFilled(bytes32 indexed orderHash, address indexed maker, address indexed taker, uint256 makerAssetId, uint256 takerAssetId, uint256 makerAmountFilled, uint256 takerAmountFilled, uint256 fee)'
+]);
+
+const ORDER_FILLED_EVENT_SIGNATURE = '0xd0a08e8c493f9c94f29311604c9de1b4e8c8d4c06bd0c789af57f2d65bfec0f6';
+
 /**
- * Extracts wallet addresses from transaction logs
- * Looks for OrderFilled event signature: 0xd0a08e8c493f9c94f29311604c9de1b4e8c8d4c06bd0c789af57f2d65bfec0f6
+ * Extended result from transaction log parsing with additional metadata
  */
-export async function getWalletsFromTx(txHash: string): Promise<{ maker: string | null; taker: string | null }> {
+export interface TxLogWalletResult {
+  maker: string | null;
+  taker: string | null;
+  blockNumber: bigint | null;
+  logIndex: number | null;
+}
+
+/**
+ * Extracts wallet addresses from transaction logs using proper ABI decoding
+ * Looks for OrderFilled events and decodes them using viem
+ */
+export async function getWalletsFromTx(txHash: string): Promise<TxLogWalletResult> {
   try {
     const receipt = await publicClient.getTransactionReceipt({
       hash: txHash as `0x${string}`,
     });
 
-    // Find the OrderFilled event
-    // Signature: 0xd0a08e8c493f9c94f29311604c9de1b4e8c8d4c06bd0c789af57f2d65bfec0f6
-    const orderFilledLog = receipt.logs.find(log =>
-      log.topics[0] === '0xd0a08e8c493f9c94f29311604c9de1b4e8c8d4c06bd0c789af57f2d65bfec0f6'
+    // Find all OrderFilled events in the transaction
+    const orderFilledLogs = receipt.logs.filter(log =>
+      log.topics[0] === ORDER_FILLED_EVENT_SIGNATURE
     );
 
-    if (orderFilledLog && orderFilledLog.topics.length >= 4) {
-      // Based on observation:
-      // Topic 1: ?
-      // Topic 2: Address 1 (Maker or Taker)
-      // Topic 3: Address 2 (Maker or Taker)
-
-      // We'll return both and let the worker decide or use both
-      // Usually the taker is the one who sent the tx, but in a relayer setup it might differ.
-      // For now, we just return them.
-
-      const address1 = orderFilledLog.topics[2] ? `0x${orderFilledLog.topics[2].slice(26)}` : null;
-      const address2 = orderFilledLog.topics[3] ? `0x${orderFilledLog.topics[3].slice(26)}` : null;
-
-      return {
-        maker: address1,
-        taker: address2
-      };
+    if (orderFilledLogs.length === 0) {
+      return { maker: null, taker: null, blockNumber: null, logIndex: null };
     }
 
-    return { maker: null, taker: null };
+    // Use the first OrderFilled event (most transactions have one, if multiple, first is usually the primary)
+    const log = orderFilledLogs[0];
+
+    try {
+      // Decode the event using viem's proper ABI decoding
+      const decoded = decodeEventLog({
+        abi: ORDER_FILLED_ABI,
+        data: log.data,
+        topics: log.topics,
+      });
+
+      // Extract maker and taker from decoded args
+      const args = decoded.args as {
+        orderHash: `0x${string}`;
+        maker: `0x${string}`;
+        taker: `0x${string}`;
+        makerAssetId: bigint;
+        takerAssetId: bigint;
+        makerAmountFilled: bigint;
+        takerAmountFilled: bigint;
+        fee: bigint;
+      };
+
+      return {
+        maker: args.maker?.toLowerCase() || null,
+        taker: args.taker?.toLowerCase() || null,
+        blockNumber: receipt.blockNumber,
+        logIndex: log.logIndex,
+      };
+    } catch (decodeError) {
+      // Fallback to manual topic parsing if ABI decoding fails
+      console.warn(`[Intelligence] ABI decode failed for ${txHash}, using fallback:`, decodeError);
+      
+      // Topics: [0]=eventSig, [1]=orderHash, [2]=maker, [3]=taker
+      const maker = log.topics[2] ? `0x${log.topics[2].slice(26)}`.toLowerCase() : null;
+      const taker = log.topics[3] ? `0x${log.topics[3].slice(26)}`.toLowerCase() : null;
+
+      return {
+        maker,
+        taker,
+        blockNumber: receipt.blockNumber,
+        logIndex: log.logIndex,
+      };
+    }
   } catch (error) {
     console.error(`[Intelligence] Error fetching tx ${txHash}:`, error);
-    return { maker: null, taker: null };
+    return { maker: null, taker: null, blockNumber: null, logIndex: null };
   }
+}
+
+/**
+ * Legacy wrapper for backward compatibility
+ * Returns just maker/taker without extended metadata
+ */
+export async function getWalletsFromTxSimple(txHash: string): Promise<{ maker: string | null; taker: string | null }> {
+  const result = await getWalletsFromTx(txHash);
+  return { maker: result.maker, taker: result.taker };
 }
 
 

@@ -156,7 +156,7 @@ export default function Home() {
           <PeriodSelector />
         </div>
 
-        <div className="overflow-y-auto p-4 scrollbar-hide pt-4 pb-20 scroll-container">
+        <div className="p-4 pt-4 pb-20">
           <motion.div
             className="w-full"
             key={currentPage}

@@ -848,7 +848,11 @@ export const TradeScalarFieldEnum = {
   conditionId: 'conditionId',
   outcome: 'outcome',
   question: 'question',
-  image: 'image'
+  image: 'image',
+  transactionHash: 'transactionHash',
+  blockNumber: 'blockNumber',
+  logIndex: 'logIndex',
+  enrichmentStatus: 'enrichmentStatus'
 } as const
 
 export type TradeScalarFieldEnum = (typeof TradeScalarFieldEnum)[keyof typeof TradeScalarFieldEnum]
@@ -995,6 +999,20 @@ export type DateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel
  * Reference to a field of type 'DateTime[]'
  */
 export type ListDateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DateTime[]'>
+    
+
+
+/**
+ * Reference to a field of type 'BigInt'
+ */
+export type BigIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'BigInt'>
+    
+
+
+/**
+ * Reference to a field of type 'BigInt[]'
+ */
+export type ListBigIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'BigInt[]'>
     
 
 

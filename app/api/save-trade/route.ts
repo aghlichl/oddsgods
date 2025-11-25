@@ -76,6 +76,8 @@ export async function POST(request: Request) {
         outcome: tradeData.outcome,
         question: tradeData.question,
         image: tradeData.image,
+        // Mark as enriched since it comes with wallet address
+        enrichmentStatus: 'enriched',
       },
     });
 
