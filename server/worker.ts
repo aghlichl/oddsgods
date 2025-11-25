@@ -138,7 +138,6 @@ export async function processTrade(trade: PolymarketTrade) {
         outcome: assetInfo.outcomeLabel,
         conditionId: assetInfo.conditionId,
         odds: Math.round(price * 100),
-        image: marketMeta.image,
       },
       trade: {
         assetId: trade.asset_id,
@@ -146,7 +145,7 @@ export async function processTrade(trade: PolymarketTrade) {
         side,
         price,
         tradeValue: value,
-        timestamp: new Date(Number(trade.timestamp) * 1000 || Date.now()),
+        timestamp: new Date(trade.timestamp || Date.now()),
       },
       analysis: {
         tags: [

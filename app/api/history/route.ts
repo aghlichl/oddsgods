@@ -19,7 +19,7 @@ export async function GET(request: Request) {
     const trades = await prisma.trade.findMany({
       where: {
         tradeValue: {
-          gt: 1000,
+          gt: 10000,
         },
         timestamp: {
           gte: twentyFourHoursAgo,

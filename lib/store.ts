@@ -224,7 +224,7 @@ export const useMarketStore = create<MarketStore>((set, get) => ({
         outcome: enrichedTrade.market.outcome,
         odds: enrichedTrade.market.odds,
         value: enrichedTrade.trade.tradeValue,
-        timestamp: new Date(enrichedTrade.trade.timestamp).getTime(),
+        timestamp: new Date(Date.now()).getTime(),
         side: enrichedTrade.trade.side as 'BUY' | 'SELL',
         image: enrichedTrade.market.image,
         wallet_context: {
