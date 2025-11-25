@@ -54,6 +54,7 @@ interface PolymarketPosition {
  */
 async function fetchTraderProfileFromAPI(address: string): Promise<Partial<TraderProfile>> {
   try {
+    console.log(`[Intelligence] Fetching trader profile for ${address}`);
     const url = `https://data-api.polymarket.com/positions?user=${address}`;
     const response = await fetch(url);
 

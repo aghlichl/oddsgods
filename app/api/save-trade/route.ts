@@ -1,23 +1,6 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 
-// Helper function for safe timestamp parsing
-function safeParseTimestamp(timestamp: string | number | Date | undefined): Date {
-  if (!timestamp) {
-    return new Date();
-  }
-
-  const date = new Date(timestamp);
-
-  // Check if the date is valid
-  if (isNaN(date.getTime())) {
-    console.warn('[API] Invalid timestamp received:', timestamp, '- using current time');
-    return new Date();
-  }
-
-  return date;
-}
-
 interface SaveTradeRequest {
   assetId: string;
   side: 'BUY' | 'SELL';
@@ -83,7 +66,7 @@ export async function POST(request: Request) {
         size: tradeData.size,
         price: tradeData.price,
         tradeValue: tradeData.tradeValue,
-        timestamp: safeParseTimestamp(tradeData.timestamp),
+        timestamp: new Date(Date.now()),
         walletAddress: tradeData.walletAddress,
         isWhale,
         isSmartMoney,

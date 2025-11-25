@@ -52,7 +52,7 @@ async function saveTradeToDatabase(trade: any, anomaly: Anomaly, conditionId?: s
         if (tradeValue < CONFIG.THRESHOLDS.MIN_VALUE) {
             return;
         }
-
+        console.log(`[TIMESTAMP] ${Date.now(), trade.timestamp}`);
         // Prepare trade data for API
         const tradeData = {
             assetId: trade.asset_id,
@@ -60,7 +60,7 @@ async function saveTradeToDatabase(trade: any, anomaly: Anomaly, conditionId?: s
             size,
             price,
             tradeValue,
-            timestamp: anomaly.timestamp,
+            timestamp: new Date(Date.now()),
             walletAddress,
             type: anomaly.type,
             conditionId: conditionId || null,
