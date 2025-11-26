@@ -28,7 +28,18 @@ export async function GET(request: NextRequest) {
         });
 
         if (existingSnapshot) {
-            return NextResponse.json(existingSnapshot);
+            // Transform database snapshot to GammaPortfolio format
+            const totalPnlPercent = existingSnapshot.totalValue > 0
+                ? (existingSnapshot.totalPnl / (existingSnapshot.totalValue - existingSnapshot.totalPnl)) * 100
+                : 0;
+
+            return NextResponse.json({
+                address: existingSnapshot.walletAddress,
+                totalValue: existingSnapshot.totalValue,
+                totalPnl: existingSnapshot.totalPnl,
+                totalPnlPercent,
+                positions: existingSnapshot.positions
+            });
         }
 
         // 2. If no fresh snapshot, fetch from Gamma
@@ -44,7 +55,19 @@ export async function GET(request: NextRequest) {
             });
 
             if (oldSnapshot) {
-                return NextResponse.json({ ...oldSnapshot, isStale: true });
+                // Transform database snapshot to GammaPortfolio format
+                const totalPnlPercent = oldSnapshot.totalValue > 0
+                    ? (oldSnapshot.totalPnl / (oldSnapshot.totalValue - oldSnapshot.totalPnl)) * 100
+                    : 0;
+
+                return NextResponse.json({
+                    address: oldSnapshot.walletAddress,
+                    totalValue: oldSnapshot.totalValue,
+                    totalPnl: oldSnapshot.totalPnl,
+                    totalPnlPercent,
+                    positions: oldSnapshot.positions,
+                    isStale: true
+                });
             }
 
             return NextResponse.json({ error: 'Portfolio not found' }, { status: 404 });
@@ -76,7 +99,18 @@ export async function GET(request: NextRequest) {
             },
         });
 
-        return NextResponse.json(newSnapshot);
+        // Transform database snapshot to GammaPortfolio format
+        const totalPnlPercent = newSnapshot.totalValue > 0
+            ? (newSnapshot.totalPnl / (newSnapshot.totalValue - newSnapshot.totalPnl)) * 100
+            : 0;
+
+        return NextResponse.json({
+            address: newSnapshot.walletAddress,
+            totalValue: newSnapshot.totalValue,
+            totalPnl: newSnapshot.totalPnl,
+            totalPnlPercent,
+            positions: newSnapshot.positions
+        });
 
     } catch (error) {
         console.error('[API] Error fetching portfolio:', error);
