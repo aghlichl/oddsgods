@@ -19,25 +19,107 @@ import {
   AssetOutcome,
   PolymarketTrade,
   EnrichmentStatus,
-  GammaPortfolio,
 } from "../lib/types";
 import { fetchPortfolio } from "../lib/gamma";
 import { CONFIG } from "../lib/config";
-import { AlertQueue } from "../lib/alerts/queue";
-import { NotificationRouter } from "../lib/alerts/router";
+
+// Direct alert sending functions (replaces queue system)
+async function sendWhaleAlertDirectly(wallet: string, emoji: string, type: string, value: number, outcome: string, market: string, price: number, side: string) {
+  // Get all users who should receive whale alerts
+  const users = await prisma.user.findMany({
+    where: {
+      alertSettings: {
+        is: {
+          alertTypes: { has: "WHALE_MOVEMENT" }
+        }
+      }
+    },
+    include: { alertSettings: true }
+  });
+
+  // Send to each user's Discord webhook
+  await Promise.all(users.map(async (user) => {
+    const webhookUrl = user.alertSettings?.discordWebhook;
+    if (!webhookUrl) return;
+
+    try {
+      const payload = {
+        content: null,
+        embeds: [{
+          title: `${emoji} ${type} ALERT`,
+          description: `**${wallet.slice(0, 8)}...** ${side} $${value.toLocaleString()} of **${outcome}** in *${market}* @ ${Math.round(price * 100)}¢`,
+          color: 0x00ff00,
+          timestamp: new Date().toISOString(),
+          fields: [
+            { name: "Market", value: market, inline: true },
+            { name: "Value", value: `$${value.toLocaleString()}`, inline: true },
+            { name: "Price", value: `${Math.round(price * 100)}¢`, inline: true }
+          ]
+        }]
+      };
+
+      await fetch(webhookUrl, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+    } catch (error) {
+      // Fail silently - alerts are not critical
+      console.log(`[WORKER] Failed to send ${type} alert to user ${user.email}: ${(error as Error).message}`);
+    }
+  }));
+}
+
+async function sendSmartMoneyAlertDirectly(wallet: string, value: number, outcome: string, market: string, winRate: number, side: string) {
+  // Get all users who should receive smart money alerts
+  const users = await prisma.user.findMany({
+    where: {
+      alertSettings: {
+        is: {
+          alertTypes: { has: "SMART_MONEY_ENTRY" }
+        }
+      }
+    },
+    include: { alertSettings: true }
+  });
+
+  // Send to each user's Discord webhook
+  await Promise.all(users.map(async (user) => {
+    const webhookUrl = user.alertSettings?.discordWebhook;
+    if (!webhookUrl) return;
+
+    try {
+      const payload = {
+        content: null,
+        embeds: [{
+          title: `🧠 SMART MONEY ALERT`,
+          description: `**${wallet.slice(0, 8)}...** (Win Rate: ${Math.round(winRate * 100)}%) ${side} $${value.toLocaleString()} of **${outcome}** in *${market}*`,
+          color: 0x0099ff,
+          timestamp: new Date().toISOString(),
+          fields: [
+            { name: "Win Rate", value: `${Math.round(winRate * 100)}%`, inline: true },
+            { name: "Value", value: `$${value.toLocaleString()}`, inline: true }
+          ]
+        }]
+      };
+
+      await fetch(webhookUrl, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+    } catch (error) {
+      // Fail silently - alerts are not critical
+      console.log(`[WORKER] Failed to send SMART MONEY alert to user ${user.email}: ${(error as Error).message}`);
+    }
+  }));
+}
 
 // Helper function for rate limiting delays
 const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
-// Initialize services
+// Initialize services (remove alert queue)
 const redis = new Redis(process.env.REDIS_URL || "redis://localhost:6379");
-const alertQueue = new AlertQueue(process.env.REDIS_URL);
-const notificationRouter = new NotificationRouter();
-
-// Start alert processor
-alertQueue.processQueue(async (event) => {
-  await notificationRouter.route(event);
-});
 
 // Socket.io server on port 3001
 const httpServer = createServer();
@@ -410,41 +492,21 @@ export async function processTrade(trade: PolymarketTrade) {
 
     // === ALERT GENERATION ===
     try {
+      console.log(`[WORKER] Checking alerts: value=$${value}, isWhale=${isWhale}, isMegaWhale=${isMegaWhale}, isSmartMoney=${isSmartMoney}`);
+
       if (isGodWhale || isSuperWhale || isMegaWhale || isWhale) {
         const whaleType = isGodWhale ? "GOD WHALE" : isSuperWhale ? "SUPER WHALE" : isMegaWhale ? "MEGA WHALE" : "WHALE";
         const emoji = isGodWhale ? "🐋👑" : isSuperWhale ? "🐋🔥" : isMegaWhale ? "🐋⚡" : "🐋";
 
-        await alertQueue.enqueueAlert({
-          type: "WHALE_MOVEMENT",
-          title: `${emoji} ${whaleType} ALERT`,
-          description: `**${walletDisplay}** ${side} $${value.toLocaleString()} of **${assetInfo.outcomeLabel}** in *${marketMeta.question}* @ ${Math.round(price * 100)}¢`,
-          timestamp: new Date(),
-          data: {
-            wallet: walletAddress,
-            value: value,
-            market: marketMeta.question,
-            outcome: assetInfo.outcomeLabel,
-            price: price,
-            link: `https://polymarket.com/event/${marketMeta.conditionId}` // Approximate link
-          },
-          walletAddress: walletAddress.toLowerCase(),
-          marketId: assetInfo.conditionId // Using conditionId as marketId proxy for now
-        });
+        console.log(`[WORKER] 🚨 SENDING ${whaleType} ALERT: $${value} trade`);
+        // Send directly to Discord (fails silently)
+        await sendWhaleAlertDirectly(walletAddress, emoji, whaleType, value, assetInfo.outcomeLabel, marketMeta.question, price, side)
+          .catch(err => console.log(`[WORKER] Alert failed silently: ${(err as Error).message}`));
+
       } else if (isSmartMoney) {
-        await alertQueue.enqueueAlert({
-          type: "SMART_MONEY_ENTRY",
-          title: `🧠 SMART MONEY ALERT`,
-          description: `**${walletDisplay}** (Win Rate: ${(profile.winRate * 100).toFixed(0)}%) ${side} $${value.toLocaleString()} of **${assetInfo.outcomeLabel}** in *${marketMeta.question}*`,
-          timestamp: new Date(),
-          data: {
-            wallet: walletAddress,
-            value: value,
-            winRate: profile.winRate,
-            pnl: profile.totalPnl
-          },
-          walletAddress: walletAddress.toLowerCase(),
-          marketId: assetInfo.conditionId
-        });
+        // Send directly to Discord (fails silently)
+        await sendSmartMoneyAlertDirectly(walletAddress, value, assetInfo.outcomeLabel, marketMeta.question, profile.winRate, side)
+          .catch(err => console.log(`[WORKER] Alert failed silently: ${(err as Error).message}`));
       }
     } catch (alertError) {
       console.error("[Worker] Error generating alert:", alertError);
