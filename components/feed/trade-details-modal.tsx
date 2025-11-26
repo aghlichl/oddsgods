@@ -38,7 +38,7 @@ export function TradeDetailsModal({ isOpen, onClose, anomaly }: TradeDetailsModa
 
         // If no team found in teamMeta.ts, use Polymarket image as primary fallback
         const noTeamMatch = !team;
-        const hasPolymarketImage = image && image.trim() !== '';
+        const hasPolymarketImage = image && image.length > 0;
 
         return {
             resolvedTeam: team,

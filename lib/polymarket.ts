@@ -77,7 +77,7 @@ export function parseMarketData(markets: PolymarketMarket[]): {
                 marketType: market.marketType,
                 outcomes,
                 clobTokenIds: tokenIds,
-                image: imageUrl,
+                image: imageUrl ?? null,
                 outcomePrices: typeof market.outcomePrices === 'string' ? JSON.parse(market.outcomePrices) : market.outcomePrices,
                 closed: market.closed
             };

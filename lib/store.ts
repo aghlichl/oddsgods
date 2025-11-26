@@ -213,9 +213,9 @@ export const useMarketStore = create<MarketStore>((set, get) => ({
     socket.on('disconnect', () => {
       console.log('[Store] Disconnected from worker Socket.io');
     });
-
     socket.on('trade', (enrichedTrade) => {
       // Convert worker's enriched trade format to anomaly format
+      console.log('[STORE] Enriched trade:', JSON.stringify(enrichedTrade, null, 2));
       const anomaly: Anomaly = {
         id: enrichedTrade.trade.assetId + '_' + enrichedTrade.trade.timestamp,
         type: enrichedTrade.analysis.tags.includes('WHALE') ? 'WHALE' :

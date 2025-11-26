@@ -34,7 +34,7 @@ export interface Anomaly {
     value: number;
     timestamp: number;
     side: 'BUY' | 'SELL';
-    image?: string; // Event image URL
+    image?: string | null; // Event image URL
     // Optional fields for enriched display
     wallet_context?: {
         address?: string;
@@ -65,7 +65,7 @@ export interface MarketMeta {
     marketType: string;
     outcomes: string[];
     clobTokenIds: string[];
-    image?: string;
+    image?: string | null;
     outcomePrices?: string[];
     closed?: boolean;
 }
@@ -101,6 +101,7 @@ export interface EnrichedTrade {
         outcome: string;
         conditionId: string;
         odds: number;
+        image?: string | null;
     };
     trade: {
         assetId: string;

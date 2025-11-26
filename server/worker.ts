@@ -1,40 +1,53 @@
-import 'dotenv/config';
-import { prisma } from '../lib/prisma';
-import Redis from 'ioredis';
-import { Server as SocketIOServer } from 'socket.io';
-import { createServer } from 'http';
-import WebSocket from 'ws';
-import { getTraderProfile, analyzeMarketImpact, getWalletsFromTx } from '../lib/intelligence';
-import { fetchMarketsFromGamma, parseMarketData, enrichTradeWithDataAPI } from '../lib/polymarket';
-import { MarketMeta, AssetOutcome, PolymarketTrade, EnrichmentStatus } from '../lib/types';
-import { CONFIG } from '../lib/config';
+import "dotenv/config";
+import { prisma } from "../lib/prisma";
+import Redis from "ioredis";
+import { Server as SocketIOServer } from "socket.io";
+import { createServer } from "http";
+import WebSocket from "ws";
+import {
+  getTraderProfile,
+  analyzeMarketImpact,
+  getWalletsFromTx,
+} from "../lib/intelligence";
+import {
+  fetchMarketsFromGamma,
+  parseMarketData,
+  enrichTradeWithDataAPI,
+} from "../lib/polymarket";
+import {
+  MarketMeta,
+  AssetOutcome,
+  PolymarketTrade,
+  EnrichmentStatus,
+} from "../lib/types";
+import { CONFIG } from "../lib/config";
 
 // Helper function for rate limiting delays
-const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
+const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
 // Initialize services
-const redis = new Redis(process.env.REDIS_URL || 'redis://localhost:6379');
+const redis = new Redis(process.env.REDIS_URL || "redis://localhost:6379");
 
 // Socket.io server on port 3001
 const httpServer = createServer();
 const io = new SocketIOServer(httpServer, {
   cors: {
-    origin: process.env.FRONTEND_URL || 'http://localhost:3000',
-    methods: ['GET', 'POST'],
+    origin: process.env.FRONTEND_URL || "http://localhost:3000",
+    methods: ["GET", "POST"],
   },
 });
 
-if (process.argv[1].endsWith('worker.ts')) {
+if (process.argv[1].endsWith("worker.ts")) {
   httpServer.listen(3001, () => {
-    console.log('[Worker] Socket.io server listening on port 3001');
+    console.log("[Worker] Socket.io server listening on port 3001");
   });
 }
 
 // Add connection handling for Socket.io clients
-io.on('connection', (socket) => {
+io.on("connection", (socket) => {
   console.log(`[Worker] Client connected: ${socket.id}`);
 
-  socket.on('disconnect', () => {
+  socket.on("disconnect", () => {
     console.log(`[Worker] Client disconnected: ${socket.id}`);
   });
 });
@@ -57,17 +70,19 @@ async function updateMarketMetadata(): Promise<string[]> {
     marketsByCondition = result.marketsByCondition;
     assetIdToOutcome = result.assetIdToOutcome;
 
-    console.log(`[Worker] Mapped ${marketsByCondition.size} markets and ${assetIdToOutcome.size} assets`);
+    console.log(
+      `[Worker] Mapped ${marketsByCondition.size} markets and ${assetIdToOutcome.size} assets`
+    );
     return result.allAssetIds;
   } catch (error) {
-    console.error('[Worker] Error fetching metadata:', error);
+    console.error("[Worker] Error fetching metadata:", error);
     return [];
   }
 }
 
 /**
  * Process and enrich a trade with wallet identity
- * 
+ *
  * Enrichment pipeline:
  * 1. Try WebSocket fields (fast path) - ~10-20% success
  * 2. Try Data-API matching if txHash available - primary source
@@ -99,25 +114,26 @@ export async function processTrade(trade: PolymarketTrade) {
     }
 
     // === WALLET ENRICHMENT PIPELINE ===
-    let walletAddress = '';
-    let enrichmentStatus: EnrichmentStatus = 'pending';
+    let walletAddress = "";
+    let enrichmentStatus: EnrichmentStatus = "pending";
     let blockNumber: bigint | null = null;
     let logIndex: number | null = null;
     const transactionHash = trade.transaction_hash || null;
 
     // Step 1: Try WebSocket fields (fast path)
-    walletAddress = trade.user || trade.maker || trade.taker || trade.wallet || '';
+    walletAddress =
+      trade.user || trade.maker || trade.taker || trade.wallet || "";
     if (walletAddress) {
-      enrichmentStatus = 'enriched';
+      enrichmentStatus = "enriched";
     }
 
     // Step 2: Try Data-API matching (if has txHash and no wallet yet)
     if (!walletAddress && transactionHash) {
       try {
-        const timestamp = trade.timestamp 
-          ? new Date(trade.timestamp) 
+        const timestamp = trade.timestamp
+          ? new Date(trade.timestamp)
           : new Date();
-        
+
         const dataApiResult = await enrichTradeWithDataAPI({
           assetId: trade.asset_id,
           price,
@@ -125,17 +141,17 @@ export async function processTrade(trade: PolymarketTrade) {
           timestamp,
           transactionHash,
         });
-        
+
         if (dataApiResult) {
           // Prefer taker (active trader) over maker
-          walletAddress = dataApiResult.taker || dataApiResult.maker || '';
+          walletAddress = dataApiResult.taker || dataApiResult.maker || "";
           if (walletAddress) {
-            enrichmentStatus = 'enriched';
+            enrichmentStatus = "enriched";
             // console.log(`[Worker] Enriched wallet via Data-API: ${walletAddress.slice(0, 8)}...`);
           }
         }
       } catch (dataApiError) {
-        console.warn('[Worker] Data-API enrichment failed:', dataApiError);
+        console.warn("[Worker] Data-API enrichment failed:", dataApiError);
       }
     }
 
@@ -144,43 +160,49 @@ export async function processTrade(trade: PolymarketTrade) {
       try {
         const txResult = await getWalletsFromTx(transactionHash);
         // Prefer taker as the active trader
-        walletAddress = txResult.taker || txResult.maker || '';
+        walletAddress = txResult.taker || txResult.maker || "";
         blockNumber = txResult.blockNumber;
         logIndex = txResult.logIndex;
-        
+
         if (walletAddress) {
-          enrichmentStatus = 'enriched';
+          enrichmentStatus = "enriched";
           // console.log(`[Worker] Enriched wallet via tx logs: ${walletAddress.slice(0, 8)}...`);
         }
       } catch (txError) {
-        console.warn('[Worker] Tx log parsing failed:', txError);
+        console.warn("[Worker] Tx log parsing failed:", txError);
       }
     }
 
     // Mark as failed if we couldn't enrich after trying all methods
     if (!walletAddress && transactionHash) {
-      enrichmentStatus = 'failed';
+      enrichmentStatus = "failed";
     }
 
     // Determine side (BUY or SELL)
-    const side = trade.side || (trade.type === 'buy' ? 'BUY' : 'SELL') || 'BUY';
+    const side = trade.side || (trade.type === "buy" ? "BUY" : "SELL") || "BUY";
 
     // Enrich with trader profile (only if we have a wallet address)
-    const profile = walletAddress ? await getTraderProfile(walletAddress) : {
-      address: '',
-      label: null,
-      totalPnl: 0,
-      winRate: 0,
-      isFresh: false,
-      isSmartMoney: false,
-      isWhale: false,
-      txCount: 0,
-      maxTradeValue: 0,
-      activityLevel: null as 'LOW' | 'MEDIUM' | 'HIGH' | null,
-    };
+    const profile = walletAddress
+      ? await getTraderProfile(walletAddress)
+      : {
+          address: "",
+          label: null,
+          totalPnl: 0,
+          winRate: 0,
+          isFresh: false,
+          isSmartMoney: false,
+          isWhale: false,
+          txCount: 0,
+          maxTradeValue: 0,
+          activityLevel: null as "LOW" | "MEDIUM" | "HIGH" | null,
+        };
 
     // Analyze market impact
-    const impact = await analyzeMarketImpact(trade.asset_id, size, side as 'BUY' | 'SELL');
+    const impact = await analyzeMarketImpact(
+      trade.asset_id,
+      size,
+      side as "BUY" | "SELL"
+    );
 
     // Tag the trade with proper tiered classification
     const isWhale = value >= CONFIG.THRESHOLDS.WHALE || profile.isWhale;
@@ -190,18 +212,25 @@ export async function processTrade(trade: PolymarketTrade) {
     const isSmartMoney = profile.isSmartMoney;
     const isFresh = profile.isFresh;
     const isSweeper = impact.isSweeper;
-    const isInsider = profile.activityLevel === 'LOW' && profile.winRate > 0.7 && profile.totalPnl > 10000;
+    const isInsider =
+      profile.activityLevel === "LOW" &&
+      profile.winRate > 0.7 &&
+      profile.totalPnl > 10000;
 
     // Create enriched trade object
-    console.log('[WORKER] Polymarket image for market:', marketMeta.question, marketMeta.image);
+    console.log(
+      "[WORKER] Polymarket image for market:",
+      marketMeta.question,
+      marketMeta.image
+    );
     const enrichedTrade = {
-      type: 'UNUSUAL_ACTIVITY',
+      type: "UNUSUAL_ACTIVITY",
       market: {
         question: marketMeta.question,
         outcome: assetInfo.outcomeLabel,
         conditionId: assetInfo.conditionId,
         odds: Math.round(price * 100),
-        image: marketMeta.image,
+        image: marketMeta.image ?? null,
       },
       trade: {
         assetId: trade.asset_id,
@@ -213,18 +242,18 @@ export async function processTrade(trade: PolymarketTrade) {
       },
       analysis: {
         tags: [
-          isGodWhale && 'GOD_WHALE',
-          isSuperWhale && 'SUPER_WHALE',
-          isMegaWhale && 'MEGA_WHALE',
-          isWhale && 'WHALE',
-          isSmartMoney && 'SMART_MONEY',
-          isFresh && 'FRESH_WALLET',
-          isSweeper && 'SWEEPER',
-          isInsider && 'INSIDER',
+          isGodWhale && "GOD_WHALE",
+          isSuperWhale && "SUPER_WHALE",
+          isMegaWhale && "MEGA_WHALE",
+          isWhale && "WHALE",
+          isSmartMoney && "SMART_MONEY",
+          isFresh && "FRESH_WALLET",
+          isSweeper && "SWEEPER",
+          isInsider && "INSIDER",
         ].filter(Boolean) as string[],
         wallet_context: {
           address: walletAddress.toLowerCase(),
-          label: profile.label || 'Unknown',
+          label: profile.label || "Unknown",
           pnl_all_time: `$${profile.totalPnl.toLocaleString()}`,
           win_rate: `${(profile.winRate * 100).toFixed(0)}%`,
           is_fresh_wallet: isFresh,
@@ -237,9 +266,18 @@ export async function processTrade(trade: PolymarketTrade) {
           tx_count: profile.txCount,
           max_trade_value: Math.max(profile.maxTradeValue, value),
           activity_level: profile.activityLevel,
-        }
+        },
       },
     };
+    // DEBUG: Log the enriched trade right before sending
+    console.log(
+      "[WORKER] Sending enriched trade with market.image:",
+      enrichedTrade.market.image
+    );
+    console.log(
+      "[WORKER] Full enriched trade market object:",
+      JSON.stringify(enrichedTrade.market, null, 2)
+    );
 
     // Persist to database
     try {
@@ -296,16 +334,24 @@ export async function processTrade(trade: PolymarketTrade) {
         },
       });
     } catch (dbError) {
-      console.error('[Worker] Database error:', dbError);
+      console.error("[Worker] Database error:", dbError);
     }
 
     // Broadcast to Socket.io clients
-    io.emit('trade', enrichedTrade);
+    io.emit("trade", enrichedTrade);
 
-    const walletDisplay = walletAddress ? walletAddress.slice(0, 8) + '...' : 'UNKNOWN';
-    console.log(`[Worker] Processed trade: $${value.toFixed(2)} from ${walletDisplay} [${enrichmentStatus}] (${enrichedTrade.analysis.tags.join(', ')})`);
+    const walletDisplay = walletAddress
+      ? walletAddress.slice(0, 8) + "..."
+      : "UNKNOWN";
+    console.log(
+      `[Worker] Processed trade: $${value.toFixed(
+        2
+      )} from ${walletDisplay} [${enrichmentStatus}] (${enrichedTrade.analysis.tags.join(
+        ", "
+      )})`
+    );
   } catch (error) {
-    console.error('[Worker] Error processing trade:', error);
+    console.error("[Worker] Error processing trade:", error);
   }
 }
 
@@ -316,30 +362,29 @@ export async function processTrade(trade: PolymarketTrade) {
 async function runBatchEnrichment() {
   try {
     const maxAgeMs = CONFIG.ENRICHMENT.MAX_AGE_HOURS * 60 * 60 * 1000;
-    
+
     // Find trades that need enrichment (empty wallet or pending status)
     const unenrichedTrades = await prisma.trade.findMany({
       where: {
-        OR: [
-          { walletAddress: '' },
-          { enrichmentStatus: 'pending' },
-        ],
-        timestamp: { 
-          gte: new Date(Date.now() - maxAgeMs) 
+        OR: [{ walletAddress: "" }, { enrichmentStatus: "pending" }],
+        timestamp: {
+          gte: new Date(Date.now() - maxAgeMs),
         },
         // Must have transaction hash to attempt enrichment
         transactionHash: { not: null },
       },
       take: CONFIG.ENRICHMENT.BATCH_SIZE,
-      orderBy: { timestamp: 'desc' },
+      orderBy: { timestamp: "desc" },
     });
 
     if (unenrichedTrades.length === 0) {
       return;
     }
 
-    console.log(`[Enrichment] Processing ${unenrichedTrades.length} unenriched trades...`);
-    
+    console.log(
+      `[Enrichment] Processing ${unenrichedTrades.length} unenriched trades...`
+    );
+
     let enrichedCount = 0;
     let failedCount = 0;
 
@@ -348,10 +393,10 @@ async function runBatchEnrichment() {
       await delay(CONFIG.ENRICHMENT.RATE_LIMIT_DELAY_MS);
 
       try {
-        let walletAddress = '';
+        let walletAddress = "";
         let blockNumber: bigint | null = trade.blockNumber;
         let logIndex: number | null = trade.logIndex;
-        let enrichmentStatus: EnrichmentStatus = 'failed';
+        let enrichmentStatus: EnrichmentStatus = "failed";
 
         // Try Data-API matching first
         if (trade.transactionHash) {
@@ -364,9 +409,9 @@ async function runBatchEnrichment() {
           });
 
           if (dataApiResult) {
-            walletAddress = dataApiResult.taker || dataApiResult.maker || '';
+            walletAddress = dataApiResult.taker || dataApiResult.maker || "";
             if (walletAddress) {
-              enrichmentStatus = 'enriched';
+              enrichmentStatus = "enriched";
             }
           }
         }
@@ -374,12 +419,12 @@ async function runBatchEnrichment() {
         // Fall back to tx log parsing if Data-API didn't work
         if (!walletAddress && trade.transactionHash) {
           const txResult = await getWalletsFromTx(trade.transactionHash);
-          walletAddress = txResult.taker || txResult.maker || '';
+          walletAddress = txResult.taker || txResult.maker || "";
           blockNumber = txResult.blockNumber;
           logIndex = txResult.logIndex;
-          
+
           if (walletAddress) {
-            enrichmentStatus = 'enriched';
+            enrichmentStatus = "enriched";
           }
         }
 
@@ -387,7 +432,7 @@ async function runBatchEnrichment() {
         if (walletAddress) {
           // Ensure wallet profile exists
           const profile = await getTraderProfile(walletAddress);
-          
+
           await prisma.walletProfile.upsert({
             where: { id: walletAddress.toLowerCase() },
             update: {
@@ -426,7 +471,7 @@ async function runBatchEnrichment() {
           await prisma.trade.update({
             where: { id: trade.id },
             data: {
-              enrichmentStatus: 'failed',
+              enrichmentStatus: "failed",
               blockNumber,
               logIndex,
             },
@@ -434,22 +479,29 @@ async function runBatchEnrichment() {
           failedCount++;
         }
       } catch (tradeError) {
-        console.error(`[Enrichment] Error enriching trade ${trade.id}:`, tradeError);
+        console.error(
+          `[Enrichment] Error enriching trade ${trade.id}:`,
+          tradeError
+        );
         failedCount++;
-        
+
         // Mark as failed
-        await prisma.trade.update({
-          where: { id: trade.id },
-          data: { enrichmentStatus: 'failed' },
-        }).catch(() => {}); // Ignore update errors
+        await prisma.trade
+          .update({
+            where: { id: trade.id },
+            data: { enrichmentStatus: "failed" },
+          })
+          .catch(() => {}); // Ignore update errors
       }
     }
 
     if (enrichedCount > 0 || failedCount > 0) {
-      console.log(`[Enrichment] Batch complete: ${enrichedCount} enriched, ${failedCount} failed`);
+      console.log(
+        `[Enrichment] Batch complete: ${enrichedCount} enriched, ${failedCount} failed`
+      );
     }
   } catch (error) {
-    console.error('[Enrichment] Batch enrichment error:', error);
+    console.error("[Enrichment] Batch enrichment error:", error);
   }
 }
 
@@ -463,22 +515,22 @@ function connectToPolymarket() {
   const connect = async () => {
     const assetIds = await updateMarketMetadata();
     if (assetIds.length === 0) {
-      console.warn('[Worker] No assets found, retrying in 5s...');
+      console.warn("[Worker] No assets found, retrying in 5s...");
       setTimeout(connect, 5000);
       return;
     }
 
     ws = new WebSocket(CONFIG.URLS.WS_CLOB);
 
-    ws.on('open', () => {
-      console.log('[Worker] Connected to Polymarket WebSocket');
+    ws.on("open", () => {
+      console.log("[Worker] Connected to Polymarket WebSocket");
 
       const msg = {
-        type: 'market',
+        type: "market",
         assets_ids: assetIds,
-        channel: 'trades',
+        channel: "trades",
       };
-      console.log('[Worker] Subscribing to', assetIds.length, 'assets');
+      console.log("[Worker] Subscribing to", assetIds.length, "assets");
       ws?.send(JSON.stringify(msg));
 
       heartbeatInterval = setInterval(() => {
@@ -490,27 +542,32 @@ function connectToPolymarket() {
         // console.log('[Worker] Refreshing metadata...');
         const latestAssetIds = await updateMarketMetadata();
         if (ws?.readyState === WebSocket.OPEN) {
-          ws.send(JSON.stringify({
-            type: 'market',
-            assets_ids: latestAssetIds,
-            channel: 'trades',
-          }));
+          ws.send(
+            JSON.stringify({
+              type: "market",
+              assets_ids: latestAssetIds,
+              channel: "trades",
+            })
+          );
         }
       }, CONFIG.CONSTANTS.METADATA_REFRESH_INTERVAL);
 
       // Start batch enrichment job
-      console.log('[Worker] Starting batch enrichment job...');
+      console.log("[Worker] Starting batch enrichment job...");
       setInterval(runBatchEnrichment, CONFIG.ENRICHMENT.BATCH_INTERVAL_MS);
-      
+
       // Run initial batch enrichment after a short delay
       setTimeout(runBatchEnrichment, 10000);
     });
 
-    ws.on('message', (data: WebSocket.Data) => {
+    ws.on("message", (data: WebSocket.Data) => {
       try {
         const parsed = JSON.parse(data.toString());
 
-        if (parsed.event_type === 'last_trade_price' || parsed.event_type === 'trade') {
+        if (
+          parsed.event_type === "last_trade_price" ||
+          parsed.event_type === "trade"
+        ) {
           const trades = Array.isArray(parsed) ? parsed : [parsed];
 
           trades.forEach((trade: PolymarketTrade) => {
@@ -520,15 +577,15 @@ function connectToPolymarket() {
           });
         }
       } catch (error) {
-        console.warn('[Worker] Parse error:', error);
+        console.warn("[Worker] Parse error:", error);
       }
     });
 
-    ws.on('error', (error) => {
-      console.error('[Worker] WebSocket error:', error);
+    ws.on("error", (error) => {
+      console.error("[Worker] WebSocket error:", error);
     });
 
-    ws.on('close', () => {
+    ws.on("close", () => {
       // console.log('[Worker] WebSocket closed, reconnecting...');
       clearInterval(heartbeatInterval);
       setTimeout(connect, 3000);
@@ -539,7 +596,7 @@ function connectToPolymarket() {
 }
 
 // Graceful shutdown
-process.on('SIGINT', async () => {
+process.on("SIGINT", async () => {
   // console.log('[Worker] Shutting down...');
   await prisma.$disconnect();
   await redis.quit();
@@ -547,7 +604,7 @@ process.on('SIGINT', async () => {
 });
 
 // Start the worker
-if (process.argv[1].endsWith('worker.ts')) {
+if (process.argv[1].endsWith("worker.ts")) {
   // console.log('[Worker] Starting Polymarket Intelligence Worker...');
   connectToPolymarket();
 }

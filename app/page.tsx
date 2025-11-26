@@ -25,10 +25,15 @@ function passesPreferences(anomaly: Anomaly, preferences: UserPreferencesType): 
   if (anomaly.value < preferences.minValueThreshold) return false;
 
   // Check sports filter FIRST - hide events containing "vs."
-  if (!preferences.showSports && anomaly.event.toLowerCase().includes('vs.')) {
+  if (
+    !preferences.showSports &&
+    ['vs.', 'spread:', 'win on 202', 'counter-strike'].some(keyword =>
+      anomaly.event.toLowerCase().includes(keyword)
+    )
+  ) {
     return false;
   }
-
+  
   // Check anomaly type filters
   switch (anomaly.type) {
     case 'STANDARD':
