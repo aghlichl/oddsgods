@@ -30,7 +30,7 @@ export function PeriodSelector() {
           onClick={() => setSelectedPeriod(period)}
           disabled={topTradesLoading}
           className={cn(
-            "px-2 py-1.5 border-2 text-xs font-bold uppercase transition-all duration-200 shrink-0",
+            "px-2 py-1.5 border-2 text-xs font-bold uppercase transition-all duration-200 shrink-0 rounded-lg",
             selectedPeriod === period
               ? "border-[#b8a889] bg-[#b8a889]/10 text-[#e9e2d3] shadow-[3px_3px_0px_0px_rgba(184,168,137,0.7)]"
               : "border-zinc-600 bg-zinc-800 text-zinc-400 hover:border-zinc-500 hover:text-zinc-300",

@@ -25,10 +25,10 @@ export function TopWhales() {
     loadMoreTopTrades
   } = useMarketStore();
 
-  // Load initial data on mount
+  // Load initial data on mount only
   useEffect(() => {
     fetchTopTrades(selectedPeriod);
-  }, [fetchTopTrades, selectedPeriod]);
+  }, []); // Empty dependency array - only runs once on mount
 
   return (
     <div className="w-full">

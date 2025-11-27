@@ -139,7 +139,7 @@ export const useMarketStore = create<MarketStore>((set, get) => ({
   // Top trades state
   topTrades: [],
   topTradesLoading: false,
-  selectedPeriod: 'weekly',
+  selectedPeriod: 'today',
   nextCursor: undefined,
   hasMore: true,
 
@@ -279,7 +279,6 @@ export const useMarketStore = create<MarketStore>((set, get) => ({
 
         set((state) => ({
           topTrades: cursor ? [...state.topTrades, ...data.trades] : data.trades,
-          selectedPeriod: period,
           topTradesLoading: false,
           nextCursor: data.nextCursor,
           hasMore: !!data.nextCursor
