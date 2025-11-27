@@ -3,6 +3,7 @@
 import { Anomaly, MarketMeta } from "@/lib/types";
 import { Modal } from "@/components/ui/modal";
 import { cn, formatShortNumber, calculatePositionPL, formatCurrency } from "@/lib/utils";
+import { NumericDisplay } from "@/components/ui/numeric-display";
 import { useState, useEffect, useMemo } from "react";
 import { resolveTeamFromMarket, getLogoPathForTeam, inferLeagueFromMarket } from "@/lib/teamResolver";
 import { WalletPortfolio } from "@/components/wallet-portfolio";
@@ -139,7 +140,7 @@ export function TradeDetailsModal({ isOpen, onClose, anomaly }: TradeDetailsModa
                             {/* Large Hero Thumbnail */}
                             {/* Large Hero Thumbnail */}
                             <div className="relative shrink-0">
-                                <div className="relative w-16 h-16 md:w-20 md:h-20 lg:w-24 lg:h-24 xl:w-28 xl:h-28 rounded-lg overflow-hidden border-2 border-white/20 shadow-2xl group-hover:border-white/30 transition-all duration-300 backdrop-blur-sm bg-white/5">
+                                <div className="relative w-16 h-16 md:w-20 md:h-20 lg:w-24 lg:h-24 xl:w-28 xl:h-28 rounded-xl overflow-hidden border-2 border-white/20 shadow-2xl group-hover:border-white/30 transition-all duration-300 backdrop-blur-sm bg-white/5">
                                     {/* Modern Glass Effect - Only for Polymarket images */}
                                     {usePolymarketFallback && (
                                         <div className="absolute inset-0 bg-linear-to-br from-white/10 via-transparent to-black/20" />
@@ -199,7 +200,7 @@ export function TradeDetailsModal({ isOpen, onClose, anomaly }: TradeDetailsModa
                                         {side}
                                     </span>
                                     <span className="text-zinc-500">•</span>
-                                    <span className="font-mono">{odds}¢</span>
+                                    <NumericDisplay value={`${odds}¢`} />
                                 </div>
                             </div>
                         </div>
@@ -210,14 +211,22 @@ export function TradeDetailsModal({ isOpen, onClose, anomaly }: TradeDetailsModa
                 <div className="grid grid-cols-2 md:grid-cols-4 divide-x divide-zinc-800 border-b border-zinc-800">
                     <div className="p-2 md:p-3 lg:p-4 flex flex-col items-center justify-center bg-black/20">
                         <span className="text-xs md:text-sm text-zinc-500 uppercase tracking-wider mb-1">Trade</span>
-                        <span className={cn("text-lg md:text-xl lg:text-2xl font-black font-mono", themeColor.split(' ')[0])}>
-                            ${Math.round(value).toLocaleString()}
+                        <span className={cn("text-lg md:text-xl lg:text-2xl font-black", themeColor.split(' ')[0])}>
+                            <NumericDisplay
+                                value={`$${Math.round(value).toLocaleString()}`}
+                                size="2xl"
+                                variant="bold"
+                            />
                         </span>
                     </div>
                     <div className="p-2 md:p-3 lg:p-4 flex flex-col items-center justify-center bg-black/20">
                         <span className="text-xs md:text-sm text-zinc-500 uppercase tracking-wider mb-1">Volume</span>
-                        <span className="text-base md:text-lg lg:text-xl font-bold font-mono text-zinc-100">
-                            ${formatShortNumber(historyData?.priceHistory?.reduce((sum, trade) => sum + trade.tradeValue, 0) || 0)}
+                        <span className="text-base md:text-lg lg:text-xl font-bold text-zinc-100">
+                            <NumericDisplay
+                                value={`$${formatShortNumber(historyData?.priceHistory?.reduce((sum, trade) => sum + trade.tradeValue, 0) || 0)}`}
+                                size="lg"
+                                variant="bold"
+                            />
                         </span>
                         <span className="text-zinc-400 text-xs">24h total</span>
                     </div>
@@ -229,16 +238,20 @@ export function TradeDetailsModal({ isOpen, onClose, anomaly }: TradeDetailsModa
                             }
                         </span>
                         <span className={cn(
-                            "text-base md:text-lg lg:text-xl font-bold font-mono",
+                            "text-base md:text-lg lg:text-xl font-bold",
                             historyData?.priceHistory && historyData.priceHistory.length > 0 ?
                                 (historyData.priceHistory[historyData.priceHistory.length - 1].price > odds ?
                                     "text-emerald-400" : "text-red-400") :
                                 "text-zinc-100"
                         )}>
-                            {historyData?.priceHistory && historyData.priceHistory.length > 0 ?
-                                `${Math.abs(historyData.priceHistory[historyData.priceHistory.length - 1].price - odds).toFixed(1)}¢` :
-                                '0¢'
-                            }
+                            <NumericDisplay
+                                value={historyData?.priceHistory && historyData.priceHistory.length > 0 ?
+                                    `${Math.abs(historyData.priceHistory[historyData.priceHistory.length - 1].price - odds).toFixed(1)}¢` :
+                                    '0¢'
+                                }
+                                size="lg"
+                                variant="bold"
+                            />
                         </span>
                         <span className="text-zinc-400 text-xs">vs bet price</span>
                     </div>
@@ -246,14 +259,21 @@ export function TradeDetailsModal({ isOpen, onClose, anomaly }: TradeDetailsModa
                     <div className="p-2 md:p-3 lg:p-4 flex flex-col items-center justify-center bg-black/20">
                         <span className="text-xs md:text-sm text-zinc-500 uppercase tracking-wider mb-1">P/L</span>
                         <span className={cn(
-                            "text-base md:text-lg lg:text-xl font-bold font-mono",
+                            "text-base md:text-lg lg:text-xl font-bold",
                             unrealizedPL > 0 ? "text-emerald-400" :
                                 unrealizedPL < 0 ? "text-red-400" : "text-zinc-100"
                         )}>
-                            {formatCurrency(unrealizedPL)}
+                            <NumericDisplay
+                                value={formatCurrency(unrealizedPL)}
+                                size="lg"
+                                variant="bold"
+                            />
                         </span>
                         <span className="text-zinc-400 text-xs">
-                            {unrealizedPL !== 0 ? `${(unrealizedPL / value * 100).toFixed(1)}%` : '0%'}
+                            <NumericDisplay
+                                value={unrealizedPL !== 0 ? `${(unrealizedPL / value * 100).toFixed(1)}%` : '0%'}
+                                size="xs"
+                            />
                         </span>
                     </div>
                 </div>
@@ -266,7 +286,7 @@ export function TradeDetailsModal({ isOpen, onClose, anomaly }: TradeDetailsModa
                             <span className="w-1 h-3 bg-blue-500 rounded-full" />
                             Price History ({outcome})
                         </h3>
-                        <div className="h-32 md:h-40 lg:h-48 xl:h-56 w-full bg-black/20 rounded border border-zinc-800/50 p-1 md:p-2">
+                        <div className="h-32 md:h-40 lg:h-48 xl:h-56 w-full bg-black/20 rounded-xl border border-zinc-800/50 p-1 md:p-2">
                             {isLoadingHistory ? (
                                 <div className="h-full flex items-center justify-center text-zinc-600 text-xs md:text-sm animate-pulse">Loading chart data...</div>
                             ) : historyData?.priceHistory?.length ? (
@@ -356,7 +376,7 @@ export function TradeDetailsModal({ isOpen, onClose, anomaly }: TradeDetailsModa
                             <span className="w-1 h-3 bg-emerald-500 rounded-full" />
                             Recent Wallet Activity
                         </h3>
-                        <div className="h-32 md:h-40 lg:h-48 xl:h-56 w-full bg-black/20 rounded border border-zinc-800/50 p-1 md:p-2">
+                        <div className="h-32 md:h-40 lg:h-48 xl:h-56 w-full bg-black/20 rounded-xl border border-zinc-800/50 p-1 md:p-2">
                             {isLoadingHistory ? (
                                 <div className="h-full flex items-center justify-center text-zinc-600 text-xs md:text-sm animate-pulse">Loading wallet data...</div>
                             ) : historyData?.walletHistory?.length ? (
@@ -391,8 +411,14 @@ export function TradeDetailsModal({ isOpen, onClose, anomaly }: TradeDetailsModa
                                                             <div className={cn("font-bold mt-1", data.side === 'BUY' ? "text-emerald-400" : "text-red-400")}>
                                                                 {data.side} {data.outcome}
                                                             </div>
-                                                            <div className="text-zinc-300 font-mono mt-1">
-                                                                ${Math.round(data.tradeValue).toLocaleString()} @ {data.price.toFixed(1)}¢
+                                                            <div className="text-zinc-300 mt-1">
+                                                                <NumericDisplay
+                                                                    value={`$${Math.round(data.tradeValue).toLocaleString()}`}
+                                                                    size="sm"
+                                                                /> @ <NumericDisplay
+                                                                    value={`${data.price.toFixed(1)}¢`}
+                                                                    size="sm"
+                                                                />
                                                             </div>
                                                         </div>
                                                     );
@@ -426,39 +452,47 @@ export function TradeDetailsModal({ isOpen, onClose, anomaly }: TradeDetailsModa
                             { label: 'Last 10', data: historyData?.stats?.last10 },
                             { label: 'Last 50', data: historyData?.stats?.last50 }
                         ].map((period) => (
-                            <div key={period.label} className="bg-zinc-900/50 p-2 md:p-3 rounded border border-zinc-800 flex flex-col items-center text-center">
+                            <div key={period.label} className="bg-zinc-900/50 p-2 md:p-3 rounded-xl border border-zinc-800 flex flex-col items-center text-center">
                                 <div className="text-[10px] text-zinc-500 uppercase mb-1">{period.label} Trades</div>
 
                                 <div className="grid grid-cols-2 w-full gap-x-2">
                                     <div className="flex flex-col">
                                         <span className="text-[10px] text-zinc-600">Win Rate</span>
                                         <span className={cn(
-                                            "font-bold text-sm md:text-base font-mono",
+                                            "font-bold text-sm md:text-base",
                                             period.data ? (
                                                 period.data.winRate >= 50 ? "text-emerald-400" : "text-red-400"
                                             ) : "text-zinc-600 animate-pulse"
                                         )}>
-                                            {period.data ? (
-                                                `${period.data.winRate.toFixed(0)}%`
-                                            ) : (
-                                                '...'
-                                            )}
+                                            <NumericDisplay
+                                                value={period.data ? (
+                                                    `${period.data.winRate.toFixed(0)}%`
+                                                ) : (
+                                                    '...'
+                                                )}
+                                                size="sm"
+                                                variant="bold"
+                                            />
                                         </span>
                                     </div>
                                     <div className="flex flex-col">
                                         <span className="text-[10px] text-zinc-600">PnL</span>
                                         <span className={cn(
-                                            "font-bold text-sm md:text-base font-mono",
+                                            "font-bold text-sm md:text-base",
                                             period.data ? (
                                                 period.data.pnlPercent > 0 ? "text-emerald-400" :
                                                     period.data.pnlPercent < 0 ? "text-red-400" : "text-zinc-400"
                                             ) : "text-zinc-600 animate-pulse"
                                         )}>
-                                            {period.data ? (
-                                                `${period.data.pnlPercent > 0 ? '+' : ''}${period.data.pnlPercent.toFixed(1)}%`
-                                            ) : (
-                                                '...'
-                                            )}
+                                            <NumericDisplay
+                                                value={period.data ? (
+                                                    `${period.data.pnlPercent > 0 ? '+' : ''}${period.data.pnlPercent.toFixed(1)}%`
+                                                ) : (
+                                                    '...'
+                                                )}
+                                                size="sm"
+                                                variant="bold"
+                                            />
                                         </span>
                                     </div>
                                 </div>
@@ -484,7 +518,7 @@ export function TradeDetailsModal({ isOpen, onClose, anomaly }: TradeDetailsModa
 
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2 md:gap-3">
                             {/* Activity Level */}
-                            <div className="bg-zinc-900/50 p-2 md:p-3 rounded border border-zinc-800">
+                            <div className="bg-zinc-900/50 p-2 md:p-3 rounded-xl border border-zinc-800">
                                 <div className="text-[10px] text-zinc-500 uppercase mb-1">Activity Level</div>
                                 <div className={cn(
                                     "font-bold text-sm",
@@ -500,7 +534,7 @@ export function TradeDetailsModal({ isOpen, onClose, anomaly }: TradeDetailsModa
                             </div>
 
                             {/* Profitability */}
-                            <div className="bg-zinc-900/50 p-2 md:p-3 rounded border border-zinc-800">
+                            <div className="bg-zinc-900/50 p-2 md:p-3 rounded-xl border border-zinc-800">
                                 <div className="text-[10px] text-zinc-500 uppercase mb-1">Total PnL</div>
                                 <div className={cn(
                                     "font-bold text-sm",
@@ -514,10 +548,14 @@ export function TradeDetailsModal({ isOpen, onClose, anomaly }: TradeDetailsModa
                             </div>
 
                             {/* Max Trade Context */}
-                            <div className="bg-zinc-900/50 p-2 md:p-3 rounded border border-zinc-800 md:col-span-2 lg:col-span-1">
+                            <div className="bg-zinc-900/50 p-2 md:p-3 rounded-xl border border-zinc-800 md:col-span-2 lg:col-span-1">
                                 <div className="text-[10px] text-zinc-500 uppercase mb-1">Max Trade Size</div>
                                 <div className="font-bold text-sm text-zinc-300">
-                                    ${Math.round(maxTrade).toLocaleString()}
+                                    <NumericDisplay
+                                        value={`$${Math.round(maxTrade).toLocaleString()}`}
+                                        size="sm"
+                                        variant="bold"
+                                    />
                                 </div>
                                 <div className="text-[10px] text-zinc-600 mt-1 leading-tight">
                                     {value >= maxTrade * 0.9 ? "New record trade!" : "Within normal range"}
@@ -528,7 +566,7 @@ export function TradeDetailsModal({ isOpen, onClose, anomaly }: TradeDetailsModa
 
                     {/* Insider Analysis */}
                     {isInsider && (
-                        <div className="bg-red-500/5 border border-red-500/20 p-3 md:p-4 rounded-lg">
+                        <div className="bg-red-500/5 border border-red-500/20 p-3 md:p-4 rounded-xl">
                             <div className="flex items-start gap-3">
                                 <div className="p-2 bg-red-500/10 rounded-full">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-red-500"><path d="M2 12h20" /><path d="M20 12v6a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-6" /><path d="M12 2 2 7l10 5 10-5-10-5Z" /><path d="m2 17 10 5 10-5" /></svg>
@@ -544,7 +582,7 @@ export function TradeDetailsModal({ isOpen, onClose, anomaly }: TradeDetailsModa
                     )}
 
                     <div className="flex flex-col items-center gap-2 pt-3 border-t border-zinc-800">
-                        <div className="flex items-center gap-2 text-xs text-zinc-500 font-mono">
+                        <div className="flex items-center gap-2 text-xs text-zinc-500">
                             <span>WALLET:</span>
                             <span className="text-zinc-300">
                                 {wallet_context?.label && wallet_context.label !== 'Unknown'

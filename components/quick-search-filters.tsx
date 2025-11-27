@@ -64,12 +64,12 @@ export function QuickSearchFilters({ onFilterSelect, activeFilter, anomalies = [
   // Query generation helpers
   const getKeywordsForCategory = (category: CategoryType): string => {
     if (!category) return '';
-    
+
     if (category === 'sports') {
       // For sports, combine all league names
       return SPORTS_LEAGUES.join(' ');
     }
-    
+
     // For other categories, use their keyword lists
     const keywords = CATEGORY_KEYWORDS[category] || [];
     return keywords.join(' ');
@@ -116,7 +116,7 @@ export function QuickSearchFilters({ onFilterSelect, activeFilter, anomalies = [
   const getTeamsForLeague = (league: string): string[] => {
     const teamCounts = new Map<string, number>();
     const recentAnomalies = anomalies.slice(0, 100);
-    
+
     // Get teams from LEAGUE_TEAMS constant
     const knownTeams = LEAGUE_TEAMS[league] || [];
 
@@ -126,7 +126,7 @@ export function QuickSearchFilters({ onFilterSelect, activeFilter, anomalies = [
       // Create pattern from known teams
       if (knownTeams.length > 0) {
         // Escape special regex characters and create pattern
-        const escapedTeams = knownTeams.map(team => 
+        const escapedTeams = knownTeams.map(team =>
           team.replace(/[.*+?^${}()|[\]\\]/g, '\\$&').replace(/\s+/g, '[\\s.]+')
         );
         const teamPattern = new RegExp(`\\b(${escapedTeams.join('|')})\\b`, 'gi');
@@ -158,7 +158,7 @@ export function QuickSearchFilters({ onFilterSelect, activeFilter, anomalies = [
     const sortedByFrequency = Array.from(teamCounts.entries())
       .sort((a, b) => b[1] - a[1])
       .map(([team]) => team);
-    
+
     // Merge with known teams, prioritizing those found in data
     const result = [...new Set([...sortedByFrequency, ...knownTeams])];
     return result.slice(0, 8);
@@ -189,7 +189,7 @@ export function QuickSearchFilters({ onFilterSelect, activeFilter, anomalies = [
 
       // Create pattern from known keywords
       if (knownKeywords.length > 0) {
-        const escapedKeywords = knownKeywords.map(keyword => 
+        const escapedKeywords = knownKeywords.map(keyword =>
           keyword.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
         );
         const keywordPattern = new RegExp(`\\b(${escapedKeywords.join('|')})\\b`, 'gi');
@@ -209,7 +209,7 @@ export function QuickSearchFilters({ onFilterSelect, activeFilter, anomalies = [
     const sortedByFrequency = Array.from(termCounts.entries())
       .sort((a, b) => b[1] - a[1])
       .map(([term]) => term);
-    
+
     // Merge with known keywords, prioritizing those found in data
     const result = [...new Set([...sortedByFrequency, ...knownKeywords])];
     return result.slice(0, 80);
@@ -296,7 +296,7 @@ export function QuickSearchFilters({ onFilterSelect, activeFilter, anomalies = [
   if (loading) {
     return (
       <div className="flex items-center justify-center">
-        <div className="text-xs font-mono text-zinc-500">LOADING...</div>
+        <div className="text-xs text-zinc-500">LOADING...</div>
       </div>
     );
   }
@@ -310,21 +310,21 @@ export function QuickSearchFilters({ onFilterSelect, activeFilter, anomalies = [
   return (
     <div className="flex items-center w-full">
       <div className="flex items-center gap-2 overflow-x-auto scrollbar-hide pr-2">
-      {drillDownLevel > 0 && (
-        <button
-          onClick={handleBackToCategories}
-          className="px-2 py-1.5 border-2 font-mono text-xs font-bold uppercase transition-all duration-200 shrink-0 border-zinc-600 bg-zinc-800 text-zinc-400 hover:border-zinc-500 hover:text-zinc-300"
-        >
-          ← BACK
-        </button>
-      )}
+        {drillDownLevel > 0 && (
+          <button
+            onClick={handleBackToCategories}
+            className="px-2 py-1.5 border-2 text-xs font-bold uppercase transition-all duration-200 shrink-0 border-zinc-600 bg-zinc-800 text-zinc-400 hover:border-zinc-500 hover:text-zinc-300 rounded-lg"
+          >
+            ← BACK
+          </button>
+        )}
 
-      {/* Show league name only for level 2 (teams within league) */}
-      {drillDownLevel === 2 && displayTitle && (
-        <span className="text-xs font-mono text-zinc-500 uppercase tracking-wider whitespace-nowrap mr-2 shrink-0">
-          {displayTitle}:
-        </span>
-      )}
+        {/* Show league name only for level 2 (teams within league) */}
+        {drillDownLevel === 2 && displayTitle && (
+          <span className="text-xs text-zinc-500 uppercase tracking-wider whitespace-nowrap mr-2 shrink-0">
+            {displayTitle}:
+          </span>
+        )}
 
         {limitedDisplayItems.map((item) => (
           <button
@@ -339,7 +339,7 @@ export function QuickSearchFilters({ onFilterSelect, activeFilter, anomalies = [
               }
             }}
             className={cn(
-              "px-2 py-1.5 border-2 font-mono text-xs font-bold uppercase transition-all duration-200 shrink-0",
+              "px-2 py-1.5 border-2 text-xs font-bold uppercase transition-all duration-200 shrink-0 rounded-lg",
               activeFilter === item
                 ? "border-[#b8a889] bg-[#b8a889]/10 text-[#e9e2d3] shadow-[3px_3px_0px_0px_rgba(184,168,137,0.7)]"
                 : "border-zinc-600 bg-zinc-800 text-zinc-400 hover:border-zinc-500 hover:text-zinc-300"
@@ -351,7 +351,7 @@ export function QuickSearchFilters({ onFilterSelect, activeFilter, anomalies = [
 
         {/* Show indicator if there are more items */}
         {displayItems.length > maxDisplayItems && (
-          <span className="text-xs font-mono text-zinc-500 uppercase shrink-0 ml-2">
+          <span className="text-xs text-zinc-500 uppercase shrink-0 ml-2">
             +{displayItems.length - maxDisplayItems} MORE
           </span>
         )}

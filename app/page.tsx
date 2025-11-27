@@ -33,7 +33,7 @@ function passesPreferences(anomaly: Anomaly, preferences: UserPreferencesType): 
   ) {
     return false;
   }
-  
+
   // Check anomaly type filters
   switch (anomaly.type) {
     case 'STANDARD':
@@ -188,13 +188,13 @@ export default function Home() {
                 )}
 
                 {filteredAnomalies.length === 0 && !isLoading && (
-                  <div className="text-center text-zinc-600 mt-20 font-mono">
+                  <div className="text-center text-zinc-600 mt-20">
                     {searchQuery ? `NO RESULTS FOR "${searchQuery.toUpperCase()}"` : "WAITING FOR SIGNAL..."}
                   </div>
                 )}
 
                 {isLoading && (
-                  <div className="text-center text-zinc-600 mt-8 font-mono animate-pulse">
+                  <div className="text-center text-zinc-600 mt-8 animate-pulse">
                     LOADING MORE DATA...
                   </div>
                 )}
@@ -223,7 +223,7 @@ export default function Home() {
           {/* Left side - Minimal LIVE indicator */}
           <div className="flex items-center gap-1">
             <div className="w-1 h-1 bg-primary rounded-full animate-pulse" />
-            <span className="text-[8px] font-mono text-zinc-600 tracking-wider">LIVE</span>
+            <span className="text-[8px] text-zinc-600 tracking-wider">LIVE</span>
           </div>
 
           {/* Center - Carousel Navigation */}
@@ -235,7 +235,7 @@ export default function Home() {
           </div>
 
           {/* Right side - Minimal version */}
-          <div className="text-[8px] font-mono text-zinc-700">v1.0</div>
+          <div className="text-[8px] text-zinc-700">v1.0</div>
         </div>
 
         {/* Floating Search Button */}

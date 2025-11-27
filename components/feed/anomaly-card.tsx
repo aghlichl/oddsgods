@@ -8,17 +8,13 @@ import { TradeDetailsModal } from "./trade-details-modal";
 import { resolveTeamFromMarket, getLogoPathForTeam, inferLeagueFromMarket } from "@/lib/teamResolver";
 
 // Import distinctive fonts following Spotify/DoorDash/Robinhood patterns
-import { Bricolage_Grotesque, JetBrains_Mono } from 'next/font/google';
+import { Inter } from 'next/font/google';
 
-const bricolage = Bricolage_Grotesque({
-    subsets: ['latin'],
-    weight: ['200', '800'], // Extreme weight contrast
-    display: 'swap',
-});
 
-const jetbrains = JetBrains_Mono({
+
+const inter = Inter({
     subsets: ['latin'],
-    weight: ['200', '800'], // Extreme weight contrast
+    weight: ['400', '500', '600', '700'], // Include semibold for currency amounts
     display: 'swap',
 });
 
@@ -94,10 +90,10 @@ export const AnomalyCard = memo(function AnomalyCard({ anomaly }: AnomalyCardPro
                         {/* Demonic Flame Rings - Around Card Border */}
                         <div className="absolute -inset-1 z-0 overflow-hidden rounded-inherit">
                             {/* Outer Ring - Slow Pulsing */}
-                            <div className="absolute inset-0 bg-[conic-gradient(from_0deg_at_50%_50%,transparent_0deg,rgba(251,191,36,0.8)_45deg,rgba(239,68,68,0.9)_90deg,rgba(251,191,36,0.7)_135deg,transparent_180deg,rgba(168,85,247,0.6)_225deg,rgba(239,68,68,0.8)_270deg,rgba(251,191,36,0.7)_315deg,transparent_360deg)] animate-[spin_8s_linear_infinite] opacity-70 blur-sm rounded-[60%_40%_70%_30%/40%_60%_30%_70%]" />
+                            <div className="absolute inset-0 bg-[conic-gradient(from_0deg_at_50%_50%,transparent_0deg,rgba(251,191,36,0.8)_45deg,rgba(239,68,68,0.9)_90deg,rgba(251,191,36,0.7)_135deg,transparent_180deg,rgba(168,85,247,0.6)_225deg,rgba(239,68,68,0.8)_270deg,rgba(251,191,36,0.7)_315deg,transparent_360deg)] animate-[spin_8s_linear_infinite] opacity-70 blur-sm rounded-xl" />
 
                             {/* Inner Ring - Faster Rotation */}
-                            <div className="absolute inset-1 bg-[conic-gradient(from_0deg_at_50%_50%,transparent_0deg,rgba(239,68,68,1.0)_30deg,rgba(251,191,36,1.0)_60deg,rgba(239,68,68,0.9)_90deg,transparent_120deg,rgba(251,191,36,0.8)_150deg,rgba(239,68,68,1.0)_180deg,rgba(251,191,36,0.9)_210deg,transparent_240deg,rgba(168,85,247,0.7)_270deg,rgba(239,68,68,0.8)_300deg,rgba(251,191,36,1.0)_330deg,transparent_360deg)] animate-spin-reverse opacity-60 blur-sm rounded-[60%_40%_70%_30%/40%_60%_30%_70%]" />
+                            <div className="absolute inset-1 bg-[conic-gradient(from_0deg_at_50%_50%,transparent_0deg,rgba(239,68,68,1.0)_30deg,rgba(251,191,36,1.0)_60deg,rgba(239,68,68,0.9)_90deg,transparent_120deg,rgba(251,191,36,0.8)_150deg,rgba(239,68,68,1.0)_180deg,rgba(251,191,36,0.9)_210deg,transparent_240deg,rgba(168,85,247,0.7)_270deg,rgba(239,68,68,0.8)_300deg,rgba(251,191,36,1.0)_330deg,transparent_360deg)] animate-spin-reverse opacity-60 blur-sm rounded-xl" />
                         </div>
 
                         Energy Wisps - Floating Demonic Particles Around Border
@@ -118,28 +114,28 @@ export const AnomalyCard = memo(function AnomalyCard({ anomaly }: AnomalyCardPro
                 )}
 
                 <Card className={cn(
-                    "relative z-10 h-full p-4 border-2 transition-all duration-300 ease-out rounded-none overflow-hidden",
+                    "relative z-10 h-full p-4 transition-all duration-300 ease-out rounded-xl overflow-hidden",
                     // Standard Tier (Default)
                     !isGod && !isSuper && !isMega && !isWhale &&
-                    "border-zinc-700 bg-zinc-950 shadow-[4px_4px_0px_0px_#27272a] group-hover:shadow-[6px_6px_0px_0px_#27272a] group-hover:-translate-y-1",
+                    "bg-zinc-950 shadow-[5px_5px_0px_0px_#27272a] group-hover:shadow-[6px_6px_0px_0px_#27272a] group-hover:-translate-y-1",
 
                     // Whale Tier - Subtle Blue
-                    isWhale && "border-zinc-700 bg-zinc-950 shadow-[4px_4px_0px_0px_#3b82f6] group-hover:shadow-[6px_6px_0px_0px_#3b82f6] group-hover:-translate-y-1",
+                    isWhale && "bg-zinc-950 shadow-[5px_5px_0px_0px_#3b82f6] group-hover:shadow-[6px_6px_0px_0px_#3b82f6] group-hover:-translate-y-1",
 
                     // Mega Whale - Pulsing Purple
-                    isMega && "border-zinc-700 bg-zinc-950 shadow-[4px_4px_0px_0px_#a855f7] group-hover:shadow-[6px_6px_0px_0px_#a855f7] group-hover:-translate-y-1",
+                    isMega && "bg-zinc-950 shadow-[5px_5px_0px_0px_#a855f7] group-hover:shadow-[6px_6px_0px_0px_#a855f7] group-hover:-translate-y-1",
 
                     // Super Whale - Aggressive Red
-                    isSuper && "border-zinc-700 bg-zinc-950 shadow-[4px_4px_0px_0px_#ef4444] group-hover:shadow-[6px_6px_0px_0px_#ef4444] group-hover:-translate-y-1",
+                    isSuper && "bg-zinc-950 shadow-[5px_5px_0px_0px_#ef4444] group-hover:shadow-[6px_6px_0px_0px_#ef4444] group-hover:-translate-y-1",
 
                     // God Whale - Mythic Gold
-                    isGod && "border-zinc-700 bg-zinc-950 shadow-[4px_4px_0px_0px_#fbbf24] group-hover:shadow-[6px_6px_0px_0px_#fbbf24] group-hover:-translate-y-1"
+                    isGod && "bg-zinc-950 shadow-[5px_5px_0px_0px_#fbbf24] group-hover:shadow-[6px_6px_0px_0px_#fbbf24] group-hover:-translate-y-1"
                 )}>
                     {/* God Tier: Cosmic Limit Break (Anime Style) */}
                     {isGod && (
                         <>
                             {/* Manga Speed Lines (Rapid Rotation) */}
-                            <div className="absolute inset-[-150%] z-0 pointer-events-none bg-[conic-gradient(from_0deg_at_50%_50%,transparent_0deg,rgba(251,191,36,0.4)_10deg,transparent_20deg,rgba(251,191,36,0.1)_50deg,transparent_60deg,rgba(251,191,36,0.4)_90deg,transparent_100deg)] animate-super-spin mix-blend-plus-lighter opacity-70" />
+                            <div className="absolute inset-[-150%] z-0 pointer-events-none bg-[conic-gradient(from_0deg_at_50%_50%,transparent_0deg,rgba(251,191,36,0.4)_10deg,transparent_20deg,rgba(251,191,36,0.1)_50deg,transparent_60deg,rgba(251,191,36,0.4)_90deg,transparent_100deg)] animate-super-spin mix-blend-plus-lighter opacity-70 rounded-xl" />
 
                             {/* Core Energy Flash (Blinding Light) */}
                             <div className="absolute inset-0 z-0 pointer-events-none bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.8)_0%,rgba(251,191,36,0.5)_20%,transparent_60%)] animate-flash mix-blend-screen" />
@@ -192,7 +188,7 @@ export const AnomalyCard = memo(function AnomalyCard({ anomaly }: AnomalyCardPro
                             <div className="absolute inset-0 z-0 pointer-events-none bg-[radial-gradient(circle_at_center,rgba(168,85,247,0.3)_0%,transparent_70%)] animate-heartbeat mix-blend-screen" />
 
                             {/* Arcane Nebula - Contained Swirling Motion */}
-                            <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden rounded-none">
+                            <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden rounded-xl">
                                 {/* Primary Nebula Swirl - Large central vortex */}
                                 <div className="absolute inset-0 bg-[conic-gradient(from_0deg_at_50%_50%,transparent_0deg,rgba(168,85,247,0.1)_30deg,rgba(168,85,247,0.3)_60deg,rgba(168,85,247,0.1)_90deg,rgba(147,51,234,0.2)_120deg,rgba(147,51,234,0.4)_150deg,rgba(147,51,234,0.2)_180deg,transparent_210deg)] animate-[nebula-swirl_12s_linear_infinite] mix-blend-screen opacity-70" />
 
@@ -300,7 +296,7 @@ export const AnomalyCard = memo(function AnomalyCard({ anomaly }: AnomalyCardPro
                                         {/* Main Title - Two-line approach */}
                                         <h3
                                             className={cn(
-                                                bricolage.className,
+                                                // bricolage.className removed
                                                 // Responsive typography:
                                                 // - Mobile: text-sm (14px)
                                                 // - Tablet/Desktop: Scales fluidly up to text-lg (18px)
@@ -346,71 +342,58 @@ export const AnomalyCard = memo(function AnomalyCard({ anomaly }: AnomalyCardPro
                             </div>
                         </div>
 
-                        {/* Top Right: Amount - THE DATA SHARD (POLISHED) */}
+                        {/* Top Right: Amount - REDESIGNED (Minimalist Neobrutalism) */}
                         <div className="flex items-start justify-end">
-                            <div className="relative group">
-                                {/* The Shard Container - Holographic Glass */}
+                            <div className={cn(
+                                "relative group",
+                                "bg-zinc-950", // Deep solid background
+                                "border border-zinc-800", // Structural border
+                                "rounded-lg", // Consistent shape
+                                "px-4 py-2",
+                                "transition-all duration-300",
+                                "hover:border-zinc-700" // Subtle interaction
+                            )}>
+                                {/* Tier Indicator - Minimal Corner Accent */}
                                 <div className={cn(
-                                    "relative pl-4 pr-3 py-1.5 overflow-hidden",
-                                    "bg-black/40 backdrop-blur-xl", // Glass base
-                                    "border border-white/10", // Subtle physical border
-                                    "rounded-lg rounded-tr-none rounded-bl-none", // Tech shape without clip-path for better borders
-                                    "shadow-[0_4px_20px_-4px_rgba(0,0,0,0.5)]", // Deep shadow
-                                    "group-hover:border-white/20 transition-colors duration-300"
-                                )}>
-                                    {/* Internal Highlight / Rim Light */}
-                                    <div className={cn(
-                                        "absolute inset-0 opacity-20",
-                                        "bg-gradient-to-br from-white/20 via-transparent to-black/40"
-                                    )} />
+                                    "absolute top-0 right-0 w-2 h-2",
+                                    "border-t border-r rounded-tr-lg", // Corner bracket style
+                                    "transition-colors duration-300",
+                                    isGod ? "border-yellow-500" :
+                                        isSuper ? "border-red-500" :
+                                            isMega ? "border-purple-500" :
+                                                isWhale ? "border-blue-500" :
+                                                    "border-zinc-600"
+                                )} />
 
-                                    {/* Animated Scanline Overlay */}
-                                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent -skew-x-12 translate-x-[-200%] animate-shimmer-slide opacity-30" />
+                                {/* Bottom Left Accent - Balancing the composition */}
+                                <div className={cn(
+                                    "absolute bottom-0 left-0 w-2 h-2",
+                                    "border-b border-l rounded-bl-lg", // Corner bracket style
+                                    "transition-colors duration-300 opacity-50",
+                                    isGod ? "border-yellow-500" :
+                                        isSuper ? "border-red-500" :
+                                            isMega ? "border-purple-500" :
+                                                isWhale ? "border-blue-500" :
+                                                    "border-zinc-600"
+                                )} />
 
-                                    {/* Tier-Specific Accent Line (Top) */}
-                                    <div className={cn(
-                                        "absolute top-0 left-0 right-0 h-[1px] opacity-50",
-                                        "bg-gradient-to-r from-transparent via-current to-transparent",
-                                        isGod ? "text-yellow-400" :
-                                            isSuper ? "text-red-400" :
-                                                isMega ? "text-purple-400" :
-                                                    isWhale ? "text-blue-400" :
-                                                        "text-zinc-400"
-                                    )} />
+                                <div className="relative flex items-baseline gap-1">
+                                    <span className={cn(
+                                        // jetbrains.className removed
+                                        "text-sm font-bold",
+                                        isGod ? "text-yellow-500/90" :
+                                            isSuper ? "text-red-500/90" :
+                                                isMega ? "text-purple-500/90" :
+                                                    isWhale ? "text-blue-500/90" :
+                                                        "text-zinc-500"
+                                    )}>$</span>
 
-                                    {/* Content Layout */}
-                                    <div className="relative flex items-baseline gap-1 z-10">
-                                        {/* Currency Symbol */}
-                                        <span className={cn(
-                                            jetbrains.className,
-                                            "text-sm font-bold opacity-80",
-                                            isGod ? "text-yellow-400" :
-                                                isSuper ? "text-red-400" :
-                                                    isMega ? "text-purple-400" :
-                                                        isWhale ? "text-blue-400" :
-                                                            "text-zinc-400"
-                                        )}>
-                                            $
-                                        </span>
-
-                                        {/* Amount - The Hero */}
-                                        <span className={cn(
-                                            jetbrains.className,
-                                            "text-3xl font-bold tracking-tighter",
-                                            "drop-shadow-lg",
-                                            isGod ? "text-yellow-100" :
-                                                isSuper ? "text-red-100" :
-                                                    isMega ? "text-purple-100" :
-                                                        isWhale ? "text-blue-100" :
-                                                            "text-zinc-100"
-                                        )}>
-                                            {amount.replace('$', '')}
-                                        </span>
-                                    </div>
-
-                                    {/* Decorative Corner Bits */}
-                                    <div className="absolute bottom-0 right-0 w-1.5 h-1.5 bg-white/20" />
-                                    <div className="absolute top-0 left-0 w-1.5 h-1.5 bg-white/20" />
+                                    <span className={cn(
+                                        inter.className,
+                                        "text-3xl font-semibold tracking-tight text-zinc-100"
+                                    )}>
+                                        {amount.replace('$', '')}
+                                    </span>
                                 </div>
                             </div>
                         </div>
@@ -427,7 +410,7 @@ export const AnomalyCard = memo(function AnomalyCard({ anomaly }: AnomalyCardPro
 
                                     {/* Main Container */}
                                     <div className={cn(
-                                        "relative flex flex-col min-w-[100px] overflow-hidden transition-all duration-300",
+                                        "relative flex flex-col min-w-[100px] overflow-hidden transition-all duration-300 rounded-lg",
                                         "bg-zinc-950 border border-zinc-800",
                                         side === 'SELL'
                                             ? "hover:border-red-500/50"
@@ -445,7 +428,7 @@ export const AnomalyCard = memo(function AnomalyCard({ anomaly }: AnomalyCardPro
                                             {/* Label - Micro Typography */}
                                             <div className="flex items-center gap-1.5 mb-0.5">
                                                 <span className={cn(
-                                                    bricolage.className,
+                                                    // bricolage.className removed
                                                     "text-[0.65rem] uppercase tracking-[0.25em] font-black",
                                                     side === 'SELL' ? "text-red-400" : "text-emerald-400"
                                                 )}>
@@ -461,7 +444,7 @@ export const AnomalyCard = memo(function AnomalyCard({ anomaly }: AnomalyCardPro
                                             {/* The Outcome Text - Hero */}
                                             <div className="relative">
                                                 <span className={cn(
-                                                    bricolage.className,
+                                                    // bricolage.className removed
                                                     "block text-lg font-black italic tracking-tighter leading-none uppercase text-zinc-100",
                                                     "group-hover/outcome:translate-x-0.5 transition-transform duration-300"
                                                 )}>
@@ -470,7 +453,7 @@ export const AnomalyCard = memo(function AnomalyCard({ anomaly }: AnomalyCardPro
 
                                                 {/* Glitch/Echo Effect on Hover */}
                                                 <span className={cn(
-                                                    bricolage.className,
+                                                    // bricolage.className removed
                                                     "absolute inset-0 text-lg font-black italic tracking-tighter leading-none uppercase opacity-0 group-hover/outcome:opacity-40 transition-opacity duration-100 delay-75",
                                                     "translate-x-[-1px] translate-y-[0.5px]",
                                                     side === 'SELL' ? "text-red-500" : "text-emerald-500"
@@ -502,7 +485,7 @@ export const AnomalyCard = memo(function AnomalyCard({ anomaly }: AnomalyCardPro
 
                 {/* Card Docked Plate - Timestamp Footer */}
                 <div className={cn(
-                    jetbrains.className,
+                    // jetbrains.className removed
                     "mx-auto mt-1 w-[92%] px-4 py-1.5 text-[10px] rounded-md",
                     "backdrop-blur-sm border-t",
                     // Base styling - more subtle

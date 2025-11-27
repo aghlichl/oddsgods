@@ -74,7 +74,7 @@ export function SearchButton({ onSearch, className }: SearchButtonProps) {
         <button
           onClick={handleToggle}
           className={cn(
-            "flex items-center justify-center w-12 h-12",
+            "flex items-center justify-center w-12 h-12 rounded-xl",
             "bg-zinc-950/95 backdrop-blur-xl border-2 border-zinc-600 shadow-[4px_4px_0px_0px_#27272a]",
             "hover:shadow-[6px_6px_0px_0px_#27272a] hover:-translate-y-1",
             "text-zinc-400 hover:text-zinc-100 transition-colors duration-200"
@@ -103,7 +103,7 @@ export function SearchButton({ onSearch, className }: SearchButtonProps) {
               className="w-full max-w-md mx-auto"
               onClick={(e) => e.stopPropagation()}
             >
-              <div className="flex items-center bg-zinc-950/95 backdrop-blur-xl border-2 border-zinc-600 shadow-[4px_4px_0px_0px_#27272a] rounded-lg overflow-hidden">
+              <div className="flex items-center bg-zinc-950/95 backdrop-blur-xl border-2 border-zinc-600 shadow-[4px_4px_0px_0px_#27272a] rounded-xl overflow-hidden">
                 <input
                   ref={inputRef}
                   type="search"
@@ -116,7 +116,7 @@ export function SearchButton({ onSearch, className }: SearchButtonProps) {
                   onChange={(e) => setQuery(e.target.value)}
                   onKeyDown={handleKeyDown}
                   placeholder="Search events..."
-                  className="flex-1 bg-transparent border-none outline-none text-zinc-100 placeholder-zinc-500 font-mono text-lg px-4 py-4"
+                  className="flex-1 bg-transparent border-none outline-none text-zinc-100 placeholder-zinc-500 text-lg px-4 py-4"
                 />
                 <button
                   onClick={() => {
@@ -137,7 +137,7 @@ export function SearchButton({ onSearch, className }: SearchButtonProps) {
                   transition={{ delay: 0.1 }}
                   className="mt-4 space-y-2"
                 >
-                  <div className="text-xs font-mono text-zinc-500 uppercase tracking-wider mb-3">
+                  <div className="text-xs text-zinc-500 uppercase tracking-wider mb-3">
                     Popular searches
                   </div>
                   <div className="flex flex-wrap gap-2">
@@ -145,7 +145,7 @@ export function SearchButton({ onSearch, className }: SearchButtonProps) {
                       <button
                         key={suggestion}
                         onClick={() => handleSuggestionClick(suggestion)}
-                        className="px-3 py-1 text-sm font-mono text-zinc-400 hover:text-zinc-100 hover:bg-zinc-800/50 border border-zinc-700 rounded transition-colors duration-200"
+                        className="px-3 py-1 text-sm text-zinc-400 hover:text-zinc-100 hover:bg-zinc-800/50 border border-zinc-700 rounded-md transition-colors duration-200"
                       >
                         {suggestion}
                       </button>

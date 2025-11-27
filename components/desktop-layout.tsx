@@ -16,7 +16,7 @@ export function DesktopLayout({ children, leftPanel, rightPanel, centerTitle }: 
                 {/* Left Panel - Preferences */}
                 <div className="hidden lg:flex lg:flex-col h-full bg-zinc-950/30">
                     <div className="shrink-0 px-6 py-3 border-b border-zinc-800/30">
-                        <h2 className="text-center text-sm font-mono tracking-wider uppercase">
+                        <h2 className="text-center text-sm tracking-wider uppercase">
                             USER <span className="text-purple-400 animate-pulse">PREFERENCES</span>
                         </h2>
                     </div>
@@ -28,7 +28,7 @@ export function DesktopLayout({ children, leftPanel, rightPanel, centerTitle }: 
                 {/* Center Panel - Main Feed */}
                 <div className="h-full relative bg-background flex flex-col">
                     <div className="shrink-0 px-6 py-3 border-b border-zinc-800/30">
-                        <h2 className="text-center text-sm font-mono tracking-wider uppercase">
+                        <h2 className="text-center text-sm tracking-wider uppercase">
                             {centerTitle || <><span className="text-green-400 animate-pulse">LIVE</span> MARKET INTELLIGENCE</>}
                         </h2>
                     </div>
@@ -40,7 +40,7 @@ export function DesktopLayout({ children, leftPanel, rightPanel, centerTitle }: 
                 {/* Right Panel - Top Whales */}
                 <div className="hidden lg:flex lg:flex-col h-full bg-zinc-950/30">
                     <div className="shrink-0 px-6 py-3 border-b border-zinc-800/30">
-                        <h2 className="text-center text-sm font-mono tracking-wider uppercase">
+                        <h2 className="text-center text-sm tracking-wider uppercase">
                             TOP <span className="text-blue-400 animate-pulse">WHALES</span>
                         </h2>
                     </div>

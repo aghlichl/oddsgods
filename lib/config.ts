@@ -1,7 +1,7 @@
 export const CONFIG = {
     THRESHOLDS: {
         MIN_VALUE: 1000,
-        WHALE: 1200,
+        WHALE: 8001,
         MEGA_WHALE: 15000,
         SUPER_WHALE: 50000,
         GOD_WHALE: 100000,

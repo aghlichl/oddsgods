@@ -114,6 +114,7 @@ export interface EnrichedTrade {
     analysis: {
         tags: string[];
         wallet_context: {
+            address: string;
             label: string;
             pnl_all_time: string;
             win_rate: string;

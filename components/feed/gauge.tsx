@@ -1,4 +1,5 @@
 import { cn } from "@/lib/utils";
+import { NumericDisplay } from "@/components/ui/numeric-display";
 
 interface GaugeProps {
     value: number;
@@ -55,8 +56,8 @@ export function Gauge({ value, size = 60, strokeWidth = 8, className, label }: G
                 />
             </svg>
             <div className="absolute inset-0 flex flex-col items-center justify-end" style={{ transform: 'none' }}>
-                <span className="text-sm font-black font-mono leading-none" style={{ color }}>
-                    {value}¢
+                <span className="text-sm font-black leading-none" style={{ color }}>
+                    <NumericDisplay value={`${value}¢`} size="sm" variant="bold" />
                 </span>
                 {label && (
                     <span className={cn(

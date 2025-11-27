@@ -1,5 +1,5 @@
-import { EnrichedTrade } from "../../lib/types";
-import { TEAMS } from "../teamMeta";
+import { EnrichedTrade, MarketMeta } from "../../lib/types";
+import { resolveTeamFromMarket, getLogoPathForTeam, inferLeagueFromMarket } from "../teamResolver";
 
 export interface AlertStyle {
     color: number;
@@ -16,27 +16,6 @@ export const ALERT_STYLES = {
     DEFAULT: { color: 0x3498db, emoji: "📊", titlePrefix: "TRADE" } // Blue
 };
 
-/**
- * Finds team logo for a market by parsing the question and outcome
- */
-function findTeamLogo(question: string, outcome: string): string | null {
-    // Combine question and outcome text to search for team names
-    const searchText = `${question} ${outcome}`.toLowerCase();
-
-    // Look through all teams and their aliases
-    for (const team of TEAMS) {
-        // Check team name and aliases
-        const allNames = [team.name.toLowerCase(), ...team.aliases.map(a => a.toLowerCase())];
-
-        for (const name of allNames) {
-            if (searchText.includes(name)) {
-                return team.logoPath;
-            }
-        }
-    }
-
-    return null;
-}
 
 export interface DiscordEmbedField {
     name: string;
@@ -138,17 +117,29 @@ export function formatDiscordAlert(trade: EnrichedTrade): DiscordEmbed {
         color: style.color,
         timestamp: trade.trade.timestamp.toISOString(),
         thumbnail: (() => {
-            // Prefer team logo over market image for sports markets
-            const teamLogo = findTeamLogo(trade.market.question, trade.market.outcome);
-            if (teamLogo) {
-                return { url: teamLogo };
+            // Use the same team resolution logic as the frontend
+            const team = resolveTeamFromMarket({
+                marketTitle: trade.market.question,
+                outcomeLabel: trade.market.outcome,
+                question: trade.market.question,
+            });
+
+            const league = team?.league || inferLeagueFromMarket({ question: trade.market.question } as MarketMeta);
+            const logoPath = getLogoPathForTeam(team, league);
+
+            if (logoPath && logoPath !== '/logos/generic/default.svg') {
+                // Convert relative path to full URL for Discord
+                const baseUrl = process.env.FRONTEND_URL || 'https://oddsgods.com';
+                const fullUrl = logoPath.startsWith('http') ? logoPath : `${baseUrl}${logoPath}`;
+                return { url: fullUrl };
             }
+
             // Fall back to market image if no team logo found
             return trade.market.image ? { url: trade.market.image } : undefined;
         })(),
         footer: {
             text: "OddsGods Intelligence",
-            // icon_url: "https://oddsgods.com/logo.png" // Optional
+            icon_url: "https://oddsgods.com/logo.png" // Optional
         },
         fields: fields
     };

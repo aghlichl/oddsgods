@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { GammaPortfolio, GammaPosition } from "@/lib/types";
 import { cn, formatCurrency, formatShortNumber } from "@/lib/utils";
+import { NumericDisplay } from "@/components/ui/numeric-display";
 
 interface WalletPortfolioProps {
     walletAddress: string;
@@ -44,11 +45,11 @@ export function WalletPortfolio({ walletAddress, className }: WalletPortfolioPro
     if (isLoading) {
         return (
             <div className={cn("p-4 animate-pulse", className)}>
-                <div className="h-4 w-32 bg-zinc-800 rounded mb-4"></div>
+                <div className="h-4 w-32 bg-zinc-800 rounded-md mb-4"></div>
                 <div className="space-y-2">
-                    <div className="h-10 w-full bg-zinc-900 rounded"></div>
-                    <div className="h-10 w-full bg-zinc-900 rounded"></div>
-                    <div className="h-10 w-full bg-zinc-900 rounded"></div>
+                    <div className="h-10 w-full bg-zinc-900 rounded-md"></div>
+                    <div className="h-10 w-full bg-zinc-900 rounded-md"></div>
+                    <div className="h-10 w-full bg-zinc-900 rounded-md"></div>
                 </div>
             </div>
         );
@@ -68,12 +69,17 @@ export function WalletPortfolio({ walletAddress, className }: WalletPortfolioPro
                     <span className="w-1 h-4 bg-indigo-500 rounded-full" />
                     Current Portfolio
                 </h3>
-                <div className="text-xs text-zinc-500 font-mono">
-                    Total Value: <span className="text-zinc-300 font-bold">{formatCurrency(portfolio.totalValue)}</span>
+                <div className="text-xs text-zinc-500">
+                    Total Value: <NumericDisplay
+                        value={formatCurrency(portfolio.totalValue)}
+                        className="text-zinc-300"
+                        variant="bold"
+                        size="xs"
+                    />
                 </div>
             </div>
 
-            <div className="bg-zinc-900/50 rounded border border-zinc-800 overflow-hidden">
+            <div className="bg-zinc-900/50 rounded-xl border border-zinc-800 overflow-hidden">
                 <div className="grid grid-cols-12 gap-2 p-2 border-b border-zinc-800 text-[10px] text-zinc-500 uppercase tracking-wider font-bold">
                     <div className="col-span-6">Market</div>
                     <div className="col-span-2 text-right">Size</div>
@@ -90,7 +96,7 @@ export function WalletPortfolio({ walletAddress, className }: WalletPortfolioPro
                                 </div>
                                 <div className="flex items-center gap-2 mt-0.5">
                                     <span className={cn(
-                                        "text-[10px] px-1.5 py-0.5 rounded font-bold uppercase",
+                                        "text-[10px] px-1.5 py-0.5 rounded-md font-bold uppercase",
                                         pos.outcomeLabel === 'Yes' ? "bg-emerald-500/10 text-emerald-400" :
                                             pos.outcomeLabel === 'No' ? "bg-red-500/10 text-red-400" : "bg-zinc-800 text-zinc-400"
                                     )}>
@@ -101,24 +107,34 @@ export function WalletPortfolio({ walletAddress, className }: WalletPortfolioPro
                                     </span>
                                 </div>
                             </div>
-                            <div className="col-span-2 text-right font-mono text-zinc-400">
-                                {formatShortNumber(pos.size)}
+                            <div className="col-span-2 text-right">
+                                <NumericDisplay value={formatShortNumber(pos.size)} size="xs" />
                             </div>
-                            <div className="col-span-2 text-right font-mono text-zinc-300 font-bold">
-                                {formatShortNumber(pos.value)}
+                            <div className="col-span-2 text-right">
+                                <NumericDisplay
+                                    value={formatShortNumber(pos.value)}
+                                    variant="bold"
+                                    className="text-zinc-300"
+                                    size="xs"
+                                />
                             </div>
-                            <div className="col-span-2 text-right font-mono">
+                            <div className="col-span-2 text-right">
                                 <div className={cn(
-                                    "font-bold",
                                     pos.pnl > 0 ? "text-emerald-400" : pos.pnl < 0 ? "text-red-400" : "text-zinc-400"
                                 )}>
-                                    {pos.pnl > 0 ? '+' : ''}{formatShortNumber(pos.pnl)}
+                                    <NumericDisplay
+                                        value={`${pos.pnl > 0 ? '+' : ''}${formatShortNumber(pos.pnl)}`}
+                                        variant="bold"
+                                        size="xs"
+                                    />
                                 </div>
                                 <div className={cn(
-                                    "text-[10px]",
                                     pos.pnlPercent > 0 ? "text-emerald-500/70" : pos.pnlPercent < 0 ? "text-red-500/70" : "text-zinc-600"
                                 )}>
-                                    {pos.pnlPercent > 0 ? '+' : ''}{pos.pnlPercent.toFixed(1)}%
+                                    <NumericDisplay
+                                        value={`${pos.pnlPercent > 0 ? '+' : ''}${pos.pnlPercent.toFixed(1)}%`}
+                                        size="xs"
+                                    />
                                 </div>
                             </div>
                         </div>

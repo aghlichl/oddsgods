@@ -352,14 +352,6 @@ export type UserAlertSettingsNullableScalarRelationFilter = {
   isNot?: Prisma.UserAlertSettingsWhereInput | null
 }
 
-export type StringNullableListFilter<$PrismaModel = never> = {
-  equals?: string[] | Prisma.ListStringFieldRefInput<$PrismaModel> | null
-  has?: string | Prisma.StringFieldRefInput<$PrismaModel> | null
-  hasEvery?: string[] | Prisma.ListStringFieldRefInput<$PrismaModel>
-  hasSome?: string[] | Prisma.ListStringFieldRefInput<$PrismaModel>
-  isEmpty?: boolean
-}
-
 export type EnumAlertTypeNullableListFilter<$PrismaModel = never> = {
   equals?: $Enums.AlertType[] | Prisma.ListEnumAlertTypeFieldRefInput<$PrismaModel> | null
   has?: $Enums.AlertType | Prisma.EnumAlertTypeFieldRefInput<$PrismaModel> | null

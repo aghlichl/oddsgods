@@ -1,5 +1,12 @@
 @import "tailwindcss";
 
+@font-face {
+  font-family: 'Spotify Mix';
+  src: url('/fonts/Spotify Mix.ttf') format('truetype');
+  unicode-range: U+0000-002F, U+003A-10FFFF;
+  font-display: swap;
+}
+
 :root {
   --background: #050505;
   --foreground: #E0E0E0;
@@ -9,6 +16,14 @@
   --muted: #888888;
   --card: #000000;
   --border: #27272a;
+
+  /* Radius System */
+  --radius-xs: 4px;
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+  --radius-xl: 18px;
+  --radius-full: 9999px;
 }
 
 @theme inline {
@@ -21,8 +36,18 @@
   --color-card: var(--card);
   --color-border: var(--border);
 
-  --font-sans: var(--font-inter);
+  --font-sans: "Spotify Mix", var(--font-inter);
   --font-mono: var(--font-jetbrains-mono);
+
+  /* Radius Overrides */
+  --radius-none: 0px;
+  --radius-xs: var(--radius-xs);
+  --radius-sm: var(--radius-sm);
+  --radius-md: var(--radius-md);
+  --radius-lg: var(--radius-lg);
+  --radius-xl: var(--radius-xl);
+  --radius-full: var(--radius-full);
+
 
   --animate-marquee: marquee 20s linear infinite;
   --animate-jackpot: jackpot 0.8s cubic-bezier(0.36, 0.07, 0.19, 0.97);
@@ -55,18 +80,23 @@
   --animate-majestic-float: majestic-float 2.5s ease-in-out infinite;
 
   @keyframes majestic-float {
-    0%, 100% {
+
+    0%,
+    100% {
       transform: translateY(0px) scale(1);
       filter: drop-shadow(0 4px 12px rgba(0, 255, 148, 0.15));
     }
+
     25% {
       transform: translateY(-12px) scale(1.05);
       filter: drop-shadow(0 16px 24px rgba(0, 255, 148, 0.25));
     }
+
     50% {
       transform: translateY(-6px) scale(1.02);
       filter: drop-shadow(0 10px 18px rgba(0, 255, 148, 0.2));
     }
+
     75% {
       transform: translateY(-14px) scale(1.06);
       filter: drop-shadow(0 18px 28px rgba(0, 255, 148, 0.3));

@@ -4,6 +4,7 @@ import React from "react";
 import { usePreferencesStore } from "@/lib/store";
 import { usePrivy } from "@privy-io/react-auth";
 import { CONFIG } from "@/lib/config";
+import { NumericDisplay } from "@/components/ui/numeric-display";
 
 // Exponential scale mapping for more intuitive control
 const VALUE_LEVELS = [
@@ -106,14 +107,16 @@ export function UserPreferences() {
       {/* Anomaly Type Filters */}
       <div className="space-y-4">
         {/* STANDARD Card */}
-        <div className={`relative p-4 border-2 transition-all duration-200 cursor-pointer ${preferences.showStandard
+        <div className={`relative p-4 border-2 transition-all duration-200 cursor-pointer rounded-xl ${preferences.showStandard
           ? 'border-zinc-500 bg-zinc-900 shadow-[3px_3px_0px_0px_rgba(0,0,0,0.8)]'
           : 'border-zinc-700 bg-zinc-950 shadow-[2px_2px_0px_0px_rgba(0,0,0,0.4)] opacity-60'
           }`} onClick={() => setPreferences({ showStandard: !preferences.showStandard })}>
           <div className="flex items-center justify-between">
             <div>
-              <div className="font-mono font-bold text-zinc-400">STANDARD</div>
-              <div className="text-xs text-zinc-600 font-mono">$0 - $8,000</div>
+              <div className="font-bold text-zinc-400">STANDARD</div>
+              <div className="text-xs text-zinc-600">
+                <NumericDisplay value="$0 - $8,000" size="xs" />
+              </div>
             </div>
             <div className={`w-4 h-4 border-2 transition-all duration-200 ${preferences.showStandard
               ? 'border-zinc-400 bg-zinc-400'
@@ -123,14 +126,16 @@ export function UserPreferences() {
         </div>
 
         {/* WHALE Card */}
-        <div className={`relative p-4 border-2 transition-all duration-200 cursor-pointer ${preferences.showWhale
+        <div className={`relative p-4 border-2 transition-all duration-200 cursor-pointer rounded-xl ${preferences.showWhale
           ? 'border-blue-500 bg-blue-950/20 shadow-[3px_3px_0px_0px_rgba(59,130,246,0.8)]'
           : 'border-blue-700/50 bg-zinc-950 shadow-[2px_2px_0px_0px_rgba(0,0,0,0.4)] opacity-60'
           }`} onClick={() => setPreferences({ showWhale: !preferences.showWhale })}>
           <div className="flex items-center justify-between">
             <div>
-              <div className="font-mono font-bold text-blue-400">WHALE</div>
-              <div className="text-xs text-zinc-600 font-mono">$8,000 - $15,000</div>
+              <div className="font-bold text-blue-400">WHALE</div>
+              <div className="text-xs text-zinc-600">
+                <NumericDisplay value="$8,000 - $15,000" size="xs" />
+              </div>
             </div>
             <div className={`w-4 h-4 border-2 transition-all duration-200 ${preferences.showWhale
               ? 'border-blue-400 bg-blue-400'
@@ -140,14 +145,16 @@ export function UserPreferences() {
         </div>
 
         {/* MEGA_WHALE Card */}
-        <div className={`relative p-4 border-2 transition-all duration-200 cursor-pointer ${preferences.showMegaWhale
+        <div className={`relative p-4 border-2 transition-all duration-200 cursor-pointer rounded-xl ${preferences.showMegaWhale
           ? 'border-purple-500 bg-purple-950/20 shadow-[3px_3px_0px_0px_rgba(147,51,234,0.8)]'
           : 'border-purple-700/50 bg-zinc-950 shadow-[2px_2px_0px_0px_rgba(0,0,0,0.4)] opacity-60'
           }`} onClick={() => setPreferences({ showMegaWhale: !preferences.showMegaWhale })}>
           <div className="flex items-center justify-between">
             <div>
-              <div className="font-mono font-bold text-purple-400">MEGA WHALE</div>
-              <div className="text-xs text-zinc-600 font-mono">$15,000 - $50,000</div>
+              <div className="font-bold text-purple-400">MEGA WHALE</div>
+              <div className="text-xs text-zinc-600">
+                <NumericDisplay value="$15,000 - $50,000" size="xs" />
+              </div>
             </div>
             <div className={`w-4 h-4 border-2 transition-all duration-200 ${preferences.showMegaWhale
               ? 'border-purple-400 bg-purple-400'
@@ -157,14 +164,16 @@ export function UserPreferences() {
         </div>
 
         {/* SUPER_WHALE Card */}
-        <div className={`relative p-4 border-2 transition-all duration-200 cursor-pointer ${preferences.showSuperWhale
+        <div className={`relative p-4 border-2 transition-all duration-200 cursor-pointer rounded-xl ${preferences.showSuperWhale
           ? 'border-red-500 bg-red-950/20 shadow-[3px_3px_0px_0px_rgba(239,68,68,0.8)]'
           : 'border-red-700/50 bg-zinc-950 shadow-[2px_2px_0px_0px_rgba(0,0,0,0.4)] opacity-60'
           }`} onClick={() => setPreferences({ showSuperWhale: !preferences.showSuperWhale })}>
           <div className="flex items-center justify-between">
             <div>
-              <div className="font-mono font-bold text-red-400">SUPER WHALE</div>
-              <div className="text-xs text-zinc-600 font-mono">$50,000 - $100,000</div>
+              <div className="font-bold text-red-400">SUPER WHALE</div>
+              <div className="text-xs text-zinc-600">
+                <NumericDisplay value="$50,000 - $100,000" size="xs" />
+              </div>
             </div>
             <div className={`w-4 h-4 border-2 transition-all duration-200 ${preferences.showSuperWhale
               ? 'border-red-400 bg-red-400'
@@ -174,14 +183,16 @@ export function UserPreferences() {
         </div>
 
         {/* GOD_WHALE Card */}
-        <div className={`relative p-4 border-2 transition-all duration-200 cursor-pointer ${preferences.showGodWhale
+        <div className={`relative p-4 border-2 transition-all duration-200 cursor-pointer rounded-xl ${preferences.showGodWhale
           ? 'border-yellow-500 bg-yellow-950/20 shadow-[3px_3px_0px_0px_rgba(251,191,36,0.8)]'
           : 'border-yellow-700/50 bg-zinc-950 shadow-[2px_2px_0px_0px_rgba(0,0,0,0.4)] opacity-60'
           }`} onClick={() => setPreferences({ showGodWhale: !preferences.showGodWhale })}>
           <div className="flex items-center justify-between">
             <div>
-              <div className="font-mono font-bold text-yellow-400">GOD WHALE</div>
-              <div className="text-xs text-zinc-600 font-mono">$100,000+</div>
+              <div className="font-bold text-yellow-400">GOD WHALE</div>
+              <div className="text-xs text-zinc-600">
+                <NumericDisplay value="$100,000+" size="xs" />
+              </div>
             </div>
             <div className={`w-4 h-4 border-2 transition-all duration-200 ${preferences.showGodWhale
               ? 'border-yellow-400 bg-yellow-400'
@@ -193,19 +204,19 @@ export function UserPreferences() {
 
       {/* Content Filter */}
       <div className="space-y-4">
-        <h2 className="text-lg font-mono font-semibold text-zinc-400">
+        <h2 className="text-lg font-semibold text-zinc-400">
           CONTENT FILTERS
         </h2>
 
         {/* SPORTS Card */}
-        <div className={`relative p-4 border-2 transition-all duration-200 cursor-pointer ${preferences.showSports
+        <div className={`relative p-4 border-2 transition-all duration-200 cursor-pointer rounded-xl ${preferences.showSports
           ? 'border-green-500 bg-green-950/20 shadow-[3px_3px_0px_0px_rgba(34,197,94,0.8)]'
           : 'border-green-700/50 bg-zinc-950 shadow-[2px_2px_0px_0px_rgba(0,0,0,0.4)] opacity-60'
           }`} onClick={() => setPreferences({ showSports: !preferences.showSports })}>
           <div className="flex items-center justify-between">
             <div>
-              <div className="font-mono font-bold text-green-400">SPORTS</div>
-              <div className="text-xs text-zinc-600 font-mono">Events with "vs." in title</div>
+              <div className="font-bold text-green-400">SPORTS</div>
+              <div className="text-xs text-zinc-600">Events with "vs." in title</div>
             </div>
             <div className={`w-4 h-4 border-2 transition-all duration-200 ${preferences.showSports
               ? 'border-green-400 bg-green-400'
@@ -217,16 +228,20 @@ export function UserPreferences() {
 
       {/* Enhanced Minimum Value Filter */}
       <div className="space-y-4">
-        <h2 className="text-lg font-mono font-semibold text-zinc-400">
+        <h2 className="text-lg font-semibold text-zinc-400">
           MINIMUM VALUE FILTER
         </h2>
 
         {/* Current Value Display */}
         <div className="text-center">
-          <div className="text-3xl font-mono font-bold text-primary mb-1">
-            {formatValue(preferences.minValueThreshold)}
+          <div className="text-3xl font-bold text-primary mb-1">
+            <NumericDisplay
+              value={formatValue(preferences.minValueThreshold)}
+              size="3xl"
+              variant="bold"
+            />
           </div>
-          <div className="text-xs text-zinc-600 font-mono">
+          <div className="text-xs text-zinc-600">
             Minimum trade value to display
           </div>
         </div>
@@ -310,10 +325,10 @@ export function UserPreferences() {
           </div>
 
           {/* Level markers */}
-          <div className="flex justify-between text-xs text-zinc-600 font-mono">
+          <div className="flex justify-between text-xs text-zinc-600">
             {VALUE_LEVELS.filter((_, index) => index % 2 === 0).map((level) => (
               <span key={level.value} className="text-center">
-                {level.label}
+                <NumericDisplay value={level.label} size="xs" />
               </span>
             ))}
           </div>
@@ -328,7 +343,7 @@ export function UserPreferences() {
                   preferences.minValueThreshold >= CONFIG.THRESHOLDS.WHALE ? 'bg-blue-400' :
                     'bg-zinc-400'
               }`} />
-            <span className="text-xs font-mono text-zinc-400">
+            <span className="text-xs text-zinc-400">
               {preferences.minValueThreshold >= CONFIG.THRESHOLDS.GOD_WHALE ? 'GOD WHALE +' :
                 preferences.minValueThreshold >= CONFIG.THRESHOLDS.SUPER_WHALE ? 'SUPER WHALE +' :
                   preferences.minValueThreshold >= CONFIG.THRESHOLDS.MEGA_WHALE ? 'MEGA WHALE +' :
@@ -340,7 +355,7 @@ export function UserPreferences() {
       </div>
       {/* Alert Settings Section */}
       <div className="space-y-4 pt-6 border-t border-zinc-800">
-        <h2 className="text-lg font-mono font-semibold text-zinc-400">
+        <h2 className="text-lg font-semibold text-zinc-400">
           ALERTS & NOTIFICATIONS
         </h2>
 
@@ -349,7 +364,7 @@ export function UserPreferences() {
 
       {/* Save Indicator */}
       <div className="text-center">
-        <p className="text-xs text-zinc-700 font-mono">
+        <p className="text-xs text-zinc-700">
           Preferences saved automatically
         </p>
       </div>
@@ -424,8 +439,8 @@ function AlertSettings() {
 
   if (!user) {
     return (
-      <div className="p-4 border border-zinc-800 bg-zinc-900/50 rounded-lg text-center">
-        <p className="text-zinc-500 font-mono text-sm">Sign in to configure alerts</p>
+      <div className="p-4 border border-zinc-800 bg-zinc-900/50 rounded-xl text-center">
+        <p className="text-zinc-500 text-sm">Sign in to configure alerts</p>
       </div>
     );
   }
@@ -434,22 +449,22 @@ function AlertSettings() {
     <div className="space-y-6">
       {/* Discord Webhook Input */}
       <div className="space-y-2">
-        <label className="text-xs font-mono text-zinc-500 uppercase">Discord Webhook URL</label>
+        <label className="text-xs text-zinc-500 uppercase">Discord Webhook URL</label>
         <input
           type="text"
           value={discordWebhook}
           onChange={(e) => setDiscordWebhook(e.target.value)}
           placeholder="https://discord.com/api/webhooks/..."
-          className="w-full bg-zinc-950 border border-zinc-800 rounded p-2 text-sm font-mono text-zinc-300 focus:border-primary focus:outline-none"
+          className="w-full bg-zinc-950 border border-zinc-800 rounded-lg p-2 text-sm text-zinc-300 focus:border-primary focus:outline-none"
         />
       </div>
 
       {/* Alert Types */}
       <div className="space-y-3">
-        <label className="text-xs font-mono text-zinc-500 uppercase">Alert Types</label>
+        <label className="text-xs text-zinc-500 uppercase">Alert Types</label>
 
         <div
-          className={`flex items-center justify-between p-3 border rounded cursor-pointer transition-colors ${alertTypes.includes("WHALE_MOVEMENT")
+          className={`flex items-center justify-between p-3 border rounded-xl cursor-pointer transition-colors ${alertTypes.includes("WHALE_MOVEMENT")
             ? "border-blue-500/50 bg-blue-500/10"
             : "border-zinc-800 bg-zinc-950"
             }`}
@@ -457,14 +472,14 @@ function AlertSettings() {
         >
           <div className="flex items-center gap-2">
             <span className="text-lg">🐋</span>
-            <span className="font-mono text-sm text-zinc-300">Whale Movements</span>
+            <span className="text-sm text-zinc-300">Whale Movements</span>
           </div>
           <div className={`w-3 h-3 rounded-full border ${alertTypes.includes("WHALE_MOVEMENT") ? "bg-blue-500 border-blue-500" : "border-zinc-600"
             }`} />
         </div>
 
         <div
-          className={`flex items-center justify-between p-3 border rounded cursor-pointer transition-colors ${alertTypes.includes("SMART_MONEY_ENTRY")
+          className={`flex items-center justify-between p-3 border rounded-xl cursor-pointer transition-colors ${alertTypes.includes("SMART_MONEY_ENTRY")
             ? "border-green-500/50 bg-green-500/10"
             : "border-zinc-800 bg-zinc-950"
             }`}
@@ -472,7 +487,7 @@ function AlertSettings() {
         >
           <div className="flex items-center gap-2">
             <span className="text-lg">🧠</span>
-            <span className="font-mono text-sm text-zinc-300">Smart Money Entries</span>
+            <span className="text-sm text-zinc-300">Smart Money Entries</span>
           </div>
           <div className={`w-3 h-3 rounded-full border ${alertTypes.includes("SMART_MONEY_ENTRY") ? "bg-green-500 border-green-500" : "border-zinc-600"
             }`} />
@@ -483,7 +498,7 @@ function AlertSettings() {
       <button
         onClick={saveSettings}
         disabled={status === "saving"}
-        className={`w-full py-2 font-mono text-sm font-bold rounded transition-all ${status === "saved"
+        className={`w-full py-2 text-sm font-bold rounded-lg transition-all ${status === "saved"
           ? "bg-green-500 text-black"
           : status === "error"
             ? "bg-red-500 text-white"

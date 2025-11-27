@@ -62,11 +62,14 @@ async function main() {
                     content: null,
                     embeds: [{
                         title: `🐋 TEST WHALE ALERT`,
-                        description: `**0xWhale...** BUY $1000000 of **Test Outcome** in *Test Market* @ 5000¢`,
+                        description: `**0xWhale...** BUY $1000000 of **Lakers** in *Los Angeles Lakers vs Golden State Warriors* @ 5000¢`,
                         color: 0x00ff00,
                         timestamp: new Date().toISOString(),
+                        thumbnail: {
+                            url: `${process.env.FRONTEND_URL || 'https://polymarketwhales.vercel.app'}/logos/NBA/LAL.png`
+                        },
                         fields: [
-                            { name: "Market", value: "Test Market", inline: true },
+                            { name: "Market", value: "Los Angeles Lakers vs Golden State Warriors", inline: true },
                             { name: "Value", value: "$1000000", inline: true },
                             { name: "Price", value: "5000¢", inline: true }
                         ]

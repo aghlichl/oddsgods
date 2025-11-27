@@ -85,6 +85,8 @@ export const WalletProfileScalarFieldEnum = {
   txCount: 'txCount',
   maxTradeValue: 'maxTradeValue',
   activityLevel: 'activityLevel',
+  riskScore: 'riskScore',
+  tradingStyle: 'tradingStyle',
   lastUpdated: 'lastUpdated'
 } as const
 
@@ -116,6 +118,9 @@ export const TradeScalarFieldEnum = {
   isSmartMoney: 'isSmartMoney',
   isFresh: 'isFresh',
   isSweeper: 'isSweeper',
+  zScore: 'zScore',
+  marketVolatility: 'marketVolatility',
+  behavioralTags: 'behavioralTags',
   conditionId: 'conditionId',
   outcome: 'outcome',
   question: 'question',
