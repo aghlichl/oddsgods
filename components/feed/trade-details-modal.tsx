@@ -119,7 +119,7 @@ export function TradeDetailsModal({ isOpen, onClose, anomaly }: TradeDetailsModa
             onClose={onClose}
             className="max-w-lg md:max-w-4xl lg:max-w-5xl xl:max-w-6xl"
         >
-            <div className="flex flex-col max-h-[75vh] md:max-h-[80vh] lg:max-h-[85vh] overflow-y-auto custom-scrollbar">
+            <div className="flex flex-col max-h-[75vh] md:max-h-[80vh] lg:max-h-[85vh] overflow-y-auto scrollbar-hide">
                 {/* Header - HERO STYLE */}
                 <div className={cn("relative border-b border-zinc-800", bgGlow)}>
                     {/* Background Image Overlay */}

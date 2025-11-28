@@ -583,3 +583,66 @@ body {
   display: none;
   /* Safari and Chrome */
 }
+
+/* Global scrollbar hiding - Phase 1 */
+html, body {
+  /* Hide scrollbars on the root elements */
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+html::-webkit-scrollbar,
+body::-webkit-scrollbar {
+  display: none;
+}
+
+/* Universal scrollbar hiding for all elements */
+* {
+  /* Hide scrollbars on all elements by default */
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+*::-webkit-scrollbar {
+  display: none;
+}
+
+/* Alternative class for more specific control */
+.scrollbar-none {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
+}
+
+/* Browser-specific overrides - Phase 4 */
+/* Firefox specific */
+@-moz-document url-prefix() {
+  * {
+    scrollbar-width: none !important;
+  }
+}
+
+/* Edge/IE specific */
+@media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) {
+  * {
+    -ms-overflow-style: none !important;
+  }
+
+  *::-webkit-scrollbar {
+    display: none !important;
+  }
+}
+
+/* Safari/WebKit specific additional rules */
+@media screen and (-webkit-min-device-pixel-ratio: 0) {
+  *::-webkit-scrollbar {
+    display: none !important;
+  }
+
+  * {
+    -webkit-overflow-scrolling: touch;
+  }
+}
