@@ -18,37 +18,37 @@ export { Prisma }
 export * as $Enums from './enums'
 export * from './enums';
 /**
- * Model WalletProfile
+ * Model Alert
  * 
  */
-export type WalletProfile = Prisma.WalletProfileModel
-/**
- * Model WalletPortfolioSnapshot
- * 
- */
-export type WalletPortfolioSnapshot = Prisma.WalletPortfolioSnapshotModel
+export type Alert = Prisma.AlertModel
 /**
  * Model Trade
  * 
  */
 export type Trade = Prisma.TradeModel
 /**
+ * Model UserAlertSettings
+ * 
+ */
+export type UserAlertSettings = Prisma.UserAlertSettingsModel
+/**
  * Model User
  * 
  */
 export type User = Prisma.UserModel
 /**
+ * Model WalletPortfolioSnapshot
+ * 
+ */
+export type WalletPortfolioSnapshot = Prisma.WalletPortfolioSnapshotModel
+/**
+ * Model WalletProfile
+ * 
+ */
+export type WalletProfile = Prisma.WalletProfileModel
+/**
  * Model Watchlist
  * 
  */
 export type Watchlist = Prisma.WatchlistModel
-/**
- * Model Alert
- * 
- */
-export type Alert = Prisma.AlertModel
-/**
- * Model UserAlertSettings
- * 
- */
-export type UserAlertSettings = Prisma.UserAlertSettingsModel

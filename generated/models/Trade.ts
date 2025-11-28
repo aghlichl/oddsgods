@@ -30,8 +30,6 @@ export type TradeAvgAggregateOutputType = {
   size: number | null
   price: number | null
   tradeValue: number | null
-  zScore: number | null
-  marketVolatility: number | null
   blockNumber: number | null
   logIndex: number | null
 }
@@ -40,8 +38,6 @@ export type TradeSumAggregateOutputType = {
   size: number | null
   price: number | null
   tradeValue: number | null
-  zScore: number | null
-  marketVolatility: number | null
   blockNumber: bigint | null
   logIndex: number | null
 }
@@ -59,8 +55,6 @@ export type TradeMinAggregateOutputType = {
   isSmartMoney: boolean | null
   isFresh: boolean | null
   isSweeper: boolean | null
-  zScore: number | null
-  marketVolatility: number | null
   conditionId: string | null
   outcome: string | null
   question: string | null
@@ -84,8 +78,6 @@ export type TradeMaxAggregateOutputType = {
   isSmartMoney: boolean | null
   isFresh: boolean | null
   isSweeper: boolean | null
-  zScore: number | null
-  marketVolatility: number | null
   conditionId: string | null
   outcome: string | null
   question: string | null
@@ -109,9 +101,6 @@ export type TradeCountAggregateOutputType = {
   isSmartMoney: number
   isFresh: number
   isSweeper: number
-  zScore: number
-  marketVolatility: number
-  behavioralTags: number
   conditionId: number
   outcome: number
   question: number
@@ -128,8 +117,6 @@ export type TradeAvgAggregateInputType = {
   size?: true
   price?: true
   tradeValue?: true
-  zScore?: true
-  marketVolatility?: true
   blockNumber?: true
   logIndex?: true
 }
@@ -138,8 +125,6 @@ export type TradeSumAggregateInputType = {
   size?: true
   price?: true
   tradeValue?: true
-  zScore?: true
-  marketVolatility?: true
   blockNumber?: true
   logIndex?: true
 }
@@ -157,8 +142,6 @@ export type TradeMinAggregateInputType = {
   isSmartMoney?: true
   isFresh?: true
   isSweeper?: true
-  zScore?: true
-  marketVolatility?: true
   conditionId?: true
   outcome?: true
   question?: true
@@ -182,8 +165,6 @@ export type TradeMaxAggregateInputType = {
   isSmartMoney?: true
   isFresh?: true
   isSweeper?: true
-  zScore?: true
-  marketVolatility?: true
   conditionId?: true
   outcome?: true
   question?: true
@@ -207,9 +188,6 @@ export type TradeCountAggregateInputType = {
   isSmartMoney?: true
   isFresh?: true
   isSweeper?: true
-  zScore?: true
-  marketVolatility?: true
-  behavioralTags?: true
   conditionId?: true
   outcome?: true
   question?: true
@@ -320,9 +298,6 @@ export type TradeGroupByOutputType = {
   isSmartMoney: boolean
   isFresh: boolean
   isSweeper: boolean
-  zScore: number
-  marketVolatility: number
-  behavioralTags: string[]
   conditionId: string | null
   outcome: string | null
   question: string | null
@@ -369,9 +344,6 @@ export type TradeWhereInput = {
   isSmartMoney?: Prisma.BoolFilter<"Trade"> | boolean
   isFresh?: Prisma.BoolFilter<"Trade"> | boolean
   isSweeper?: Prisma.BoolFilter<"Trade"> | boolean
-  zScore?: Prisma.FloatFilter<"Trade"> | number
-  marketVolatility?: Prisma.FloatFilter<"Trade"> | number
-  behavioralTags?: Prisma.StringNullableListFilter<"Trade">
   conditionId?: Prisma.StringNullableFilter<"Trade"> | string | null
   outcome?: Prisma.StringNullableFilter<"Trade"> | string | null
   question?: Prisma.StringNullableFilter<"Trade"> | string | null
@@ -396,9 +368,6 @@ export type TradeOrderByWithRelationInput = {
   isSmartMoney?: Prisma.SortOrder
   isFresh?: Prisma.SortOrder
   isSweeper?: Prisma.SortOrder
-  zScore?: Prisma.SortOrder
-  marketVolatility?: Prisma.SortOrder
-  behavioralTags?: Prisma.SortOrder
   conditionId?: Prisma.SortOrderInput | Prisma.SortOrder
   outcome?: Prisma.SortOrderInput | Prisma.SortOrder
   question?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -426,9 +395,6 @@ export type TradeWhereUniqueInput = Prisma.AtLeast<{
   isSmartMoney?: Prisma.BoolFilter<"Trade"> | boolean
   isFresh?: Prisma.BoolFilter<"Trade"> | boolean
   isSweeper?: Prisma.BoolFilter<"Trade"> | boolean
-  zScore?: Prisma.FloatFilter<"Trade"> | number
-  marketVolatility?: Prisma.FloatFilter<"Trade"> | number
-  behavioralTags?: Prisma.StringNullableListFilter<"Trade">
   conditionId?: Prisma.StringNullableFilter<"Trade"> | string | null
   outcome?: Prisma.StringNullableFilter<"Trade"> | string | null
   question?: Prisma.StringNullableFilter<"Trade"> | string | null
@@ -453,9 +419,6 @@ export type TradeOrderByWithAggregationInput = {
   isSmartMoney?: Prisma.SortOrder
   isFresh?: Prisma.SortOrder
   isSweeper?: Prisma.SortOrder
-  zScore?: Prisma.SortOrder
-  marketVolatility?: Prisma.SortOrder
-  behavioralTags?: Prisma.SortOrder
   conditionId?: Prisma.SortOrderInput | Prisma.SortOrder
   outcome?: Prisma.SortOrderInput | Prisma.SortOrder
   question?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -487,9 +450,6 @@ export type TradeScalarWhereWithAggregatesInput = {
   isSmartMoney?: Prisma.BoolWithAggregatesFilter<"Trade"> | boolean
   isFresh?: Prisma.BoolWithAggregatesFilter<"Trade"> | boolean
   isSweeper?: Prisma.BoolWithAggregatesFilter<"Trade"> | boolean
-  zScore?: Prisma.FloatWithAggregatesFilter<"Trade"> | number
-  marketVolatility?: Prisma.FloatWithAggregatesFilter<"Trade"> | number
-  behavioralTags?: Prisma.StringNullableListFilter<"Trade">
   conditionId?: Prisma.StringNullableWithAggregatesFilter<"Trade"> | string | null
   outcome?: Prisma.StringNullableWithAggregatesFilter<"Trade"> | string | null
   question?: Prisma.StringNullableWithAggregatesFilter<"Trade"> | string | null
@@ -512,9 +472,6 @@ export type TradeCreateInput = {
   isSmartMoney?: boolean
   isFresh?: boolean
   isSweeper?: boolean
-  zScore?: number
-  marketVolatility?: number
-  behavioralTags?: Prisma.TradeCreatebehavioralTagsInput | string[]
   conditionId?: string | null
   outcome?: string | null
   question?: string | null
@@ -539,9 +496,6 @@ export type TradeUncheckedCreateInput = {
   isSmartMoney?: boolean
   isFresh?: boolean
   isSweeper?: boolean
-  zScore?: number
-  marketVolatility?: number
-  behavioralTags?: Prisma.TradeCreatebehavioralTagsInput | string[]
   conditionId?: string | null
   outcome?: string | null
   question?: string | null
@@ -564,9 +518,6 @@ export type TradeUpdateInput = {
   isSmartMoney?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isFresh?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isSweeper?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  zScore?: Prisma.FloatFieldUpdateOperationsInput | number
-  marketVolatility?: Prisma.FloatFieldUpdateOperationsInput | number
-  behavioralTags?: Prisma.TradeUpdatebehavioralTagsInput | string[]
   conditionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   outcome?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   question?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -591,9 +542,6 @@ export type TradeUncheckedUpdateInput = {
   isSmartMoney?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isFresh?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isSweeper?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  zScore?: Prisma.FloatFieldUpdateOperationsInput | number
-  marketVolatility?: Prisma.FloatFieldUpdateOperationsInput | number
-  behavioralTags?: Prisma.TradeUpdatebehavioralTagsInput | string[]
   conditionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   outcome?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   question?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -617,9 +565,6 @@ export type TradeCreateManyInput = {
   isSmartMoney?: boolean
   isFresh?: boolean
   isSweeper?: boolean
-  zScore?: number
-  marketVolatility?: number
-  behavioralTags?: Prisma.TradeCreatebehavioralTagsInput | string[]
   conditionId?: string | null
   outcome?: string | null
   question?: string | null
@@ -642,9 +587,6 @@ export type TradeUpdateManyMutationInput = {
   isSmartMoney?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isFresh?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isSweeper?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  zScore?: Prisma.FloatFieldUpdateOperationsInput | number
-  marketVolatility?: Prisma.FloatFieldUpdateOperationsInput | number
-  behavioralTags?: Prisma.TradeUpdatebehavioralTagsInput | string[]
   conditionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   outcome?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   question?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -668,9 +610,6 @@ export type TradeUncheckedUpdateManyInput = {
   isSmartMoney?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isFresh?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isSweeper?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  zScore?: Prisma.FloatFieldUpdateOperationsInput | number
-  marketVolatility?: Prisma.FloatFieldUpdateOperationsInput | number
-  behavioralTags?: Prisma.TradeUpdatebehavioralTagsInput | string[]
   conditionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   outcome?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   question?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -679,24 +618,6 @@ export type TradeUncheckedUpdateManyInput = {
   blockNumber?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
   logIndex?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   enrichmentStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-}
-
-export type TradeListRelationFilter = {
-  every?: Prisma.TradeWhereInput
-  some?: Prisma.TradeWhereInput
-  none?: Prisma.TradeWhereInput
-}
-
-export type TradeOrderByRelationAggregateInput = {
-  _count?: Prisma.SortOrder
-}
-
-export type StringNullableListFilter<$PrismaModel = never> = {
-  equals?: string[] | Prisma.ListStringFieldRefInput<$PrismaModel> | null
-  has?: string | Prisma.StringFieldRefInput<$PrismaModel> | null
-  hasEvery?: string[] | Prisma.ListStringFieldRefInput<$PrismaModel>
-  hasSome?: string[] | Prisma.ListStringFieldRefInput<$PrismaModel>
-  isEmpty?: boolean
 }
 
 export type TradeCountOrderByAggregateInput = {
@@ -712,9 +633,6 @@ export type TradeCountOrderByAggregateInput = {
   isSmartMoney?: Prisma.SortOrder
   isFresh?: Prisma.SortOrder
   isSweeper?: Prisma.SortOrder
-  zScore?: Prisma.SortOrder
-  marketVolatility?: Prisma.SortOrder
-  behavioralTags?: Prisma.SortOrder
   conditionId?: Prisma.SortOrder
   outcome?: Prisma.SortOrder
   question?: Prisma.SortOrder
@@ -729,8 +647,6 @@ export type TradeAvgOrderByAggregateInput = {
   size?: Prisma.SortOrder
   price?: Prisma.SortOrder
   tradeValue?: Prisma.SortOrder
-  zScore?: Prisma.SortOrder
-  marketVolatility?: Prisma.SortOrder
   blockNumber?: Prisma.SortOrder
   logIndex?: Prisma.SortOrder
 }
@@ -748,8 +664,6 @@ export type TradeMaxOrderByAggregateInput = {
   isSmartMoney?: Prisma.SortOrder
   isFresh?: Prisma.SortOrder
   isSweeper?: Prisma.SortOrder
-  zScore?: Prisma.SortOrder
-  marketVolatility?: Prisma.SortOrder
   conditionId?: Prisma.SortOrder
   outcome?: Prisma.SortOrder
   question?: Prisma.SortOrder
@@ -773,8 +687,6 @@ export type TradeMinOrderByAggregateInput = {
   isSmartMoney?: Prisma.SortOrder
   isFresh?: Prisma.SortOrder
   isSweeper?: Prisma.SortOrder
-  zScore?: Prisma.SortOrder
-  marketVolatility?: Prisma.SortOrder
   conditionId?: Prisma.SortOrder
   outcome?: Prisma.SortOrder
   question?: Prisma.SortOrder
@@ -789,10 +701,50 @@ export type TradeSumOrderByAggregateInput = {
   size?: Prisma.SortOrder
   price?: Prisma.SortOrder
   tradeValue?: Prisma.SortOrder
-  zScore?: Prisma.SortOrder
-  marketVolatility?: Prisma.SortOrder
   blockNumber?: Prisma.SortOrder
   logIndex?: Prisma.SortOrder
+}
+
+export type TradeListRelationFilter = {
+  every?: Prisma.TradeWhereInput
+  some?: Prisma.TradeWhereInput
+  none?: Prisma.TradeWhereInput
+}
+
+export type TradeOrderByRelationAggregateInput = {
+  _count?: Prisma.SortOrder
+}
+
+export type FloatFieldUpdateOperationsInput = {
+  set?: number
+  increment?: number
+  decrement?: number
+  multiply?: number
+  divide?: number
+}
+
+export type BoolFieldUpdateOperationsInput = {
+  set?: boolean
+}
+
+export type NullableStringFieldUpdateOperationsInput = {
+  set?: string | null
+}
+
+export type NullableBigIntFieldUpdateOperationsInput = {
+  set?: bigint | number | null
+  increment?: bigint | number
+  decrement?: bigint | number
+  multiply?: bigint | number
+  divide?: bigint | number
+}
+
+export type NullableIntFieldUpdateOperationsInput = {
+  set?: number | null
+  increment?: number
+  decrement?: number
+  multiply?: number
+  divide?: number
 }
 
 export type TradeCreateNestedManyWithoutWalletProfileInput = {
@@ -837,31 +789,6 @@ export type TradeUncheckedUpdateManyWithoutWalletProfileNestedInput = {
   deleteMany?: Prisma.TradeScalarWhereInput | Prisma.TradeScalarWhereInput[]
 }
 
-export type TradeCreatebehavioralTagsInput = {
-  set: string[]
-}
-
-export type TradeUpdatebehavioralTagsInput = {
-  set?: string[]
-  push?: string | string[]
-}
-
-export type NullableBigIntFieldUpdateOperationsInput = {
-  set?: bigint | number | null
-  increment?: bigint | number
-  decrement?: bigint | number
-  multiply?: bigint | number
-  divide?: bigint | number
-}
-
-export type NullableIntFieldUpdateOperationsInput = {
-  set?: number | null
-  increment?: number
-  decrement?: number
-  multiply?: number
-  divide?: number
-}
-
 export type TradeCreateWithoutWalletProfileInput = {
   id?: string
   assetId: string
@@ -874,9 +801,6 @@ export type TradeCreateWithoutWalletProfileInput = {
   isSmartMoney?: boolean
   isFresh?: boolean
   isSweeper?: boolean
-  zScore?: number
-  marketVolatility?: number
-  behavioralTags?: Prisma.TradeCreatebehavioralTagsInput | string[]
   conditionId?: string | null
   outcome?: string | null
   question?: string | null
@@ -899,9 +823,6 @@ export type TradeUncheckedCreateWithoutWalletProfileInput = {
   isSmartMoney?: boolean
   isFresh?: boolean
   isSweeper?: boolean
-  zScore?: number
-  marketVolatility?: number
-  behavioralTags?: Prisma.TradeCreatebehavioralTagsInput | string[]
   conditionId?: string | null
   outcome?: string | null
   question?: string | null
@@ -954,9 +875,6 @@ export type TradeScalarWhereInput = {
   isSmartMoney?: Prisma.BoolFilter<"Trade"> | boolean
   isFresh?: Prisma.BoolFilter<"Trade"> | boolean
   isSweeper?: Prisma.BoolFilter<"Trade"> | boolean
-  zScore?: Prisma.FloatFilter<"Trade"> | number
-  marketVolatility?: Prisma.FloatFilter<"Trade"> | number
-  behavioralTags?: Prisma.StringNullableListFilter<"Trade">
   conditionId?: Prisma.StringNullableFilter<"Trade"> | string | null
   outcome?: Prisma.StringNullableFilter<"Trade"> | string | null
   question?: Prisma.StringNullableFilter<"Trade"> | string | null
@@ -979,9 +897,6 @@ export type TradeCreateManyWalletProfileInput = {
   isSmartMoney?: boolean
   isFresh?: boolean
   isSweeper?: boolean
-  zScore?: number
-  marketVolatility?: number
-  behavioralTags?: Prisma.TradeCreatebehavioralTagsInput | string[]
   conditionId?: string | null
   outcome?: string | null
   question?: string | null
@@ -1004,9 +919,6 @@ export type TradeUpdateWithoutWalletProfileInput = {
   isSmartMoney?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isFresh?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isSweeper?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  zScore?: Prisma.FloatFieldUpdateOperationsInput | number
-  marketVolatility?: Prisma.FloatFieldUpdateOperationsInput | number
-  behavioralTags?: Prisma.TradeUpdatebehavioralTagsInput | string[]
   conditionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   outcome?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   question?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1029,9 +941,6 @@ export type TradeUncheckedUpdateWithoutWalletProfileInput = {
   isSmartMoney?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isFresh?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isSweeper?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  zScore?: Prisma.FloatFieldUpdateOperationsInput | number
-  marketVolatility?: Prisma.FloatFieldUpdateOperationsInput | number
-  behavioralTags?: Prisma.TradeUpdatebehavioralTagsInput | string[]
   conditionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   outcome?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   question?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1054,9 +963,6 @@ export type TradeUncheckedUpdateManyWithoutWalletProfileInput = {
   isSmartMoney?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isFresh?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isSweeper?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  zScore?: Prisma.FloatFieldUpdateOperationsInput | number
-  marketVolatility?: Prisma.FloatFieldUpdateOperationsInput | number
-  behavioralTags?: Prisma.TradeUpdatebehavioralTagsInput | string[]
   conditionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   outcome?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   question?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1082,9 +988,6 @@ export type TradeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   isSmartMoney?: boolean
   isFresh?: boolean
   isSweeper?: boolean
-  zScore?: boolean
-  marketVolatility?: boolean
-  behavioralTags?: boolean
   conditionId?: boolean
   outcome?: boolean
   question?: boolean
@@ -1109,9 +1012,6 @@ export type TradeSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   isSmartMoney?: boolean
   isFresh?: boolean
   isSweeper?: boolean
-  zScore?: boolean
-  marketVolatility?: boolean
-  behavioralTags?: boolean
   conditionId?: boolean
   outcome?: boolean
   question?: boolean
@@ -1136,9 +1036,6 @@ export type TradeSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   isSmartMoney?: boolean
   isFresh?: boolean
   isSweeper?: boolean
-  zScore?: boolean
-  marketVolatility?: boolean
-  behavioralTags?: boolean
   conditionId?: boolean
   outcome?: boolean
   question?: boolean
@@ -1163,9 +1060,6 @@ export type TradeSelectScalar = {
   isSmartMoney?: boolean
   isFresh?: boolean
   isSweeper?: boolean
-  zScore?: boolean
-  marketVolatility?: boolean
-  behavioralTags?: boolean
   conditionId?: boolean
   outcome?: boolean
   question?: boolean
@@ -1176,7 +1070,7 @@ export type TradeSelectScalar = {
   enrichmentStatus?: boolean
 }
 
-export type TradeOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "assetId" | "side" | "size" | "price" | "tradeValue" | "timestamp" | "walletAddress" | "isWhale" | "isSmartMoney" | "isFresh" | "isSweeper" | "zScore" | "marketVolatility" | "behavioralTags" | "conditionId" | "outcome" | "question" | "image" | "transactionHash" | "blockNumber" | "logIndex" | "enrichmentStatus", ExtArgs["result"]["trade"]>
+export type TradeOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "assetId" | "side" | "size" | "price" | "tradeValue" | "timestamp" | "walletAddress" | "isWhale" | "isSmartMoney" | "isFresh" | "isSweeper" | "conditionId" | "outcome" | "question" | "image" | "transactionHash" | "blockNumber" | "logIndex" | "enrichmentStatus", ExtArgs["result"]["trade"]>
 export type TradeInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   walletProfile?: boolean | Prisma.Trade$walletProfileArgs<ExtArgs>
 }
@@ -1205,9 +1099,6 @@ export type $TradePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs 
     isSmartMoney: boolean
     isFresh: boolean
     isSweeper: boolean
-    zScore: number
-    marketVolatility: number
-    behavioralTags: string[]
     conditionId: string | null
     outcome: string | null
     question: string | null
@@ -1652,9 +1543,6 @@ export interface TradeFieldRefs {
   readonly isSmartMoney: Prisma.FieldRef<"Trade", 'Boolean'>
   readonly isFresh: Prisma.FieldRef<"Trade", 'Boolean'>
   readonly isSweeper: Prisma.FieldRef<"Trade", 'Boolean'>
-  readonly zScore: Prisma.FieldRef<"Trade", 'Float'>
-  readonly marketVolatility: Prisma.FieldRef<"Trade", 'Float'>
-  readonly behavioralTags: Prisma.FieldRef<"Trade", 'String[]'>
   readonly conditionId: Prisma.FieldRef<"Trade", 'String'>
   readonly outcome: Prisma.FieldRef<"Trade", 'String'>
   readonly question: Prisma.FieldRef<"Trade", 'String'>

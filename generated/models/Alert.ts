@@ -279,16 +279,6 @@ export type AlertUncheckedUpdateManyInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
-export type AlertListRelationFilter = {
-  every?: Prisma.AlertWhereInput
-  some?: Prisma.AlertWhereInput
-  none?: Prisma.AlertWhereInput
-}
-
-export type AlertOrderByRelationAggregateInput = {
-  _count?: Prisma.SortOrder
-}
-
 export type AlertCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   userId?: Prisma.SortOrder
@@ -309,6 +299,28 @@ export type AlertMinOrderByAggregateInput = {
   userId?: Prisma.SortOrder
   type?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+}
+
+export type AlertListRelationFilter = {
+  every?: Prisma.AlertWhereInput
+  some?: Prisma.AlertWhereInput
+  none?: Prisma.AlertWhereInput
+}
+
+export type AlertOrderByRelationAggregateInput = {
+  _count?: Prisma.SortOrder
+}
+
+export type StringFieldUpdateOperationsInput = {
+  set?: string
+}
+
+export type EnumAlertTypeFieldUpdateOperationsInput = {
+  set?: $Enums.AlertType
+}
+
+export type DateTimeFieldUpdateOperationsInput = {
+  set?: Date | string
 }
 
 export type AlertCreateNestedManyWithoutUserInput = {
@@ -351,10 +363,6 @@ export type AlertUncheckedUpdateManyWithoutUserNestedInput = {
   update?: Prisma.AlertUpdateWithWhereUniqueWithoutUserInput | Prisma.AlertUpdateWithWhereUniqueWithoutUserInput[]
   updateMany?: Prisma.AlertUpdateManyWithWhereWithoutUserInput | Prisma.AlertUpdateManyWithWhereWithoutUserInput[]
   deleteMany?: Prisma.AlertScalarWhereInput | Prisma.AlertScalarWhereInput[]
-}
-
-export type EnumAlertTypeFieldUpdateOperationsInput = {
-  set?: $Enums.AlertType
 }
 
 export type AlertCreateWithoutUserInput = {

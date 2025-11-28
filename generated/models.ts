@@ -8,11 +8,11 @@
  *
  * 🟢 You can import this file directly.
  */
-export type * from './models/WalletProfile'
-export type * from './models/WalletPortfolioSnapshot'
-export type * from './models/Trade'
-export type * from './models/User'
-export type * from './models/Watchlist'
 export type * from './models/Alert'
+export type * from './models/Trade'
 export type * from './models/UserAlertSettings'
+export type * from './models/User'
+export type * from './models/WalletPortfolioSnapshot'
+export type * from './models/WalletProfile'
+export type * from './models/Watchlist'
 export type * from './commonInputTypes'

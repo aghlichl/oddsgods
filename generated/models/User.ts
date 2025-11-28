@@ -340,6 +340,11 @@ export type UserUncheckedUpdateManyInput = {
   stripeCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
+export type UserScalarRelationFilter = {
+  is?: Prisma.UserWhereInput
+  isNot?: Prisma.UserWhereInput
+}
+
 export type UserCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   email?: Prisma.SortOrder
@@ -370,29 +375,6 @@ export type UserMinOrderByAggregateInput = {
   stripeCustomerId?: Prisma.SortOrder
 }
 
-export type UserScalarRelationFilter = {
-  is?: Prisma.UserWhereInput
-  isNot?: Prisma.UserWhereInput
-}
-
-export type EnumSubscriptionTierFieldUpdateOperationsInput = {
-  set?: $Enums.SubscriptionTier
-}
-
-export type UserCreateNestedOneWithoutWatchlistInput = {
-  create?: Prisma.XOR<Prisma.UserCreateWithoutWatchlistInput, Prisma.UserUncheckedCreateWithoutWatchlistInput>
-  connectOrCreate?: Prisma.UserCreateOrConnectWithoutWatchlistInput
-  connect?: Prisma.UserWhereUniqueInput
-}
-
-export type UserUpdateOneRequiredWithoutWatchlistNestedInput = {
-  create?: Prisma.XOR<Prisma.UserCreateWithoutWatchlistInput, Prisma.UserUncheckedCreateWithoutWatchlistInput>
-  connectOrCreate?: Prisma.UserCreateOrConnectWithoutWatchlistInput
-  upsert?: Prisma.UserUpsertWithoutWatchlistInput
-  connect?: Prisma.UserWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutWatchlistInput, Prisma.UserUpdateWithoutWatchlistInput>, Prisma.UserUncheckedUpdateWithoutWatchlistInput>
-}
-
 export type UserCreateNestedOneWithoutAlertsInput = {
   create?: Prisma.XOR<Prisma.UserCreateWithoutAlertsInput, Prisma.UserUncheckedCreateWithoutAlertsInput>
   connectOrCreate?: Prisma.UserCreateOrConnectWithoutAlertsInput
@@ -421,68 +403,22 @@ export type UserUpdateOneRequiredWithoutAlertSettingsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutAlertSettingsInput, Prisma.UserUpdateWithoutAlertSettingsInput>, Prisma.UserUncheckedUpdateWithoutAlertSettingsInput>
 }
 
-export type UserCreateWithoutWatchlistInput = {
-  id: string
-  email?: string | null
-  walletAddress?: string | null
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  tier?: $Enums.SubscriptionTier
-  stripeCustomerId?: string | null
-  alerts?: Prisma.AlertCreateNestedManyWithoutUserInput
-  alertSettings?: Prisma.UserAlertSettingsCreateNestedOneWithoutUserInput
+export type EnumSubscriptionTierFieldUpdateOperationsInput = {
+  set?: $Enums.SubscriptionTier
 }
 
-export type UserUncheckedCreateWithoutWatchlistInput = {
-  id: string
-  email?: string | null
-  walletAddress?: string | null
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  tier?: $Enums.SubscriptionTier
-  stripeCustomerId?: string | null
-  alerts?: Prisma.AlertUncheckedCreateNestedManyWithoutUserInput
-  alertSettings?: Prisma.UserAlertSettingsUncheckedCreateNestedOneWithoutUserInput
+export type UserCreateNestedOneWithoutWatchlistInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutWatchlistInput, Prisma.UserUncheckedCreateWithoutWatchlistInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutWatchlistInput
+  connect?: Prisma.UserWhereUniqueInput
 }
 
-export type UserCreateOrConnectWithoutWatchlistInput = {
-  where: Prisma.UserWhereUniqueInput
-  create: Prisma.XOR<Prisma.UserCreateWithoutWatchlistInput, Prisma.UserUncheckedCreateWithoutWatchlistInput>
-}
-
-export type UserUpsertWithoutWatchlistInput = {
-  update: Prisma.XOR<Prisma.UserUpdateWithoutWatchlistInput, Prisma.UserUncheckedUpdateWithoutWatchlistInput>
-  create: Prisma.XOR<Prisma.UserCreateWithoutWatchlistInput, Prisma.UserUncheckedCreateWithoutWatchlistInput>
-  where?: Prisma.UserWhereInput
-}
-
-export type UserUpdateToOneWithWhereWithoutWatchlistInput = {
-  where?: Prisma.UserWhereInput
-  data: Prisma.XOR<Prisma.UserUpdateWithoutWatchlistInput, Prisma.UserUncheckedUpdateWithoutWatchlistInput>
-}
-
-export type UserUpdateWithoutWatchlistInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  walletAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  tier?: Prisma.EnumSubscriptionTierFieldUpdateOperationsInput | $Enums.SubscriptionTier
-  stripeCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  alerts?: Prisma.AlertUpdateManyWithoutUserNestedInput
-  alertSettings?: Prisma.UserAlertSettingsUpdateOneWithoutUserNestedInput
-}
-
-export type UserUncheckedUpdateWithoutWatchlistInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  walletAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  tier?: Prisma.EnumSubscriptionTierFieldUpdateOperationsInput | $Enums.SubscriptionTier
-  stripeCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  alerts?: Prisma.AlertUncheckedUpdateManyWithoutUserNestedInput
-  alertSettings?: Prisma.UserAlertSettingsUncheckedUpdateOneWithoutUserNestedInput
+export type UserUpdateOneRequiredWithoutWatchlistNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutWatchlistInput, Prisma.UserUncheckedCreateWithoutWatchlistInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutWatchlistInput
+  upsert?: Prisma.UserUpsertWithoutWatchlistInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutWatchlistInput, Prisma.UserUpdateWithoutWatchlistInput>, Prisma.UserUncheckedUpdateWithoutWatchlistInput>
 }
 
 export type UserCreateWithoutAlertsInput = {
@@ -611,6 +547,70 @@ export type UserUncheckedUpdateWithoutAlertSettingsInput = {
   stripeCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   watchlist?: Prisma.WatchlistUncheckedUpdateManyWithoutUserNestedInput
   alerts?: Prisma.AlertUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UserCreateWithoutWatchlistInput = {
+  id: string
+  email?: string | null
+  walletAddress?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  tier?: $Enums.SubscriptionTier
+  stripeCustomerId?: string | null
+  alerts?: Prisma.AlertCreateNestedManyWithoutUserInput
+  alertSettings?: Prisma.UserAlertSettingsCreateNestedOneWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutWatchlistInput = {
+  id: string
+  email?: string | null
+  walletAddress?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  tier?: $Enums.SubscriptionTier
+  stripeCustomerId?: string | null
+  alerts?: Prisma.AlertUncheckedCreateNestedManyWithoutUserInput
+  alertSettings?: Prisma.UserAlertSettingsUncheckedCreateNestedOneWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutWatchlistInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutWatchlistInput, Prisma.UserUncheckedCreateWithoutWatchlistInput>
+}
+
+export type UserUpsertWithoutWatchlistInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutWatchlistInput, Prisma.UserUncheckedUpdateWithoutWatchlistInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutWatchlistInput, Prisma.UserUncheckedCreateWithoutWatchlistInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutWatchlistInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutWatchlistInput, Prisma.UserUncheckedUpdateWithoutWatchlistInput>
+}
+
+export type UserUpdateWithoutWatchlistInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  walletAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  tier?: Prisma.EnumSubscriptionTierFieldUpdateOperationsInput | $Enums.SubscriptionTier
+  stripeCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  alerts?: Prisma.AlertUpdateManyWithoutUserNestedInput
+  alertSettings?: Prisma.UserAlertSettingsUpdateOneWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutWatchlistInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  walletAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  tier?: Prisma.EnumSubscriptionTierFieldUpdateOperationsInput | $Enums.SubscriptionTier
+  stripeCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  alerts?: Prisma.AlertUncheckedUpdateManyWithoutUserNestedInput
+  alertSettings?: Prisma.UserAlertSettingsUncheckedUpdateOneWithoutUserNestedInput
 }
 
 

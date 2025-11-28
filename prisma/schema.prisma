@@ -1,6 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client"
   output   = "../generated"
@@ -10,38 +7,17 @@ datasource db {
   provider = "postgresql"
 }
 
-model WalletProfile {
-  id          String   @id // wallet address
-  label       String?  // e.g., "Smart Whale", "Degen"
-  totalPnl    Float    @default(0) // Total PnL in USD
-  winRate     Float    @default(0) // Win rate as decimal (0.0 to 1.0)
-  isFresh     Boolean  @default(false) // < 10 transactions
-  txCount     Int      @default(0)
-  maxTradeValue Float  @default(0)
-  activityLevel String? // "LOW", "MEDIUM", "HIGH"
-  lastUpdated DateTime @default(now())
-  trades      Trade[]
-  snapshots   WalletPortfolioSnapshot[]
+model Alert {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
 
-  @@map("wallet_profiles")
-}
+  type      AlertType
+  config    Json     // e.g., { "threshold": 10000, "wallet": "0x..." }
 
-model WalletPortfolioSnapshot {
-  id            String        @id @default(cuid())
-  walletAddress String
-  wallet        WalletProfile @relation(fields: [walletAddress], references: [id])
-  timestamp     DateTime      @default(now())
-  
-  // Summary metrics
-  totalValue    Float         @default(0)
-  totalPnl      Float         @default(0)
-  
-  // Raw data
-  positions     Json          // Array of positions from Gamma
-  
-  @@index([walletAddress])
-  @@index([timestamp])
-  @@map("wallet_portfolio_snapshots")
+  createdAt DateTime @default(now())
+
+  @@map("alerts")
 }
 
 model Trade {
@@ -52,8 +28,9 @@ model Trade {
   price         Float
   tradeValue    Float    // size * price
   timestamp     DateTime
+
   walletAddress String   @default("")
-  walletProfile WalletProfile? @relation(fields: [walletAddress], references: [id], map: "trades_walletAddress_fkey")
+  walletProfile WalletProfile? @relation(fields: [walletAddress], references: [id])
 
   // Intelligence flags
   isWhale       Boolean  @default(false)
@@ -81,13 +58,33 @@ model Trade {
   @@map("trades")
 }
 
+model UserAlertSettings {
+  id             String   @id @default(cuid())
+  userId         String   @unique
+  user           User     @relation(fields: [userId], references: [id])
+
+  // Channels
+  discordWebhook String?
+  smsNumber      String?
+  telegramId     String?
+
+  // Subscriptions
+  wallets        String[] // Array of wallet addresses to watch
+  markets        String[] // Array of market IDs to watch
+  alertTypes     AlertType[] // Types of alerts to receive
+
+  updatedAt      DateTime @updatedAt
+
+  @@map("user_alert_settings")
+}
+
 model User {
   id            String   @id // Privy DID (e.g., "did:privy:...")
   email         String?  @unique
   walletAddress String?  @unique // Primary connected wallet
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
-  
+
   // Premium/Subscription status
   tier          SubscriptionTier @default(FREE)
   stripeCustomerId String?
@@ -100,39 +97,54 @@ model User {
   @@map("users")
 }
 
-enum SubscriptionTier {
-  FREE
-  PRO
-  WHALE
+model WalletPortfolioSnapshot {
+  id            String        @id @default(cuid())
+  walletAddress String
+  wallet        WalletProfile @relation(fields: [walletAddress], references: [id])
+  timestamp     DateTime      @default(now())
+
+  // Summary metrics
+  totalValue    Float         @default(0)
+  totalPnl      Float         @default(0)
+
+  // Raw data
+  positions     Json          // Array of positions from Gamma
+
+  @@index([walletAddress])
+  @@index([timestamp])
+  @@map("wallet_portfolio_snapshots")
+}
+
+model WalletProfile {
+  id          String   @id // wallet address
+  label       String?  // e.g., "Smart Whale", "Degen"
+  totalPnl    Float    @default(0) // Total PnL in USD
+  winRate     Float    @default(0) // Win rate as decimal (0.0 to 1.0)
+  isFresh     Boolean  @default(false) // < 10 transactions
+  txCount     Int      @default(0)
+  maxTradeValue Float  @default(0)
+  activityLevel String? // "LOW", "MEDIUM", "HIGH"
+  lastUpdated DateTime @default(now())
+  trades      Trade[]
+  snapshots   WalletPortfolioSnapshot[]
+
+  @@map("wallet_profiles")
 }
 
 model Watchlist {
   id        String   @id @default(cuid())
   userId    String
   user      User     @relation(fields: [userId], references: [id])
-  
+
   // What they are watching
   walletAddress String? // Watching a specific whale
   marketId      String? // Watching a specific market
-  
+
   createdAt DateTime @default(now())
-  
+
   @@unique([userId, walletAddress])
   @@unique([userId, marketId])
   @@map("watchlists")
-}
-
-model Alert {
-  id        String   @id @default(cuid())
-  userId    String
-  user      User     @relation(fields: [userId], references: [id])
-  
-  type      AlertType
-  config    Json     // e.g., { "threshold": 10000, "wallet": "0x..." }
-  
-  createdAt DateTime @default(now())
-
-  @@map("alerts")
 }
 
 enum AlertType {
@@ -141,22 +153,8 @@ enum AlertType {
   SMART_MONEY_ENTRY
 }
 
-model UserAlertSettings {
-  id             String   @id @default(cuid())
-  userId         String   @unique
-  user           User     @relation(fields: [userId], references: [id])
-  
-  // Channels
-  discordWebhook String?
-  smsNumber      String?
-  telegramId     String?
-  
-  // Subscriptions
-  wallets        String[] // Array of wallet addresses to watch
-  markets        String[] // Array of market IDs to watch
-  alertTypes     AlertType[] // Types of alerts to receive
-  
-  updatedAt      DateTime @updatedAt
-
-  @@map("user_alert_settings")
+enum SubscriptionTier {
+  FREE
+  PRO
+  WHALE
 }

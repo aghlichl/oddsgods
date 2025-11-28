@@ -29,8 +29,8 @@ export * from "./enums"
  * @example
  * ```
  * const prisma = new PrismaClient()
- * // Fetch zero or more WalletProfiles
- * const walletProfiles = await prisma.walletProfile.findMany()
+ * // Fetch zero or more Alerts
+ * const alerts = await prisma.alert.findMany()
  * ```
  * 
  * Read more in our [docs](https://www.prisma.io/docs/reference/tools-and-interfaces/prisma-client).
@@ -40,37 +40,37 @@ export type PrismaClient<LogOpts extends Prisma.LogLevel = never, OmitOpts exten
 export { Prisma }
 
 /**
- * Model WalletProfile
+ * Model Alert
  * 
  */
-export type WalletProfile = Prisma.WalletProfileModel
-/**
- * Model WalletPortfolioSnapshot
- * 
- */
-export type WalletPortfolioSnapshot = Prisma.WalletPortfolioSnapshotModel
+export type Alert = Prisma.AlertModel
 /**
  * Model Trade
  * 
  */
 export type Trade = Prisma.TradeModel
 /**
+ * Model UserAlertSettings
+ * 
+ */
+export type UserAlertSettings = Prisma.UserAlertSettingsModel
+/**
  * Model User
  * 
  */
 export type User = Prisma.UserModel
 /**
+ * Model WalletPortfolioSnapshot
+ * 
+ */
+export type WalletPortfolioSnapshot = Prisma.WalletPortfolioSnapshotModel
+/**
+ * Model WalletProfile
+ * 
+ */
+export type WalletProfile = Prisma.WalletProfileModel
+/**
  * Model Watchlist
  * 
  */
 export type Watchlist = Prisma.WatchlistModel
-/**
- * Model Alert
- * 
- */
-export type Alert = Prisma.AlertModel
-/**
- * Model UserAlertSettings
- * 
- */
-export type UserAlertSettings = Prisma.UserAlertSettingsModel

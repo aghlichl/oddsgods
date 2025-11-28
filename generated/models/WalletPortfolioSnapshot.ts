@@ -338,16 +338,6 @@ export type WalletPortfolioSnapshotUncheckedUpdateManyInput = {
   positions?: Prisma.JsonNullValueInput | runtime.InputJsonValue
 }
 
-export type WalletPortfolioSnapshotListRelationFilter = {
-  every?: Prisma.WalletPortfolioSnapshotWhereInput
-  some?: Prisma.WalletPortfolioSnapshotWhereInput
-  none?: Prisma.WalletPortfolioSnapshotWhereInput
-}
-
-export type WalletPortfolioSnapshotOrderByRelationAggregateInput = {
-  _count?: Prisma.SortOrder
-}
-
 export type WalletPortfolioSnapshotCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   walletAddress?: Prisma.SortOrder
@@ -381,6 +371,16 @@ export type WalletPortfolioSnapshotMinOrderByAggregateInput = {
 export type WalletPortfolioSnapshotSumOrderByAggregateInput = {
   totalValue?: Prisma.SortOrder
   totalPnl?: Prisma.SortOrder
+}
+
+export type WalletPortfolioSnapshotListRelationFilter = {
+  every?: Prisma.WalletPortfolioSnapshotWhereInput
+  some?: Prisma.WalletPortfolioSnapshotWhereInput
+  none?: Prisma.WalletPortfolioSnapshotWhereInput
+}
+
+export type WalletPortfolioSnapshotOrderByRelationAggregateInput = {
+  _count?: Prisma.SortOrder
 }
 
 export type WalletPortfolioSnapshotCreateNestedManyWithoutWalletInput = {

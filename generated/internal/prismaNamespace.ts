@@ -384,13 +384,13 @@ type FieldRefInputType<Model, FieldType> = Model extends never ? never : FieldRe
 
 
 export const ModelName = {
-  WalletProfile: 'WalletProfile',
-  WalletPortfolioSnapshot: 'WalletPortfolioSnapshot',
-  Trade: 'Trade',
-  User: 'User',
-  Watchlist: 'Watchlist',
   Alert: 'Alert',
-  UserAlertSettings: 'UserAlertSettings'
+  Trade: 'Trade',
+  UserAlertSettings: 'UserAlertSettings',
+  User: 'User',
+  WalletPortfolioSnapshot: 'WalletPortfolioSnapshot',
+  WalletProfile: 'WalletProfile',
+  Watchlist: 'Watchlist'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -406,155 +406,81 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "walletProfile" | "walletPortfolioSnapshot" | "trade" | "user" | "watchlist" | "alert" | "userAlertSettings"
+    modelProps: "alert" | "trade" | "userAlertSettings" | "user" | "walletPortfolioSnapshot" | "walletProfile" | "watchlist"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
-    WalletProfile: {
-      payload: Prisma.$WalletProfilePayload<ExtArgs>
-      fields: Prisma.WalletProfileFieldRefs
+    Alert: {
+      payload: Prisma.$AlertPayload<ExtArgs>
+      fields: Prisma.AlertFieldRefs
       operations: {
         findUnique: {
-          args: Prisma.WalletProfileFindUniqueArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$WalletProfilePayload> | null
+          args: Prisma.AlertFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AlertPayload> | null
         }
         findUniqueOrThrow: {
-          args: Prisma.WalletProfileFindUniqueOrThrowArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$WalletProfilePayload>
+          args: Prisma.AlertFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AlertPayload>
         }
         findFirst: {
-          args: Prisma.WalletProfileFindFirstArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$WalletProfilePayload> | null
+          args: Prisma.AlertFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AlertPayload> | null
         }
         findFirstOrThrow: {
-          args: Prisma.WalletProfileFindFirstOrThrowArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$WalletProfilePayload>
+          args: Prisma.AlertFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AlertPayload>
         }
         findMany: {
-          args: Prisma.WalletProfileFindManyArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$WalletProfilePayload>[]
+          args: Prisma.AlertFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AlertPayload>[]
         }
         create: {
-          args: Prisma.WalletProfileCreateArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$WalletProfilePayload>
+          args: Prisma.AlertCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AlertPayload>
         }
         createMany: {
-          args: Prisma.WalletProfileCreateManyArgs<ExtArgs>
+          args: Prisma.AlertCreateManyArgs<ExtArgs>
           result: BatchPayload
         }
         createManyAndReturn: {
-          args: Prisma.WalletProfileCreateManyAndReturnArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$WalletProfilePayload>[]
+          args: Prisma.AlertCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AlertPayload>[]
         }
         delete: {
-          args: Prisma.WalletProfileDeleteArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$WalletProfilePayload>
+          args: Prisma.AlertDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AlertPayload>
         }
         update: {
-          args: Prisma.WalletProfileUpdateArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$WalletProfilePayload>
+          args: Prisma.AlertUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AlertPayload>
         }
         deleteMany: {
-          args: Prisma.WalletProfileDeleteManyArgs<ExtArgs>
+          args: Prisma.AlertDeleteManyArgs<ExtArgs>
           result: BatchPayload
         }
         updateMany: {
-          args: Prisma.WalletProfileUpdateManyArgs<ExtArgs>
+          args: Prisma.AlertUpdateManyArgs<ExtArgs>
           result: BatchPayload
         }
         updateManyAndReturn: {
-          args: Prisma.WalletProfileUpdateManyAndReturnArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$WalletProfilePayload>[]
+          args: Prisma.AlertUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AlertPayload>[]
         }
         upsert: {
-          args: Prisma.WalletProfileUpsertArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$WalletProfilePayload>
+          args: Prisma.AlertUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AlertPayload>
         }
         aggregate: {
-          args: Prisma.WalletProfileAggregateArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.AggregateWalletProfile>
+          args: Prisma.AlertAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateAlert>
         }
         groupBy: {
-          args: Prisma.WalletProfileGroupByArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.WalletProfileGroupByOutputType>[]
+          args: Prisma.AlertGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AlertGroupByOutputType>[]
         }
         count: {
-          args: Prisma.WalletProfileCountArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.WalletProfileCountAggregateOutputType> | number
-        }
-      }
-    }
-    WalletPortfolioSnapshot: {
-      payload: Prisma.$WalletPortfolioSnapshotPayload<ExtArgs>
-      fields: Prisma.WalletPortfolioSnapshotFieldRefs
-      operations: {
-        findUnique: {
-          args: Prisma.WalletPortfolioSnapshotFindUniqueArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$WalletPortfolioSnapshotPayload> | null
-        }
-        findUniqueOrThrow: {
-          args: Prisma.WalletPortfolioSnapshotFindUniqueOrThrowArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$WalletPortfolioSnapshotPayload>
-        }
-        findFirst: {
-          args: Prisma.WalletPortfolioSnapshotFindFirstArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$WalletPortfolioSnapshotPayload> | null
-        }
-        findFirstOrThrow: {
-          args: Prisma.WalletPortfolioSnapshotFindFirstOrThrowArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$WalletPortfolioSnapshotPayload>
-        }
-        findMany: {
-          args: Prisma.WalletPortfolioSnapshotFindManyArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$WalletPortfolioSnapshotPayload>[]
-        }
-        create: {
-          args: Prisma.WalletPortfolioSnapshotCreateArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$WalletPortfolioSnapshotPayload>
-        }
-        createMany: {
-          args: Prisma.WalletPortfolioSnapshotCreateManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        createManyAndReturn: {
-          args: Prisma.WalletPortfolioSnapshotCreateManyAndReturnArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$WalletPortfolioSnapshotPayload>[]
-        }
-        delete: {
-          args: Prisma.WalletPortfolioSnapshotDeleteArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$WalletPortfolioSnapshotPayload>
-        }
-        update: {
-          args: Prisma.WalletPortfolioSnapshotUpdateArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$WalletPortfolioSnapshotPayload>
-        }
-        deleteMany: {
-          args: Prisma.WalletPortfolioSnapshotDeleteManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        updateMany: {
-          args: Prisma.WalletPortfolioSnapshotUpdateManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        updateManyAndReturn: {
-          args: Prisma.WalletPortfolioSnapshotUpdateManyAndReturnArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$WalletPortfolioSnapshotPayload>[]
-        }
-        upsert: {
-          args: Prisma.WalletPortfolioSnapshotUpsertArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$WalletPortfolioSnapshotPayload>
-        }
-        aggregate: {
-          args: Prisma.WalletPortfolioSnapshotAggregateArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.AggregateWalletPortfolioSnapshot>
-        }
-        groupBy: {
-          args: Prisma.WalletPortfolioSnapshotGroupByArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.WalletPortfolioSnapshotGroupByOutputType>[]
-        }
-        count: {
-          args: Prisma.WalletPortfolioSnapshotCountArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.WalletPortfolioSnapshotCountAggregateOutputType> | number
+          args: Prisma.AlertCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AlertCountAggregateOutputType> | number
         }
       }
     }
@@ -632,6 +558,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    UserAlertSettings: {
+      payload: Prisma.$UserAlertSettingsPayload<ExtArgs>
+      fields: Prisma.UserAlertSettingsFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.UserAlertSettingsFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserAlertSettingsPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.UserAlertSettingsFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserAlertSettingsPayload>
+        }
+        findFirst: {
+          args: Prisma.UserAlertSettingsFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserAlertSettingsPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.UserAlertSettingsFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserAlertSettingsPayload>
+        }
+        findMany: {
+          args: Prisma.UserAlertSettingsFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserAlertSettingsPayload>[]
+        }
+        create: {
+          args: Prisma.UserAlertSettingsCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserAlertSettingsPayload>
+        }
+        createMany: {
+          args: Prisma.UserAlertSettingsCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.UserAlertSettingsCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserAlertSettingsPayload>[]
+        }
+        delete: {
+          args: Prisma.UserAlertSettingsDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserAlertSettingsPayload>
+        }
+        update: {
+          args: Prisma.UserAlertSettingsUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserAlertSettingsPayload>
+        }
+        deleteMany: {
+          args: Prisma.UserAlertSettingsDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.UserAlertSettingsUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.UserAlertSettingsUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserAlertSettingsPayload>[]
+        }
+        upsert: {
+          args: Prisma.UserAlertSettingsUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserAlertSettingsPayload>
+        }
+        aggregate: {
+          args: Prisma.UserAlertSettingsAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateUserAlertSettings>
+        }
+        groupBy: {
+          args: Prisma.UserAlertSettingsGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.UserAlertSettingsGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.UserAlertSettingsCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.UserAlertSettingsCountAggregateOutputType> | number
+        }
+      }
+    }
     User: {
       payload: Prisma.$UserPayload<ExtArgs>
       fields: Prisma.UserFieldRefs
@@ -703,6 +703,154 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.UserCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.UserCountAggregateOutputType> | number
+        }
+      }
+    }
+    WalletPortfolioSnapshot: {
+      payload: Prisma.$WalletPortfolioSnapshotPayload<ExtArgs>
+      fields: Prisma.WalletPortfolioSnapshotFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.WalletPortfolioSnapshotFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WalletPortfolioSnapshotPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.WalletPortfolioSnapshotFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WalletPortfolioSnapshotPayload>
+        }
+        findFirst: {
+          args: Prisma.WalletPortfolioSnapshotFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WalletPortfolioSnapshotPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.WalletPortfolioSnapshotFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WalletPortfolioSnapshotPayload>
+        }
+        findMany: {
+          args: Prisma.WalletPortfolioSnapshotFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WalletPortfolioSnapshotPayload>[]
+        }
+        create: {
+          args: Prisma.WalletPortfolioSnapshotCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WalletPortfolioSnapshotPayload>
+        }
+        createMany: {
+          args: Prisma.WalletPortfolioSnapshotCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.WalletPortfolioSnapshotCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WalletPortfolioSnapshotPayload>[]
+        }
+        delete: {
+          args: Prisma.WalletPortfolioSnapshotDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WalletPortfolioSnapshotPayload>
+        }
+        update: {
+          args: Prisma.WalletPortfolioSnapshotUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WalletPortfolioSnapshotPayload>
+        }
+        deleteMany: {
+          args: Prisma.WalletPortfolioSnapshotDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.WalletPortfolioSnapshotUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.WalletPortfolioSnapshotUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WalletPortfolioSnapshotPayload>[]
+        }
+        upsert: {
+          args: Prisma.WalletPortfolioSnapshotUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WalletPortfolioSnapshotPayload>
+        }
+        aggregate: {
+          args: Prisma.WalletPortfolioSnapshotAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateWalletPortfolioSnapshot>
+        }
+        groupBy: {
+          args: Prisma.WalletPortfolioSnapshotGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.WalletPortfolioSnapshotGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.WalletPortfolioSnapshotCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.WalletPortfolioSnapshotCountAggregateOutputType> | number
+        }
+      }
+    }
+    WalletProfile: {
+      payload: Prisma.$WalletProfilePayload<ExtArgs>
+      fields: Prisma.WalletProfileFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.WalletProfileFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WalletProfilePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.WalletProfileFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WalletProfilePayload>
+        }
+        findFirst: {
+          args: Prisma.WalletProfileFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WalletProfilePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.WalletProfileFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WalletProfilePayload>
+        }
+        findMany: {
+          args: Prisma.WalletProfileFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WalletProfilePayload>[]
+        }
+        create: {
+          args: Prisma.WalletProfileCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WalletProfilePayload>
+        }
+        createMany: {
+          args: Prisma.WalletProfileCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.WalletProfileCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WalletProfilePayload>[]
+        }
+        delete: {
+          args: Prisma.WalletProfileDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WalletProfilePayload>
+        }
+        update: {
+          args: Prisma.WalletProfileUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WalletProfilePayload>
+        }
+        deleteMany: {
+          args: Prisma.WalletProfileDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.WalletProfileUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.WalletProfileUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WalletProfilePayload>[]
+        }
+        upsert: {
+          args: Prisma.WalletProfileUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WalletProfilePayload>
+        }
+        aggregate: {
+          args: Prisma.WalletProfileAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateWalletProfile>
+        }
+        groupBy: {
+          args: Prisma.WalletProfileGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.WalletProfileGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.WalletProfileCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.WalletProfileCountAggregateOutputType> | number
         }
       }
     }
@@ -780,154 +928,6 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
-    Alert: {
-      payload: Prisma.$AlertPayload<ExtArgs>
-      fields: Prisma.AlertFieldRefs
-      operations: {
-        findUnique: {
-          args: Prisma.AlertFindUniqueArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$AlertPayload> | null
-        }
-        findUniqueOrThrow: {
-          args: Prisma.AlertFindUniqueOrThrowArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$AlertPayload>
-        }
-        findFirst: {
-          args: Prisma.AlertFindFirstArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$AlertPayload> | null
-        }
-        findFirstOrThrow: {
-          args: Prisma.AlertFindFirstOrThrowArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$AlertPayload>
-        }
-        findMany: {
-          args: Prisma.AlertFindManyArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$AlertPayload>[]
-        }
-        create: {
-          args: Prisma.AlertCreateArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$AlertPayload>
-        }
-        createMany: {
-          args: Prisma.AlertCreateManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        createManyAndReturn: {
-          args: Prisma.AlertCreateManyAndReturnArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$AlertPayload>[]
-        }
-        delete: {
-          args: Prisma.AlertDeleteArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$AlertPayload>
-        }
-        update: {
-          args: Prisma.AlertUpdateArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$AlertPayload>
-        }
-        deleteMany: {
-          args: Prisma.AlertDeleteManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        updateMany: {
-          args: Prisma.AlertUpdateManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        updateManyAndReturn: {
-          args: Prisma.AlertUpdateManyAndReturnArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$AlertPayload>[]
-        }
-        upsert: {
-          args: Prisma.AlertUpsertArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$AlertPayload>
-        }
-        aggregate: {
-          args: Prisma.AlertAggregateArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.AggregateAlert>
-        }
-        groupBy: {
-          args: Prisma.AlertGroupByArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.AlertGroupByOutputType>[]
-        }
-        count: {
-          args: Prisma.AlertCountArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.AlertCountAggregateOutputType> | number
-        }
-      }
-    }
-    UserAlertSettings: {
-      payload: Prisma.$UserAlertSettingsPayload<ExtArgs>
-      fields: Prisma.UserAlertSettingsFieldRefs
-      operations: {
-        findUnique: {
-          args: Prisma.UserAlertSettingsFindUniqueArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserAlertSettingsPayload> | null
-        }
-        findUniqueOrThrow: {
-          args: Prisma.UserAlertSettingsFindUniqueOrThrowArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserAlertSettingsPayload>
-        }
-        findFirst: {
-          args: Prisma.UserAlertSettingsFindFirstArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserAlertSettingsPayload> | null
-        }
-        findFirstOrThrow: {
-          args: Prisma.UserAlertSettingsFindFirstOrThrowArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserAlertSettingsPayload>
-        }
-        findMany: {
-          args: Prisma.UserAlertSettingsFindManyArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserAlertSettingsPayload>[]
-        }
-        create: {
-          args: Prisma.UserAlertSettingsCreateArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserAlertSettingsPayload>
-        }
-        createMany: {
-          args: Prisma.UserAlertSettingsCreateManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        createManyAndReturn: {
-          args: Prisma.UserAlertSettingsCreateManyAndReturnArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserAlertSettingsPayload>[]
-        }
-        delete: {
-          args: Prisma.UserAlertSettingsDeleteArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserAlertSettingsPayload>
-        }
-        update: {
-          args: Prisma.UserAlertSettingsUpdateArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserAlertSettingsPayload>
-        }
-        deleteMany: {
-          args: Prisma.UserAlertSettingsDeleteManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        updateMany: {
-          args: Prisma.UserAlertSettingsUpdateManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        updateManyAndReturn: {
-          args: Prisma.UserAlertSettingsUpdateManyAndReturnArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserAlertSettingsPayload>[]
-        }
-        upsert: {
-          args: Prisma.UserAlertSettingsUpsertArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserAlertSettingsPayload>
-        }
-        aggregate: {
-          args: Prisma.UserAlertSettingsAggregateArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.AggregateUserAlertSettings>
-        }
-        groupBy: {
-          args: Prisma.UserAlertSettingsGroupByArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.UserAlertSettingsGroupByOutputType>[]
-        }
-        count: {
-          args: Prisma.UserAlertSettingsCountArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.UserAlertSettingsCountAggregateOutputType> | number
-        }
-      }
-    }
   }
 } & {
   other: {
@@ -967,33 +967,15 @@ export const TransactionIsolationLevel = runtime.makeStrictEnum({
 export type TransactionIsolationLevel = (typeof TransactionIsolationLevel)[keyof typeof TransactionIsolationLevel]
 
 
-export const WalletProfileScalarFieldEnum = {
+export const AlertScalarFieldEnum = {
   id: 'id',
-  label: 'label',
-  totalPnl: 'totalPnl',
-  winRate: 'winRate',
-  isFresh: 'isFresh',
-  txCount: 'txCount',
-  maxTradeValue: 'maxTradeValue',
-  activityLevel: 'activityLevel',
-  riskScore: 'riskScore',
-  tradingStyle: 'tradingStyle',
-  lastUpdated: 'lastUpdated'
+  userId: 'userId',
+  type: 'type',
+  config: 'config',
+  createdAt: 'createdAt'
 } as const
 
-export type WalletProfileScalarFieldEnum = (typeof WalletProfileScalarFieldEnum)[keyof typeof WalletProfileScalarFieldEnum]
-
-
-export const WalletPortfolioSnapshotScalarFieldEnum = {
-  id: 'id',
-  walletAddress: 'walletAddress',
-  timestamp: 'timestamp',
-  totalValue: 'totalValue',
-  totalPnl: 'totalPnl',
-  positions: 'positions'
-} as const
-
-export type WalletPortfolioSnapshotScalarFieldEnum = (typeof WalletPortfolioSnapshotScalarFieldEnum)[keyof typeof WalletPortfolioSnapshotScalarFieldEnum]
+export type AlertScalarFieldEnum = (typeof AlertScalarFieldEnum)[keyof typeof AlertScalarFieldEnum]
 
 
 export const TradeScalarFieldEnum = {
@@ -1009,9 +991,6 @@ export const TradeScalarFieldEnum = {
   isSmartMoney: 'isSmartMoney',
   isFresh: 'isFresh',
   isSweeper: 'isSweeper',
-  zScore: 'zScore',
-  marketVolatility: 'marketVolatility',
-  behavioralTags: 'behavioralTags',
   conditionId: 'conditionId',
   outcome: 'outcome',
   question: 'question',
@@ -1023,41 +1002,6 @@ export const TradeScalarFieldEnum = {
 } as const
 
 export type TradeScalarFieldEnum = (typeof TradeScalarFieldEnum)[keyof typeof TradeScalarFieldEnum]
-
-
-export const UserScalarFieldEnum = {
-  id: 'id',
-  email: 'email',
-  walletAddress: 'walletAddress',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt',
-  tier: 'tier',
-  stripeCustomerId: 'stripeCustomerId'
-} as const
-
-export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
-
-
-export const WatchlistScalarFieldEnum = {
-  id: 'id',
-  userId: 'userId',
-  walletAddress: 'walletAddress',
-  marketId: 'marketId',
-  createdAt: 'createdAt'
-} as const
-
-export type WatchlistScalarFieldEnum = (typeof WatchlistScalarFieldEnum)[keyof typeof WatchlistScalarFieldEnum]
-
-
-export const AlertScalarFieldEnum = {
-  id: 'id',
-  userId: 'userId',
-  type: 'type',
-  config: 'config',
-  createdAt: 'createdAt'
-} as const
-
-export type AlertScalarFieldEnum = (typeof AlertScalarFieldEnum)[keyof typeof AlertScalarFieldEnum]
 
 
 export const UserAlertSettingsScalarFieldEnum = {
@@ -1073,6 +1017,57 @@ export const UserAlertSettingsScalarFieldEnum = {
 } as const
 
 export type UserAlertSettingsScalarFieldEnum = (typeof UserAlertSettingsScalarFieldEnum)[keyof typeof UserAlertSettingsScalarFieldEnum]
+
+
+export const UserScalarFieldEnum = {
+  id: 'id',
+  email: 'email',
+  walletAddress: 'walletAddress',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  tier: 'tier',
+  stripeCustomerId: 'stripeCustomerId'
+} as const
+
+export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
+
+
+export const WalletPortfolioSnapshotScalarFieldEnum = {
+  id: 'id',
+  walletAddress: 'walletAddress',
+  timestamp: 'timestamp',
+  totalValue: 'totalValue',
+  totalPnl: 'totalPnl',
+  positions: 'positions'
+} as const
+
+export type WalletPortfolioSnapshotScalarFieldEnum = (typeof WalletPortfolioSnapshotScalarFieldEnum)[keyof typeof WalletPortfolioSnapshotScalarFieldEnum]
+
+
+export const WalletProfileScalarFieldEnum = {
+  id: 'id',
+  label: 'label',
+  totalPnl: 'totalPnl',
+  winRate: 'winRate',
+  isFresh: 'isFresh',
+  txCount: 'txCount',
+  maxTradeValue: 'maxTradeValue',
+  activityLevel: 'activityLevel',
+  lastUpdated: 'lastUpdated'
+} as const
+
+export type WalletProfileScalarFieldEnum = (typeof WalletProfileScalarFieldEnum)[keyof typeof WalletProfileScalarFieldEnum]
+
+
+export const WatchlistScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  walletAddress: 'walletAddress',
+  marketId: 'marketId',
+  createdAt: 'createdAt'
+} as const
+
+export type WatchlistScalarFieldEnum = (typeof WatchlistScalarFieldEnum)[keyof typeof WatchlistScalarFieldEnum]
 
 
 export const SortOrder = {
@@ -1098,14 +1093,6 @@ export const QueryMode = {
 export type QueryMode = (typeof QueryMode)[keyof typeof QueryMode]
 
 
-export const NullsOrder = {
-  first: 'first',
-  last: 'last'
-} as const
-
-export type NullsOrder = (typeof NullsOrder)[keyof typeof NullsOrder]
-
-
 export const JsonNullValueFilter = {
   DbNull: DbNull,
   JsonNull: JsonNull,
@@ -1113,6 +1100,14 @@ export const JsonNullValueFilter = {
 } as const
 
 export type JsonNullValueFilter = (typeof JsonNullValueFilter)[keyof typeof JsonNullValueFilter]
+
+
+export const NullsOrder = {
+  first: 'first',
+  last: 'last'
+} as const
+
+export type NullsOrder = (typeof NullsOrder)[keyof typeof NullsOrder]
 
 
 
@@ -1132,6 +1127,48 @@ export type StringFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 
  * Reference to a field of type 'String[]'
  */
 export type ListStringFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'String[]'>
+    
+
+
+/**
+ * Reference to a field of type 'AlertType'
+ */
+export type EnumAlertTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'AlertType'>
+    
+
+
+/**
+ * Reference to a field of type 'AlertType[]'
+ */
+export type ListEnumAlertTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'AlertType[]'>
+    
+
+
+/**
+ * Reference to a field of type 'Json'
+ */
+export type JsonFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Json'>
+    
+
+
+/**
+ * Reference to a field of type 'QueryMode'
+ */
+export type EnumQueryModeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'QueryMode'>
+    
+
+
+/**
+ * Reference to a field of type 'DateTime'
+ */
+export type DateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DateTime'>
+    
+
+
+/**
+ * Reference to a field of type 'DateTime[]'
+ */
+export type ListDateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DateTime[]'>
     
 
 
@@ -1157,48 +1194,6 @@ export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel,
 
 
 /**
- * Reference to a field of type 'Int'
- */
-export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int'>
-    
-
-
-/**
- * Reference to a field of type 'Int[]'
- */
-export type ListIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int[]'>
-    
-
-
-/**
- * Reference to a field of type 'DateTime'
- */
-export type DateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DateTime'>
-    
-
-
-/**
- * Reference to a field of type 'DateTime[]'
- */
-export type ListDateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DateTime[]'>
-    
-
-
-/**
- * Reference to a field of type 'Json'
- */
-export type JsonFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Json'>
-    
-
-
-/**
- * Reference to a field of type 'QueryMode'
- */
-export type EnumQueryModeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'QueryMode'>
-    
-
-
-/**
  * Reference to a field of type 'BigInt'
  */
 export type BigIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'BigInt'>
@@ -1213,6 +1208,20 @@ export type ListBigIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaMod
 
 
 /**
+ * Reference to a field of type 'Int'
+ */
+export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int'>
+    
+
+
+/**
+ * Reference to a field of type 'Int[]'
+ */
+export type ListIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int[]'>
+    
+
+
+/**
  * Reference to a field of type 'SubscriptionTier'
  */
 export type EnumSubscriptionTierFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'SubscriptionTier'>
@@ -1223,20 +1232,6 @@ export type EnumSubscriptionTierFieldRefInput<$PrismaModel> = FieldRefInputType<
  * Reference to a field of type 'SubscriptionTier[]'
  */
 export type ListEnumSubscriptionTierFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'SubscriptionTier[]'>
-    
-
-
-/**
- * Reference to a field of type 'AlertType'
- */
-export type EnumAlertTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'AlertType'>
-    
-
-
-/**
- * Reference to a field of type 'AlertType[]'
- */
-export type ListEnumAlertTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'AlertType[]'>
     
 
 /**
@@ -1318,13 +1313,13 @@ export type PrismaClientOptions = ({
   omit?: GlobalOmitConfig
 }
 export type GlobalOmitConfig = {
-  walletProfile?: Prisma.WalletProfileOmit
-  walletPortfolioSnapshot?: Prisma.WalletPortfolioSnapshotOmit
-  trade?: Prisma.TradeOmit
-  user?: Prisma.UserOmit
-  watchlist?: Prisma.WatchlistOmit
   alert?: Prisma.AlertOmit
+  trade?: Prisma.TradeOmit
   userAlertSettings?: Prisma.UserAlertSettingsOmit
+  user?: Prisma.UserOmit
+  walletPortfolioSnapshot?: Prisma.WalletPortfolioSnapshotOmit
+  walletProfile?: Prisma.WalletProfileOmit
+  watchlist?: Prisma.WatchlistOmit
 }
 
 /* Types for Logging */

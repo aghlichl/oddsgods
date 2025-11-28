@@ -31,7 +31,6 @@ export type WalletProfileAvgAggregateOutputType = {
   winRate: number | null
   txCount: number | null
   maxTradeValue: number | null
-  riskScore: number | null
 }
 
 export type WalletProfileSumAggregateOutputType = {
@@ -39,7 +38,6 @@ export type WalletProfileSumAggregateOutputType = {
   winRate: number | null
   txCount: number | null
   maxTradeValue: number | null
-  riskScore: number | null
 }
 
 export type WalletProfileMinAggregateOutputType = {
@@ -51,8 +49,6 @@ export type WalletProfileMinAggregateOutputType = {
   txCount: number | null
   maxTradeValue: number | null
   activityLevel: string | null
-  riskScore: number | null
-  tradingStyle: string | null
   lastUpdated: Date | null
 }
 
@@ -65,8 +61,6 @@ export type WalletProfileMaxAggregateOutputType = {
   txCount: number | null
   maxTradeValue: number | null
   activityLevel: string | null
-  riskScore: number | null
-  tradingStyle: string | null
   lastUpdated: Date | null
 }
 
@@ -79,8 +73,6 @@ export type WalletProfileCountAggregateOutputType = {
   txCount: number
   maxTradeValue: number
   activityLevel: number
-  riskScore: number
-  tradingStyle: number
   lastUpdated: number
   _all: number
 }
@@ -91,7 +83,6 @@ export type WalletProfileAvgAggregateInputType = {
   winRate?: true
   txCount?: true
   maxTradeValue?: true
-  riskScore?: true
 }
 
 export type WalletProfileSumAggregateInputType = {
@@ -99,7 +90,6 @@ export type WalletProfileSumAggregateInputType = {
   winRate?: true
   txCount?: true
   maxTradeValue?: true
-  riskScore?: true
 }
 
 export type WalletProfileMinAggregateInputType = {
@@ -111,8 +101,6 @@ export type WalletProfileMinAggregateInputType = {
   txCount?: true
   maxTradeValue?: true
   activityLevel?: true
-  riskScore?: true
-  tradingStyle?: true
   lastUpdated?: true
 }
 
@@ -125,8 +113,6 @@ export type WalletProfileMaxAggregateInputType = {
   txCount?: true
   maxTradeValue?: true
   activityLevel?: true
-  riskScore?: true
-  tradingStyle?: true
   lastUpdated?: true
 }
 
@@ -139,8 +125,6 @@ export type WalletProfileCountAggregateInputType = {
   txCount?: true
   maxTradeValue?: true
   activityLevel?: true
-  riskScore?: true
-  tradingStyle?: true
   lastUpdated?: true
   _all?: true
 }
@@ -240,8 +224,6 @@ export type WalletProfileGroupByOutputType = {
   txCount: number
   maxTradeValue: number
   activityLevel: string | null
-  riskScore: number
-  tradingStyle: string | null
   lastUpdated: Date
   _count: WalletProfileCountAggregateOutputType | null
   _avg: WalletProfileAvgAggregateOutputType | null
@@ -277,8 +259,6 @@ export type WalletProfileWhereInput = {
   txCount?: Prisma.IntFilter<"WalletProfile"> | number
   maxTradeValue?: Prisma.FloatFilter<"WalletProfile"> | number
   activityLevel?: Prisma.StringNullableFilter<"WalletProfile"> | string | null
-  riskScore?: Prisma.FloatFilter<"WalletProfile"> | number
-  tradingStyle?: Prisma.StringNullableFilter<"WalletProfile"> | string | null
   lastUpdated?: Prisma.DateTimeFilter<"WalletProfile"> | Date | string
   trades?: Prisma.TradeListRelationFilter
   snapshots?: Prisma.WalletPortfolioSnapshotListRelationFilter
@@ -293,8 +273,6 @@ export type WalletProfileOrderByWithRelationInput = {
   txCount?: Prisma.SortOrder
   maxTradeValue?: Prisma.SortOrder
   activityLevel?: Prisma.SortOrderInput | Prisma.SortOrder
-  riskScore?: Prisma.SortOrder
-  tradingStyle?: Prisma.SortOrderInput | Prisma.SortOrder
   lastUpdated?: Prisma.SortOrder
   trades?: Prisma.TradeOrderByRelationAggregateInput
   snapshots?: Prisma.WalletPortfolioSnapshotOrderByRelationAggregateInput
@@ -312,8 +290,6 @@ export type WalletProfileWhereUniqueInput = Prisma.AtLeast<{
   txCount?: Prisma.IntFilter<"WalletProfile"> | number
   maxTradeValue?: Prisma.FloatFilter<"WalletProfile"> | number
   activityLevel?: Prisma.StringNullableFilter<"WalletProfile"> | string | null
-  riskScore?: Prisma.FloatFilter<"WalletProfile"> | number
-  tradingStyle?: Prisma.StringNullableFilter<"WalletProfile"> | string | null
   lastUpdated?: Prisma.DateTimeFilter<"WalletProfile"> | Date | string
   trades?: Prisma.TradeListRelationFilter
   snapshots?: Prisma.WalletPortfolioSnapshotListRelationFilter
@@ -328,8 +304,6 @@ export type WalletProfileOrderByWithAggregationInput = {
   txCount?: Prisma.SortOrder
   maxTradeValue?: Prisma.SortOrder
   activityLevel?: Prisma.SortOrderInput | Prisma.SortOrder
-  riskScore?: Prisma.SortOrder
-  tradingStyle?: Prisma.SortOrderInput | Prisma.SortOrder
   lastUpdated?: Prisma.SortOrder
   _count?: Prisma.WalletProfileCountOrderByAggregateInput
   _avg?: Prisma.WalletProfileAvgOrderByAggregateInput
@@ -350,8 +324,6 @@ export type WalletProfileScalarWhereWithAggregatesInput = {
   txCount?: Prisma.IntWithAggregatesFilter<"WalletProfile"> | number
   maxTradeValue?: Prisma.FloatWithAggregatesFilter<"WalletProfile"> | number
   activityLevel?: Prisma.StringNullableWithAggregatesFilter<"WalletProfile"> | string | null
-  riskScore?: Prisma.FloatWithAggregatesFilter<"WalletProfile"> | number
-  tradingStyle?: Prisma.StringNullableWithAggregatesFilter<"WalletProfile"> | string | null
   lastUpdated?: Prisma.DateTimeWithAggregatesFilter<"WalletProfile"> | Date | string
 }
 
@@ -364,8 +336,6 @@ export type WalletProfileCreateInput = {
   txCount?: number
   maxTradeValue?: number
   activityLevel?: string | null
-  riskScore?: number
-  tradingStyle?: string | null
   lastUpdated?: Date | string
   trades?: Prisma.TradeCreateNestedManyWithoutWalletProfileInput
   snapshots?: Prisma.WalletPortfolioSnapshotCreateNestedManyWithoutWalletInput
@@ -380,8 +350,6 @@ export type WalletProfileUncheckedCreateInput = {
   txCount?: number
   maxTradeValue?: number
   activityLevel?: string | null
-  riskScore?: number
-  tradingStyle?: string | null
   lastUpdated?: Date | string
   trades?: Prisma.TradeUncheckedCreateNestedManyWithoutWalletProfileInput
   snapshots?: Prisma.WalletPortfolioSnapshotUncheckedCreateNestedManyWithoutWalletInput
@@ -396,8 +364,6 @@ export type WalletProfileUpdateInput = {
   txCount?: Prisma.IntFieldUpdateOperationsInput | number
   maxTradeValue?: Prisma.FloatFieldUpdateOperationsInput | number
   activityLevel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  riskScore?: Prisma.FloatFieldUpdateOperationsInput | number
-  tradingStyle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastUpdated?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   trades?: Prisma.TradeUpdateManyWithoutWalletProfileNestedInput
   snapshots?: Prisma.WalletPortfolioSnapshotUpdateManyWithoutWalletNestedInput
@@ -412,8 +378,6 @@ export type WalletProfileUncheckedUpdateInput = {
   txCount?: Prisma.IntFieldUpdateOperationsInput | number
   maxTradeValue?: Prisma.FloatFieldUpdateOperationsInput | number
   activityLevel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  riskScore?: Prisma.FloatFieldUpdateOperationsInput | number
-  tradingStyle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastUpdated?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   trades?: Prisma.TradeUncheckedUpdateManyWithoutWalletProfileNestedInput
   snapshots?: Prisma.WalletPortfolioSnapshotUncheckedUpdateManyWithoutWalletNestedInput
@@ -428,8 +392,6 @@ export type WalletProfileCreateManyInput = {
   txCount?: number
   maxTradeValue?: number
   activityLevel?: string | null
-  riskScore?: number
-  tradingStyle?: string | null
   lastUpdated?: Date | string
 }
 
@@ -442,8 +404,6 @@ export type WalletProfileUpdateManyMutationInput = {
   txCount?: Prisma.IntFieldUpdateOperationsInput | number
   maxTradeValue?: Prisma.FloatFieldUpdateOperationsInput | number
   activityLevel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  riskScore?: Prisma.FloatFieldUpdateOperationsInput | number
-  tradingStyle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastUpdated?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -456,9 +416,17 @@ export type WalletProfileUncheckedUpdateManyInput = {
   txCount?: Prisma.IntFieldUpdateOperationsInput | number
   maxTradeValue?: Prisma.FloatFieldUpdateOperationsInput | number
   activityLevel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  riskScore?: Prisma.FloatFieldUpdateOperationsInput | number
-  tradingStyle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastUpdated?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type WalletProfileNullableScalarRelationFilter = {
+  is?: Prisma.WalletProfileWhereInput | null
+  isNot?: Prisma.WalletProfileWhereInput | null
+}
+
+export type WalletProfileScalarRelationFilter = {
+  is?: Prisma.WalletProfileWhereInput
+  isNot?: Prisma.WalletProfileWhereInput
 }
 
 export type WalletProfileCountOrderByAggregateInput = {
@@ -470,8 +438,6 @@ export type WalletProfileCountOrderByAggregateInput = {
   txCount?: Prisma.SortOrder
   maxTradeValue?: Prisma.SortOrder
   activityLevel?: Prisma.SortOrder
-  riskScore?: Prisma.SortOrder
-  tradingStyle?: Prisma.SortOrder
   lastUpdated?: Prisma.SortOrder
 }
 
@@ -480,7 +446,6 @@ export type WalletProfileAvgOrderByAggregateInput = {
   winRate?: Prisma.SortOrder
   txCount?: Prisma.SortOrder
   maxTradeValue?: Prisma.SortOrder
-  riskScore?: Prisma.SortOrder
 }
 
 export type WalletProfileMaxOrderByAggregateInput = {
@@ -492,8 +457,6 @@ export type WalletProfileMaxOrderByAggregateInput = {
   txCount?: Prisma.SortOrder
   maxTradeValue?: Prisma.SortOrder
   activityLevel?: Prisma.SortOrder
-  riskScore?: Prisma.SortOrder
-  tradingStyle?: Prisma.SortOrder
   lastUpdated?: Prisma.SortOrder
 }
 
@@ -506,8 +469,6 @@ export type WalletProfileMinOrderByAggregateInput = {
   txCount?: Prisma.SortOrder
   maxTradeValue?: Prisma.SortOrder
   activityLevel?: Prisma.SortOrder
-  riskScore?: Prisma.SortOrder
-  tradingStyle?: Prisma.SortOrder
   lastUpdated?: Prisma.SortOrder
 }
 
@@ -516,63 +477,6 @@ export type WalletProfileSumOrderByAggregateInput = {
   winRate?: Prisma.SortOrder
   txCount?: Prisma.SortOrder
   maxTradeValue?: Prisma.SortOrder
-  riskScore?: Prisma.SortOrder
-}
-
-export type WalletProfileScalarRelationFilter = {
-  is?: Prisma.WalletProfileWhereInput
-  isNot?: Prisma.WalletProfileWhereInput
-}
-
-export type WalletProfileNullableScalarRelationFilter = {
-  is?: Prisma.WalletProfileWhereInput | null
-  isNot?: Prisma.WalletProfileWhereInput | null
-}
-
-export type StringFieldUpdateOperationsInput = {
-  set?: string
-}
-
-export type NullableStringFieldUpdateOperationsInput = {
-  set?: string | null
-}
-
-export type FloatFieldUpdateOperationsInput = {
-  set?: number
-  increment?: number
-  decrement?: number
-  multiply?: number
-  divide?: number
-}
-
-export type BoolFieldUpdateOperationsInput = {
-  set?: boolean
-}
-
-export type IntFieldUpdateOperationsInput = {
-  set?: number
-  increment?: number
-  decrement?: number
-  multiply?: number
-  divide?: number
-}
-
-export type DateTimeFieldUpdateOperationsInput = {
-  set?: Date | string
-}
-
-export type WalletProfileCreateNestedOneWithoutSnapshotsInput = {
-  create?: Prisma.XOR<Prisma.WalletProfileCreateWithoutSnapshotsInput, Prisma.WalletProfileUncheckedCreateWithoutSnapshotsInput>
-  connectOrCreate?: Prisma.WalletProfileCreateOrConnectWithoutSnapshotsInput
-  connect?: Prisma.WalletProfileWhereUniqueInput
-}
-
-export type WalletProfileUpdateOneRequiredWithoutSnapshotsNestedInput = {
-  create?: Prisma.XOR<Prisma.WalletProfileCreateWithoutSnapshotsInput, Prisma.WalletProfileUncheckedCreateWithoutSnapshotsInput>
-  connectOrCreate?: Prisma.WalletProfileCreateOrConnectWithoutSnapshotsInput
-  upsert?: Prisma.WalletProfileUpsertWithoutSnapshotsInput
-  connect?: Prisma.WalletProfileWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.WalletProfileUpdateToOneWithWhereWithoutSnapshotsInput, Prisma.WalletProfileUpdateWithoutSnapshotsInput>, Prisma.WalletProfileUncheckedUpdateWithoutSnapshotsInput>
 }
 
 export type WalletProfileCreateNestedOneWithoutTradesInput = {
@@ -591,80 +495,26 @@ export type WalletProfileUpdateOneWithoutTradesNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.WalletProfileUpdateToOneWithWhereWithoutTradesInput, Prisma.WalletProfileUpdateWithoutTradesInput>, Prisma.WalletProfileUncheckedUpdateWithoutTradesInput>
 }
 
-export type WalletProfileCreateWithoutSnapshotsInput = {
-  id: string
-  label?: string | null
-  totalPnl?: number
-  winRate?: number
-  isFresh?: boolean
-  txCount?: number
-  maxTradeValue?: number
-  activityLevel?: string | null
-  riskScore?: number
-  tradingStyle?: string | null
-  lastUpdated?: Date | string
-  trades?: Prisma.TradeCreateNestedManyWithoutWalletProfileInput
+export type WalletProfileCreateNestedOneWithoutSnapshotsInput = {
+  create?: Prisma.XOR<Prisma.WalletProfileCreateWithoutSnapshotsInput, Prisma.WalletProfileUncheckedCreateWithoutSnapshotsInput>
+  connectOrCreate?: Prisma.WalletProfileCreateOrConnectWithoutSnapshotsInput
+  connect?: Prisma.WalletProfileWhereUniqueInput
 }
 
-export type WalletProfileUncheckedCreateWithoutSnapshotsInput = {
-  id: string
-  label?: string | null
-  totalPnl?: number
-  winRate?: number
-  isFresh?: boolean
-  txCount?: number
-  maxTradeValue?: number
-  activityLevel?: string | null
-  riskScore?: number
-  tradingStyle?: string | null
-  lastUpdated?: Date | string
-  trades?: Prisma.TradeUncheckedCreateNestedManyWithoutWalletProfileInput
+export type WalletProfileUpdateOneRequiredWithoutSnapshotsNestedInput = {
+  create?: Prisma.XOR<Prisma.WalletProfileCreateWithoutSnapshotsInput, Prisma.WalletProfileUncheckedCreateWithoutSnapshotsInput>
+  connectOrCreate?: Prisma.WalletProfileCreateOrConnectWithoutSnapshotsInput
+  upsert?: Prisma.WalletProfileUpsertWithoutSnapshotsInput
+  connect?: Prisma.WalletProfileWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.WalletProfileUpdateToOneWithWhereWithoutSnapshotsInput, Prisma.WalletProfileUpdateWithoutSnapshotsInput>, Prisma.WalletProfileUncheckedUpdateWithoutSnapshotsInput>
 }
 
-export type WalletProfileCreateOrConnectWithoutSnapshotsInput = {
-  where: Prisma.WalletProfileWhereUniqueInput
-  create: Prisma.XOR<Prisma.WalletProfileCreateWithoutSnapshotsInput, Prisma.WalletProfileUncheckedCreateWithoutSnapshotsInput>
-}
-
-export type WalletProfileUpsertWithoutSnapshotsInput = {
-  update: Prisma.XOR<Prisma.WalletProfileUpdateWithoutSnapshotsInput, Prisma.WalletProfileUncheckedUpdateWithoutSnapshotsInput>
-  create: Prisma.XOR<Prisma.WalletProfileCreateWithoutSnapshotsInput, Prisma.WalletProfileUncheckedCreateWithoutSnapshotsInput>
-  where?: Prisma.WalletProfileWhereInput
-}
-
-export type WalletProfileUpdateToOneWithWhereWithoutSnapshotsInput = {
-  where?: Prisma.WalletProfileWhereInput
-  data: Prisma.XOR<Prisma.WalletProfileUpdateWithoutSnapshotsInput, Prisma.WalletProfileUncheckedUpdateWithoutSnapshotsInput>
-}
-
-export type WalletProfileUpdateWithoutSnapshotsInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  label?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  totalPnl?: Prisma.FloatFieldUpdateOperationsInput | number
-  winRate?: Prisma.FloatFieldUpdateOperationsInput | number
-  isFresh?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  txCount?: Prisma.IntFieldUpdateOperationsInput | number
-  maxTradeValue?: Prisma.FloatFieldUpdateOperationsInput | number
-  activityLevel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  riskScore?: Prisma.FloatFieldUpdateOperationsInput | number
-  tradingStyle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  lastUpdated?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  trades?: Prisma.TradeUpdateManyWithoutWalletProfileNestedInput
-}
-
-export type WalletProfileUncheckedUpdateWithoutSnapshotsInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  label?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  totalPnl?: Prisma.FloatFieldUpdateOperationsInput | number
-  winRate?: Prisma.FloatFieldUpdateOperationsInput | number
-  isFresh?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  txCount?: Prisma.IntFieldUpdateOperationsInput | number
-  maxTradeValue?: Prisma.FloatFieldUpdateOperationsInput | number
-  activityLevel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  riskScore?: Prisma.FloatFieldUpdateOperationsInput | number
-  tradingStyle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  lastUpdated?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  trades?: Prisma.TradeUncheckedUpdateManyWithoutWalletProfileNestedInput
+export type IntFieldUpdateOperationsInput = {
+  set?: number
+  increment?: number
+  decrement?: number
+  multiply?: number
+  divide?: number
 }
 
 export type WalletProfileCreateWithoutTradesInput = {
@@ -676,8 +526,6 @@ export type WalletProfileCreateWithoutTradesInput = {
   txCount?: number
   maxTradeValue?: number
   activityLevel?: string | null
-  riskScore?: number
-  tradingStyle?: string | null
   lastUpdated?: Date | string
   snapshots?: Prisma.WalletPortfolioSnapshotCreateNestedManyWithoutWalletInput
 }
@@ -691,8 +539,6 @@ export type WalletProfileUncheckedCreateWithoutTradesInput = {
   txCount?: number
   maxTradeValue?: number
   activityLevel?: string | null
-  riskScore?: number
-  tradingStyle?: string | null
   lastUpdated?: Date | string
   snapshots?: Prisma.WalletPortfolioSnapshotUncheckedCreateNestedManyWithoutWalletInput
 }
@@ -722,8 +568,6 @@ export type WalletProfileUpdateWithoutTradesInput = {
   txCount?: Prisma.IntFieldUpdateOperationsInput | number
   maxTradeValue?: Prisma.FloatFieldUpdateOperationsInput | number
   activityLevel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  riskScore?: Prisma.FloatFieldUpdateOperationsInput | number
-  tradingStyle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastUpdated?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   snapshots?: Prisma.WalletPortfolioSnapshotUpdateManyWithoutWalletNestedInput
 }
@@ -737,10 +581,76 @@ export type WalletProfileUncheckedUpdateWithoutTradesInput = {
   txCount?: Prisma.IntFieldUpdateOperationsInput | number
   maxTradeValue?: Prisma.FloatFieldUpdateOperationsInput | number
   activityLevel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  riskScore?: Prisma.FloatFieldUpdateOperationsInput | number
-  tradingStyle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastUpdated?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   snapshots?: Prisma.WalletPortfolioSnapshotUncheckedUpdateManyWithoutWalletNestedInput
+}
+
+export type WalletProfileCreateWithoutSnapshotsInput = {
+  id: string
+  label?: string | null
+  totalPnl?: number
+  winRate?: number
+  isFresh?: boolean
+  txCount?: number
+  maxTradeValue?: number
+  activityLevel?: string | null
+  lastUpdated?: Date | string
+  trades?: Prisma.TradeCreateNestedManyWithoutWalletProfileInput
+}
+
+export type WalletProfileUncheckedCreateWithoutSnapshotsInput = {
+  id: string
+  label?: string | null
+  totalPnl?: number
+  winRate?: number
+  isFresh?: boolean
+  txCount?: number
+  maxTradeValue?: number
+  activityLevel?: string | null
+  lastUpdated?: Date | string
+  trades?: Prisma.TradeUncheckedCreateNestedManyWithoutWalletProfileInput
+}
+
+export type WalletProfileCreateOrConnectWithoutSnapshotsInput = {
+  where: Prisma.WalletProfileWhereUniqueInput
+  create: Prisma.XOR<Prisma.WalletProfileCreateWithoutSnapshotsInput, Prisma.WalletProfileUncheckedCreateWithoutSnapshotsInput>
+}
+
+export type WalletProfileUpsertWithoutSnapshotsInput = {
+  update: Prisma.XOR<Prisma.WalletProfileUpdateWithoutSnapshotsInput, Prisma.WalletProfileUncheckedUpdateWithoutSnapshotsInput>
+  create: Prisma.XOR<Prisma.WalletProfileCreateWithoutSnapshotsInput, Prisma.WalletProfileUncheckedCreateWithoutSnapshotsInput>
+  where?: Prisma.WalletProfileWhereInput
+}
+
+export type WalletProfileUpdateToOneWithWhereWithoutSnapshotsInput = {
+  where?: Prisma.WalletProfileWhereInput
+  data: Prisma.XOR<Prisma.WalletProfileUpdateWithoutSnapshotsInput, Prisma.WalletProfileUncheckedUpdateWithoutSnapshotsInput>
+}
+
+export type WalletProfileUpdateWithoutSnapshotsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  label?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  totalPnl?: Prisma.FloatFieldUpdateOperationsInput | number
+  winRate?: Prisma.FloatFieldUpdateOperationsInput | number
+  isFresh?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  txCount?: Prisma.IntFieldUpdateOperationsInput | number
+  maxTradeValue?: Prisma.FloatFieldUpdateOperationsInput | number
+  activityLevel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastUpdated?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  trades?: Prisma.TradeUpdateManyWithoutWalletProfileNestedInput
+}
+
+export type WalletProfileUncheckedUpdateWithoutSnapshotsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  label?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  totalPnl?: Prisma.FloatFieldUpdateOperationsInput | number
+  winRate?: Prisma.FloatFieldUpdateOperationsInput | number
+  isFresh?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  txCount?: Prisma.IntFieldUpdateOperationsInput | number
+  maxTradeValue?: Prisma.FloatFieldUpdateOperationsInput | number
+  activityLevel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastUpdated?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  trades?: Prisma.TradeUncheckedUpdateManyWithoutWalletProfileNestedInput
 }
 
 
@@ -792,8 +702,6 @@ export type WalletProfileSelect<ExtArgs extends runtime.Types.Extensions.Interna
   txCount?: boolean
   maxTradeValue?: boolean
   activityLevel?: boolean
-  riskScore?: boolean
-  tradingStyle?: boolean
   lastUpdated?: boolean
   trades?: boolean | Prisma.WalletProfile$tradesArgs<ExtArgs>
   snapshots?: boolean | Prisma.WalletProfile$snapshotsArgs<ExtArgs>
@@ -809,8 +717,6 @@ export type WalletProfileSelectCreateManyAndReturn<ExtArgs extends runtime.Types
   txCount?: boolean
   maxTradeValue?: boolean
   activityLevel?: boolean
-  riskScore?: boolean
-  tradingStyle?: boolean
   lastUpdated?: boolean
 }, ExtArgs["result"]["walletProfile"]>
 
@@ -823,8 +729,6 @@ export type WalletProfileSelectUpdateManyAndReturn<ExtArgs extends runtime.Types
   txCount?: boolean
   maxTradeValue?: boolean
   activityLevel?: boolean
-  riskScore?: boolean
-  tradingStyle?: boolean
   lastUpdated?: boolean
 }, ExtArgs["result"]["walletProfile"]>
 
@@ -837,12 +741,10 @@ export type WalletProfileSelectScalar = {
   txCount?: boolean
   maxTradeValue?: boolean
   activityLevel?: boolean
-  riskScore?: boolean
-  tradingStyle?: boolean
   lastUpdated?: boolean
 }
 
-export type WalletProfileOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "label" | "totalPnl" | "winRate" | "isFresh" | "txCount" | "maxTradeValue" | "activityLevel" | "riskScore" | "tradingStyle" | "lastUpdated", ExtArgs["result"]["walletProfile"]>
+export type WalletProfileOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "label" | "totalPnl" | "winRate" | "isFresh" | "txCount" | "maxTradeValue" | "activityLevel" | "lastUpdated", ExtArgs["result"]["walletProfile"]>
 export type WalletProfileInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   trades?: boolean | Prisma.WalletProfile$tradesArgs<ExtArgs>
   snapshots?: boolean | Prisma.WalletProfile$snapshotsArgs<ExtArgs>
@@ -866,8 +768,6 @@ export type $WalletProfilePayload<ExtArgs extends runtime.Types.Extensions.Inter
     txCount: number
     maxTradeValue: number
     activityLevel: string | null
-    riskScore: number
-    tradingStyle: string | null
     lastUpdated: Date
   }, ExtArgs["result"]["walletProfile"]>
   composites: {}
@@ -1302,8 +1202,6 @@ export interface WalletProfileFieldRefs {
   readonly txCount: Prisma.FieldRef<"WalletProfile", 'Int'>
   readonly maxTradeValue: Prisma.FieldRef<"WalletProfile", 'Float'>
   readonly activityLevel: Prisma.FieldRef<"WalletProfile", 'String'>
-  readonly riskScore: Prisma.FieldRef<"WalletProfile", 'Float'>
-  readonly tradingStyle: Prisma.FieldRef<"WalletProfile", 'String'>
   readonly lastUpdated: Prisma.FieldRef<"WalletProfile", 'DateTime'>
 }
     

@@ -9,15 +9,6 @@
 * 🟢 You can import this file directly.
 */
 
-export const SubscriptionTier = {
-  FREE: 'FREE',
-  PRO: 'PRO',
-  WHALE: 'WHALE'
-} as const
-
-export type SubscriptionTier = (typeof SubscriptionTier)[keyof typeof SubscriptionTier]
-
-
 export const AlertType = {
   WHALE_MOVEMENT: 'WHALE_MOVEMENT',
   MARKET_SPIKE: 'MARKET_SPIKE',
@@ -25,3 +16,12 @@ export const AlertType = {
 } as const
 
 export type AlertType = (typeof AlertType)[keyof typeof AlertType]
+
+
+export const SubscriptionTier = {
+  FREE: 'FREE',
+  PRO: 'PRO',
+  WHALE: 'WHALE'
+} as const
+
+export type SubscriptionTier = (typeof SubscriptionTier)[keyof typeof SubscriptionTier]

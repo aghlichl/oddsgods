@@ -24,6 +24,9 @@ export async function GET(request: Request) {
         timestamp: {
           gte: twentyFourHoursAgo,
         },
+        walletAddress: {
+          not: "", // Only include trades with valid wallet addresses
+        },
       },
       orderBy: {
         timestamp: 'desc',

@@ -347,9 +347,12 @@ export type UserAlertSettingsUncheckedUpdateManyInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
-export type UserAlertSettingsNullableScalarRelationFilter = {
-  is?: Prisma.UserAlertSettingsWhereInput | null
-  isNot?: Prisma.UserAlertSettingsWhereInput | null
+export type StringNullableListFilter<$PrismaModel = never> = {
+  equals?: string[] | Prisma.ListStringFieldRefInput<$PrismaModel> | null
+  has?: string | Prisma.StringFieldRefInput<$PrismaModel> | null
+  hasEvery?: string[] | Prisma.ListStringFieldRefInput<$PrismaModel>
+  hasSome?: string[] | Prisma.ListStringFieldRefInput<$PrismaModel>
+  isEmpty?: boolean
 }
 
 export type EnumAlertTypeNullableListFilter<$PrismaModel = never> = {
@@ -390,6 +393,38 @@ export type UserAlertSettingsMinOrderByAggregateInput = {
   updatedAt?: Prisma.SortOrder
 }
 
+export type UserAlertSettingsNullableScalarRelationFilter = {
+  is?: Prisma.UserAlertSettingsWhereInput | null
+  isNot?: Prisma.UserAlertSettingsWhereInput | null
+}
+
+export type UserAlertSettingsCreatewalletsInput = {
+  set: string[]
+}
+
+export type UserAlertSettingsCreatemarketsInput = {
+  set: string[]
+}
+
+export type UserAlertSettingsCreatealertTypesInput = {
+  set: $Enums.AlertType[]
+}
+
+export type UserAlertSettingsUpdatewalletsInput = {
+  set?: string[]
+  push?: string | string[]
+}
+
+export type UserAlertSettingsUpdatemarketsInput = {
+  set?: string[]
+  push?: string | string[]
+}
+
+export type UserAlertSettingsUpdatealertTypesInput = {
+  set?: $Enums.AlertType[]
+  push?: $Enums.AlertType | $Enums.AlertType[]
+}
+
 export type UserAlertSettingsCreateNestedOneWithoutUserInput = {
   create?: Prisma.XOR<Prisma.UserAlertSettingsCreateWithoutUserInput, Prisma.UserAlertSettingsUncheckedCreateWithoutUserInput>
   connectOrCreate?: Prisma.UserAlertSettingsCreateOrConnectWithoutUserInput
@@ -420,33 +455,6 @@ export type UserAlertSettingsUncheckedUpdateOneWithoutUserNestedInput = {
   delete?: Prisma.UserAlertSettingsWhereInput | boolean
   connect?: Prisma.UserAlertSettingsWhereUniqueInput
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserAlertSettingsUpdateToOneWithWhereWithoutUserInput, Prisma.UserAlertSettingsUpdateWithoutUserInput>, Prisma.UserAlertSettingsUncheckedUpdateWithoutUserInput>
-}
-
-export type UserAlertSettingsCreatewalletsInput = {
-  set: string[]
-}
-
-export type UserAlertSettingsCreatemarketsInput = {
-  set: string[]
-}
-
-export type UserAlertSettingsCreatealertTypesInput = {
-  set: $Enums.AlertType[]
-}
-
-export type UserAlertSettingsUpdatewalletsInput = {
-  set?: string[]
-  push?: string | string[]
-}
-
-export type UserAlertSettingsUpdatemarketsInput = {
-  set?: string[]
-  push?: string | string[]
-}
-
-export type UserAlertSettingsUpdatealertTypesInput = {
-  set?: $Enums.AlertType[]
-  push?: $Enums.AlertType | $Enums.AlertType[]
 }
 
 export type UserAlertSettingsCreateWithoutUserInput = {
